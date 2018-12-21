@@ -12,12 +12,9 @@ class Vector {
       this.components[1] += value;
 
     } else if (typeof value === 'object') { // Conditional must check if the object is a vector
-      console.log(value + " passed to vector add method is an object.")
       this.components[0] += value.x;
       this.components[1] += value.y;
-    } else {
-      console.log(typeof value);
-    }
+    } 
 
   }
 

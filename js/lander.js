@@ -1,4 +1,4 @@
-
+"use strict"
 class Lander {
 
   constructor(x, y){
@@ -7,14 +7,15 @@ class Lander {
     this.acceleration = new Vector(0, 0);
 
     this.mass = 1;
-    this.size = 10;
+    this.width = 10;
+    this.height = 20;
 
     this.angle = 0;
     this.angularVelocity = 0;
     this.angularAcceleration = 0;
 
     this.thrusters = 0.15;
-    this.momentOfInertia = (.5 * this.mass * Math.pow(this.size/2, 2));
+    this.momentOfInertia = (.5 * this.mass * Math.pow(this.width/2, 2));
     this.fuel = 3000;
   }
 
@@ -22,22 +23,48 @@ class Lander {
     this.acceleration.add(force);
   }
 
-  update(){
+  applyTorque(clockwise){
+    if (clockwise) {
+      this.angularAcceleration += 0.01;
+    } else {
+      this.angularAcceleration -= 0.01;
+    }
 
-    console.log("Before adding acceleration. vel: " + this.velocity + ", acc: " + this.acceleration);
+  }
 
+  applyThrusters(){
+    let thrustForce = new Vector(this.thrusters * Math.cos(this.angle-(Math.PI/2)), this.thrusters * Math.sin(this.angle-(Math.PI/2)));
+
+    this.acceleration.add(thrustForce)
+  }
+
+  update() {
+    // Translational motion
     this.velocity.add(this.acceleration);
-
-    console.log("After adding acceleration. " + this.velocity + ", accel: " + typeof this.acceleration)
-
-
     this.coordinates.add(this.velocity);
-
 
     this.acceleration.mult(0);
 
+    // Rotational motion
 
+    this.angularAcceleration += ((-this.angularVelocity*.9)/this.momentOfInertia);
 
+    this.angularVelocity += this.angularAcceleration;
+    this.angle += this.angularVelocity;
+
+    this.angularAcceleration *= 0;
+  }
+
+  show() {
+    contextGA.fillStyle = "rgb(255, 255, 255)";
+
+    contextGA.save();
+    contextGA.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
+    contextGA.rotate(this.angle);
+    contextGA.fillRect(-this.width/2, -this.height/2, this.width, this.height);
+    contextGA.restore();
+
+    contextGA.fillStyle = "#000000";
   }
 
   get x(){
