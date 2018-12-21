@@ -27,11 +27,12 @@ class Lander {
     this.momentOfInertia = (.5 * this.mass * Math.pow(this.width/2, 2));
     this.fuel = 3000;
     this.fillStyle = 'rgb(255, 255, 255)';
+
     // sprite animation
     this.numImages = 3, this.currImage = 0;
     this.animationDirection = 1;
     this.thrustersOn = false;
-    this.framesPerAnimation = 4; // change this to change the animation speed
+    this.framesPerAnimation = 2; // change this to change the animation speed
     this.animationTimer = 0;
   }
 
@@ -63,7 +64,9 @@ class Lander {
     this.acceleration.mult(0);
 
     // Rotational motion
-    this.angularAcceleration += ((-this.angularVelocity*.9)/this.momentOfInertia);
+    //this.angularAcceleration += ((-this.angularVelocity*.9)/this.momentOfInertia);
+    this.angularAcceleration += (-this.angularVelocity*.05);
+
 
     this.angularVelocity += this.angularAcceleration;
     this.angle += this.angularVelocity;
