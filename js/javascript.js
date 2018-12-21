@@ -37,14 +37,17 @@ function displayEverything() {
 
 	probe.applyForce(new Vector(0, 0.05));
 	probe.update();
-	probe.show();
-
+	// probe.showRect();
+	probe.showSprite();
 	terrain.show();
 }
 
 function applyKeyboardInput() {
 	if (keys[UP] || keys[W]) {
 		probe.applyThrusters();
+	}
+	else {
+		probe.thrustersOn = false;
 	}
 	if (keys[RIGHT] || keys[D]) {
 		probe.applyTorque(true);
