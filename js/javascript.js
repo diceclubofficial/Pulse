@@ -15,21 +15,7 @@ const W = 87,
 
 let keys = [];
 let probe = new Lander(canvasGA.width/2, 50);
-
-
-
-
-
-//console.log(probe.toString())
-
-//
-// for (let i = 0; i < 5; i++) {
-// 	probe.applyForce(new Vector(0, -9.8));
-// 	probe.update();
-// }
-
-
-
+let terrain = new Terrain();
 // CREATE AND RUN GAME
 
 //var g = new game();
@@ -39,15 +25,24 @@ setInterval(play, 33);
 function play(){
 	// Check array keys for input
 	applyKeyboardInput();
+	collisionDetection();
 
-	drawBackground();
+	// Draw
+	displayEverything();
 
-	probe.applyForce(new Vector(0, 0.1));
-	probe.update();
-	probe.show();
 }
 
-function applyKeyboardInput(){
+function displayEverything() {
+	drawBackground();
+
+	probe.applyForce(new Vector(0, 0.05));
+	probe.update();
+	probe.show();
+
+	terrain.show();
+}
+
+function applyKeyboardInput() {
 	if (keys[UP] || keys[W]) {
 		probe.applyThrusters();
 	}
@@ -59,6 +54,18 @@ function applyKeyboardInput(){
 		probe.applyTorque(false);
 	}
 
+	if (keys[DOWN] || keys[S]) {
+		terrain.regenerate();
+	}
+
+}
+
+function collisionDetection(){
+	if (terrain.isPointBelowSurface(probe.x, probe.y) || terrain.isPointBelowSurface(probe.x + probe.width, probe.y) || terrain.isPointBelowSurface(probe.x + probe.width, probe.y + probe.height) || terrain.isPointBelowSurface(probe.x, probe.y + probe.height)) {
+		probe.fillStyle = "rgb(255, 0, 0)";
+	} else {
+		probe.fillStyle = "rgb(0, 255, 0)";
+	}
 }
 
 function drawBackground(){

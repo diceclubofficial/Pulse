@@ -17,6 +17,8 @@ class Lander {
     this.thrusters = 0.15;
     this.momentOfInertia = (.5 * this.mass * Math.pow(this.width/2, 2));
     this.fuel = 3000;
+
+    this.fillStyle = "rgb(255, 255, 255)";
   }
 
   applyForce(force){ // force need be a vector
@@ -56,7 +58,7 @@ class Lander {
   }
 
   show() {
-    contextGA.fillStyle = "rgb(255, 255, 255)";
+    contextGA.fillStyle = this.fillStyle;
 
     contextGA.save();
     contextGA.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
@@ -74,6 +76,12 @@ class Lander {
   get y(){
     return this.coordinates.y;
   }
+
+  // set fillStyle(newStyle){
+  //   if (typeof newStyle == 'string') {
+  //     this.fillStyle = newStyle;
+  //   }
+  // }
 
   toString(){
     return (`Acceleration: ${this.acceleration.toString()} \n Velocity: ${this.velocity.toString()} \n Location: ${this.coordinates.toString()}`);
