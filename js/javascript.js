@@ -16,6 +16,8 @@ const W = 87,
 let keys = [];
 let probe = new Lander(canvasGA.width/2, 50);
 let terrain = new Terrain();
+
+let waves = [];
 // CREATE AND RUN GAME
 
 //var g = new game();
@@ -27,19 +29,54 @@ function play(){
 	applyKeyboardInput();
 	collisionDetection();
 
+	updateWaves();
+	probe.applyForce(new Vector(0, 0.05));
+	probe.update();
+
 	// Draw
 	displayEverything();
-
 }
 
 function displayEverything() {
 	drawBackground();
 
-	probe.applyForce(new Vector(0, 0.05));
-	probe.update();
-	// probe.showRect();
-	probe.showSprite();
+	for(let wave of waves) {
+		wave.showRect();
+		wave.showSprite();
+	}
 	terrain.show();
+
+	probe.showRect();
+	probe.showSprite();
+}
+
+function updateWaves() {
+	// spawn waves
+	if(waves.length < 5) {
+		let x = randomInt(0, canvasGA.width);
+		let y = randomInt(0, canvasGA.height);
+
+		let velX = randomInt(-5, 5, 0);
+		let velY = randomInt(-5, 5, 0);
+		let vel = new Vector( velX, velY );
+
+		waves.push(new Wave(x, y, vel));
+		console.log("New wave spawned at x: " + x + ", y: " + y + " with velocity " + vel);
+	}
+
+	// despawn waves
+	let temp = [];
+	for(let wave of waves) {
+		if(wave.isAlive) {
+			temp.push(wave);
+		}
+	}
+	waves = temp;
+
+	// update all waves
+	for(let wave of waves) {
+		wave.update();
+	}
 }
 
 function applyKeyboardInput() {
@@ -90,10 +127,7 @@ function processKeyDownInput(event) {
 		console.log(keys);
 	}
 	keys[event.keyCode] = true;
-
 }
-
-
 
 function processKeyUpInput(event) {
 	//var key = event.key;
@@ -109,6 +143,18 @@ function processMouseInput(event) {
 
 function map(value, li, hi, lt, ht){
 	return (value/(hi-li))*(ht-lt)+lt;
+}
+
+function randomValue(min, max) {
+	return min + (Math.random() * (max - min));
+}
+
+function randomInt(min, max, excluding) {
+	let value = Math.floor(min + (Math.random() * (max - min)));
+	while(value == excluding) {
+		value = Math.floor(min + (Math.random() * (max - min)));
+	}
+	return value;
 }
 
 

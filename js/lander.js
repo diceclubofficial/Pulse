@@ -4,9 +4,9 @@ class Lander {
   constructor(x, y){
     // image data
     this.landerThrusterSheet = new Image();
-    this.landerThrusterSheet.src = "images/spritesheet.png";
+    this.landerThrusterSheet.src = "images/landerThrusterSheet.png";
     this.landerStaticImage = new Image();
-    this.landerStaticImage.src = "images/lander.png";
+    this.landerStaticImage.src = "images/landerStaticImage.png";
     this.spriteWidth = 42, this.spriteHeight = 50;
 
     // vector quantities
@@ -89,6 +89,11 @@ class Lander {
     contextGA.rotate(this.angle);
     contextGA.fillRect(-this.width/2, -this.height/2, this.width, this.height);
     contextGA.restore();
+
+    contextGA.fillStyle = "Tomato";
+    contextGA.fillRect(this.x, this.y, 4, 4);
+    contextGA.fillStyle = "yellow";
+    contextGA.fillRect(this.x + this.width, this.y + this.height, 4, 4);
 
     contextGA.fillStyle = "#000000";
   }

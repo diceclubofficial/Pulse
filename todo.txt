@@ -1,0 +1,5 @@
+
+todo:
+-make collision detection with waves and lander
+-make spawn points to spawn waves from automatically
+-make music interpretation

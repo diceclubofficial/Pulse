@@ -14,7 +14,7 @@ class Vector {
     } else if (typeof value === 'object') { // Conditional must check if the object is a vector
       this.components[0] += value.x;
       this.components[1] += value.y;
-    } 
+    }
 
   }
 
@@ -40,8 +40,22 @@ class Vector {
     return this.components[1];
   }
 
+  get magnitude() {
+    return Math.sqrt(Math.pow(this.components[0], 2) + Math.pow(this.components[1], 2));
+  }
+
+  set magnitude(newMag) {
+    let ratio = newMag / this.magnitude;
+    this.components[0] = this.components[0] * ratio;
+    this.components[1] = this.components[1] * ratio;
+  }
+
+  get angle() {
+    return Math.PI/2 + Math.atan2(this.components[1], this.components[0]);
+  }
+
   toString(){
-      return `x: ${this.components[0]}, y: ${this.components[1]}`;
+      return `x: ${Math.floor(this.components[0])}, y: ${Math.floor(this.components[1])}`;
   }
 
 }
