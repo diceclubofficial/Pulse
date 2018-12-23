@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Polygon Testing</title>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="600" style="background-color: lightblue"></canvas>
+
+  <script type="text/javascript" src="js/projection.js"></script>
+  <script type="text/javascript" src="js/vector.js"></script>
+  <script type="text/javascript" src="js/polygon.js"></script>
+
+  <script type="text/javascript">
+
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+
+    // Polygon 1
+    let point1 = new Vector(50, 50);
+    let point2 = new Vector(100, 50);
+    let point3 = new Vector(125, 100);
+    let point4 = new Vector(100, 200);
+    let point5 = new Vector(50, 200);
+    let point6 = new Vector(25, 100);
+    let points1 = [point1, point2, point3, point4, point5, point6];
+    let polygon1 = new Polygon(points1);
+
+    // Polygon 2
+    let point01 = new Vector(150, 200);
+    let point02 = new Vector(250, 200);
+    let point03 = new Vector(250, 150);
+    let point04 = new Vector(75, 150);
+    let points2 = [point01, point02, point03, point04];
+    let polygon2 = new Polygon(points2);
+
+    // draw polygons
+    polygon1.draw(context);
+    console.log("Polygon 1:")
+    console.log(polygon1);
+    polygon2.draw(context);
+    console.log("Polygon 2:")
+    console.log(polygon2);
+
+    // Add normals to axes and remove parallel axes
+    let normals1 = polygon1.normals;
+    let normals2 = polygon2.normals;
+    let normals = normals1.concat(normals2);
+    let axes = [];
+    outer: for(let normal of normals) {
+      for(let axis of axes) {
+        if(axis.isParallelTo(normal)) {
+          continue outer;
+        }
+      }
+      axes.push(normal);
+    }
+    console.log(axes);
+
+    // cycle through axes and evaluate if the polygons' projections overlap
+    let overlaps = true;
+    for(let axis of axes) {
+      axis.draw(context, new Vector(canvas.width/2, canvas.height/2), 10);
+      console.log("along axis: " + axis);
+      let projection1 = polygon1.project(axis);
+      let projection2 = polygon2.project(axis);
+
+      console.log("proj1: " + projection1);
+      console.log("proj2: " + projection2);
+
+      let thisOverlaps = projection1.overlaps(projection2);
+      console.log(thisOverlaps);
+
+      if(!thisOverlaps) {
+        overlaps = false;
+        // break;
+      }
+      console.log(" ");
+    }
+    if(overlaps) console.log("OVERLAPS");
+    else console.log("NO OVERLAP");
+
+
+  </script>
+
+</body>
+</html>

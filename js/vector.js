@@ -32,6 +32,43 @@ class Vector {
     }
   }
 
+  // dot product
+  dot(otherVector) {
+    return (this.x*otherVector.x) + (this.y*otherVector.y);
+  }
+
+  // return unit vector with magnitude of 1
+  normalize() {
+    this.div(this.magnitude);
+  }
+
+  // return perpendicular vector
+  perp() {
+    let perpendicular = new Vector(this.components[1], -this.components[0]);
+    return perpendicular;
+  }
+
+  isParallelTo(otherVector) {
+    let thisSlope = this.y / this.x;
+    let otherSlope = otherVector.y / otherVector.x;
+
+    if(thisSlope == otherSlope) return true;
+    if(Math.abs(thisSlope) == Infinity && Math.abs(otherSlope) == Infinity) return true;
+    else return false;
+  }
+
+  // to draw a vector from a point and scaled up a certain value
+  draw(context, origin, scalar) {
+    context.beginPath();
+    context.moveTo(origin.x, origin.y);
+    let distance = new Vector(this.x, this.y);
+    distance.mult(scalar);
+    let target = new Vector(origin.x + distance.x, origin.y + distance.y);
+    context.lineTo(target.x, target.y);
+    context.stroke();
+    // console.log("Drawing from (" + origin.x + ", " + origin.y + ") to (" + target.x + ", " + target.y +")")
+  }
+
   get x() {
     return this.components[0];
   }
@@ -55,7 +92,7 @@ class Vector {
   }
 
   toString(){
-      return `x: ${Math.floor(this.components[0])}, y: ${Math.floor(this.components[1])}`;
+      return `x: ${this.components[0]}, y: ${this.components[1]}`;
   }
 
 }

@@ -1,4 +1,5 @@
 "use strict"
+
 class Wave {
 
   constructor(x, y, vel){
@@ -14,7 +15,6 @@ class Wave {
     // scalar quantities
     this.width = 120;
     this.height = this.width * (this.spriteHeight / this.spriteWidth); // calculate height based on width and sprite size to not distort the image
-    console.log(this.height);
 
     // calculate angle based on velocity vector
     this.angle = this.velocity.angle;
@@ -45,16 +45,7 @@ class Wave {
       this.alive = false;
     }
 
-    // Collision detection with probe (square)
-    let leftX = this.x;
-    let rightX = this.x + this.width;
-    let topY = this.y - this.width/2 + this.height/2;
-    let bottomY = this.y + this.width;
-
-    if(leftX < probe.x + probe.width && rightX > probe.x && topY < probe.y + probe.height && bottomY > probe.y) {
-      this.alive = false;
-      console.log("Wave collided!");
-    }
+    if(this.collidedWithRect()) console.log("Wave collided!");
 
   }
 
@@ -67,13 +58,11 @@ class Wave {
     contextGA.fillRect(-this.width/2, -this.height/2, this.width, this.height);
     contextGA.restore();
 
-    // contextGA.fillStyle = "Tomato";
-    // contextGA.fillRect(this.x, this.y - this.width/2 + this.height/2, this.width, this.width);
-
-    contextGA.fillStyle = "pink";
-    contextGA.fillRect(this.x, this.y - this.width/2 + this.height/2, 4, 4);
-    contextGA.fillStyle = "lightblue";
-    contextGA.fillRect(this.x + this.width, this.y + this.width, 4, 4);
+    // // show corners of big box
+    // contextGA.fillStyle = "pink";
+    // contextGA.fillRect(this.x, this.y - this.width/2 + this.height/2, 4, 4);
+    // contextGA.fillStyle = "lightblue";
+    // contextGA.fillRect(this.x + this.width, this.y + this.width, 4, 4);
 
     contextGA.fillStyle = "#000000";
   }
@@ -86,11 +75,22 @@ class Wave {
     contextGA.restore();
   }
 
-  // private
-  animate() {
-    // console.log("animating wave; currImage: " + this.currImage + ", numImages: " + this.numImages);
-    this.currImage += 1;
+  collidedWithRect() {
+    // Big box method
+    let leftX = this.x;
+    let rightX = this.x + this.width;
+    let topY = this.y - this.width/2 + this.height/2;
+    let bottomY = this.y + this.width;
+    if(leftX < probe.x + probe.width && rightX > probe.x && topY < probe.y + probe.height && bottomY > probe.y) {
+      this.alive = false;
+      return true;
+    }
 
+    //
+  }
+
+  animate() {
+    this.currImage += 1;
     // reset currImage to 0
     if(this.currImage >= this.numImages) this.currImage = 0;
   }
