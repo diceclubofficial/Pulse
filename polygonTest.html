@@ -9,6 +9,7 @@
 
   <script type="text/javascript" src="js/projection.js"></script>
   <script type="text/javascript" src="js/vector.js"></script>
+  <script type="text/javascript" src="js/methods.js"></script>
   <script type="text/javascript" src="js/polygon.js"></script>
 
   <script type="text/javascript">
@@ -27,12 +28,14 @@
     let polygon1 = new Polygon(points1);
 
     // Polygon 2
-    let point01 = new Vector(150, 200);
-    let point02 = new Vector(250, 200);
-    let point03 = new Vector(250, 150);
-    let point04 = new Vector(75, 150);
+    let point01 = new Vector(100, 100);
+    let point02 = new Vector(400, 100);
+    let point03 = new Vector(400, 300);
+    let point04 = new Vector(200, 300);
     let points2 = [point01, point02, point03, point04];
     let polygon2 = new Polygon(points2);
+    // polygon2.rotate(Math.PI);
+    polygon2.translate(new Vector(100, 0));
 
     // draw polygons
     polygon1.draw(context);

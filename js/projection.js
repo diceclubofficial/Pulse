@@ -8,19 +8,11 @@ class Projection {
   }
 
   overlaps(otherProjection) {
-    if(this.startPoint < otherProjection.endPoint && otherProjection.startPoint < this.endPoint) return true;
+    if(this.start < otherProjection.end && otherProjection.start < this.end) return true;
     return false;
   }
 
-  get startPoint() {
-    return this.start;
-  }
-
-  get endPoint() {
-    return this.end;
-  }
-
   toString(){
-      return `start: ${this.startPoint}, end: ${this.endPoint}`;
+      return `start: ${this.start}, end: ${this.end}`;
   }
 }

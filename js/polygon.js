@@ -11,6 +11,10 @@ class Polygon {
 
     // list of edges (as Vectors)
     this.edges = [];
+    this.updateEdges();
+  }
+
+  updateEdges() {
     for(let i = 0; i < this.vertices.length; i++) {
       let point1 = this.vertices[i];
       let point2;
@@ -22,7 +26,8 @@ class Polygon {
     }
   }
 
-  draw(context) {
+  draw(context, color) {
+    context.strokeStyle = color;
     // draw vertices and edges
     for(let i = 0; i < this.vertices.length; i++) {
       let currPoint = this.vertices[i];
@@ -51,7 +56,6 @@ class Polygon {
     // P = B * ( A / |A| )
     // P - projection, A - axis vector, B - projected vector
     axis.normalize(); //get the unit vector
-    // console.log("Normalized axis: " + axis);
     let min = axis.dot(this.vertices[0]);
     let max = min;
 
@@ -63,6 +67,49 @@ class Polygon {
     }
     let projection = new Projection(min, max);
     return projection;
+  }
+
+  rotate(theta) {
+    // theta in radians
+    let fixedCentroid = this.centroid;
+    for(let i = 0; i < this.vertices.length; i++) {
+      this.vertices[i] = rotatePoint(this.vertices[i], theta, fixedCentroid);
+    }
+    this.updateEdges();
+  }
+
+  translate(vector) {
+    for(let i = 0; i < this.vertices.length; i++) {
+      this.vertices[i].add(vector);
+    }
+  }
+
+  overlaps(polygon2) {
+    let polygon1 = this;
+    // Add normals to axes and remove parallel axes
+    let normals1 = polygon1.normals;
+    let normals2 = polygon2.normals;
+    let normals = normals1.concat(normals2);
+    let axes = [];
+    outer: for(let normal of normals) {
+      for(let axis of axes) {
+        if(axis.isParallelTo(normal)) {
+          continue outer;
+        }
+      }
+      axes.push(normal);
+    }
+
+    // cycle through axes and evaluate if the polygons' projections overlap
+    for(let axis of axes) {
+      let projection1 = polygon1.project(axis);
+      let projection2 = polygon2.project(axis);
+
+      if(!projection1.overlaps(projection2)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   get centroid() {
@@ -86,14 +133,6 @@ class Polygon {
       normals[i] = this.edges[i].perp();
     }
     return normals;
-  }
-
-  get vertexVectors() {
-    return this.vertices;
-  }
-
-  get edgeVectors() {
-    return this.edges;
   }
 
   toString() {

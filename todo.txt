@@ -1,12 +1,4 @@
 
 todo:
--make polygon class & make collidedWithRect() in wave.js take a polygon as a parameter
--make collision detection with waves and lander
--make spawn points to spawn waves from automatically
+-make circular wave that radiates out
 -make music interpretation
-
-rotating points:
-x1 = x0(cosPhi) - y0(sinPhi)
-y1 = y0(cosPhi) + x0(sinPhi)
-[cosPhi   -sinPhi]
-[sinPhi    cosPhi]

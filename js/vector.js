@@ -15,7 +15,17 @@ class Vector {
       this.components[0] += value.x;
       this.components[1] += value.y;
     }
+  }
 
+  sub(value) {
+    if (typeof value == 'number') {
+      this.components[0] -= value;
+      this.components[1] -= value;
+
+    } else if (typeof value === 'object') { // Conditional must check if the object is a vector
+      this.components[0] -= value.x;
+      this.components[1] -= value.y;
+    }
   }
 
   div(value) {
@@ -37,7 +47,7 @@ class Vector {
     return (this.x*otherVector.x) + (this.y*otherVector.y);
   }
 
-  // return unit vector with magnitude of 1
+  // set magnitude to 1 to become a unit vector
   normalize() {
     this.div(this.magnitude);
   }
