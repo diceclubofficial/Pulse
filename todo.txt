@@ -1,4 +1,15 @@
 
 todo:
--make circular wave that radiates out
+-make bass waves randomly spawn
+-make bass wave collision detection with polygon lander
 -make music interpretation
+-make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
+
+wave names:
+-treble - small fast waves (blue, green, and red rectangular waves)
+-bass - large slower waves (waves that radiate out)
+-alto - wind?
+-tenor
+-soprano
+-baritone
+-subbass

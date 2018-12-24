@@ -93,7 +93,7 @@ class Lander {
 
     // If offscreen, print coordinates
     if(this.x < -this.width || this.x > canvasGA.width || this.y < -this.height || this.y > canvasGA.height) {
-      console.log("Lander is offscreen at (" + Math.floor(this.x) + ", " + Math.floor(this.y) + ")");
+      console.log("Lander is offscreen at (" + Math.floor(this.x) + ", " + Math.floor(this.y) + ") with velocity x:" + Math.floor(this.velocity.x) + " y:" + Math.floor(this.velocity.y));
     }
   }
 

@@ -84,7 +84,7 @@ class Polygon {
     }
   }
 
-  overlaps(polygon2) {
+  overlapsPolygon(polygon2) {
     let polygon1 = this;
     // Add normals to axes and remove parallel axes
     let normals1 = polygon1.normals;
@@ -110,6 +110,65 @@ class Polygon {
       }
     }
     return true;
+  }
+
+  overlapsCircle(circle) {
+    let polygon = this;
+    // Add normals (and circle axis) to axes and remove parallel axes
+    let normals = polygon.normals;
+    let closestVertex = circle.findClosestVertex(polygon);
+    let circleAxis = new Vector(circle.x, circle.y);
+    circleAxis.sub(closestVertex);
+    console.log(circleAxis);
+    circleAxis.draw(context, new Vector(canvas.width/2, canvas.height/2), 10);
+
+    normals.push(circleAxis);
+    let axes = [];
+    outer: for(let normal of normals) {
+      for(let axis of axes) {
+        if(axis.isParallelTo(normal)) {
+          continue outer;
+        }
+      }
+      axes.push(normal);
+    }
+
+    console.log("axes: ");
+    console.log(axes);
+
+    // cycle through axes and evaluate if the polygons' projections overlap
+    for(let axis of axes) {
+      let polygonProj = polygon.project(axis);
+      let circleProj = circle.project(axis);
+
+      console.log("polygon proj: " + polygonProj);
+      console.log("circle proj: " + circleProj);
+
+      if(!polygonProj.overlaps(circleProj)) {
+        return false;
+      }
+    }
+
+    //if circle has start and end angle specified, only return true if the polygon is inside that range
+    if(circle.startAngle != undefined && circle.endAngle != undefined) {
+  		let towardsPolygon = new Vector(this.x, this.y);
+  		towardsPolygon.sub(new Vector(circle.x, circle.y));
+      towardsPolygon.draw(context, new Vector(circle.x, circle.y), 1);
+      let middleAngle = Math.PI/2 - towardsPolygon.angle;
+      console.log("middle angle: " + toDegrees(middleAngle));
+      console.log(toDegrees(circle.startAngle), toDegrees(circle.endAngle));
+      if(middleAngle < circle.startAngle || middleAngle > circle.endAngle) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  get x() {
+    return this.centroid.x;
+  }
+  get y() {
+    return this.centroid.y;
   }
 
   get centroid() {

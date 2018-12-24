@@ -1,16 +1,43 @@
 "use strict"
 
-class WaveRect {
+class TrebleWave {
 
-  constructor(x, y, vel){
+  constructor(x, y, color){
+    // type of wave (1-blue, 2-green, 3-red)
+    this.type = 0;
+    if(typeof color == "number") this.type = color;
+    else if(color == "blue") this.type = 1;
+    else if(color == "green") this.type = 2;
+    else if(color == "red") this.type = 3;
+
+    // type-specific data
+    let speed;
+    if(this.type == 1) {
+      speed = randomInt(3, 5);
+    }
+    else if(this.type == 2) {
+      speed = randomInt(4, 7);
+    }
+    else if(this.type == 3) {
+      this.clockwise = randomInt(0, 2);
+      speed = randomInt(6, 9);
+    }
+
+
     // image data
     this.waveSheet = new Image();
-    this.waveSheet.src = "images/greenWaveSheet.png";
+    if(this.type == 1) this.waveSheet.src = "images/blueTrebleWaveSheet.png";
+    else if(this.type == 2) this.waveSheet.src = "images/greenTrebleWaveSheet.png";
+    else if(this.type == 3) this.waveSheet.src = "images/redTrebleWaveSheet.png";
     this.spriteWidth = 64, this.spriteHeight = 20;
 
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.velocity = vel;
+    let centerOfScreen = new Vector(canvasGA.width/2, canvasGA.height/2);
+		let direction = new Vector(centerOfScreen.x, centerOfScreen.y);
+		direction.sub(this.coordinates);
+		this.velocity = new Vector(direction.x, direction.y);
+		this.velocity.magnitude = speed;
 
     // dimensions
     this.width = 120;
@@ -31,7 +58,7 @@ class WaveRect {
 
     // sprite animation
     this.numImages = 2, this.currImage = 0;
-    this.framesPerAnimation = 8; // change this to change the animation speed
+    this.framesPerAnimation = 5; // change this to change the animation speed
     this.animationTimer = 0;
 
     // for calculating when to start dying

@@ -29,3 +29,11 @@ function randomInt(min, max, excluding) {
 function distance(x1, y1, x2, y2) {
   return Math.sqrt( Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) );
 }
+
+function toDegrees(radians) {
+  return radians*(180/Math.PI);
+}
+
+function toRadians(degrees) {
+  return degrees*(Math.PI/180);
+}

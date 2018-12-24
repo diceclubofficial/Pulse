@@ -11,6 +11,7 @@
   <script type="text/javascript" src="js/vector.js"></script>
   <script type="text/javascript" src="js/methods.js"></script>
   <script type="text/javascript" src="js/polygon.js"></script>
+  <script type="text/javascript" src="js/circle.js"></script>
 
   <script type="text/javascript">
 
@@ -37,51 +38,24 @@
     // polygon2.rotate(Math.PI);
     polygon2.translate(new Vector(100, 0));
 
-    // draw polygons
-    polygon1.draw(context);
+    // Circle
+    let center = new Vector(170, 140);
+    let circle = new Circle(center, 100, 0, Math.PI);
+
+    // draw shapes
+    polygon1.draw(context, "blue");
     console.log("Polygon 1:")
     console.log(polygon1);
-    polygon2.draw(context);
-    console.log("Polygon 2:")
-    console.log(polygon2);
+    // polygon2.draw(context, "black");
+    // console.log("Polygon 2:")
+    // console.log(polygon2);
+    circle.draw(context, "red");
+    console.log("Circle: ");
+    console.log(circle);
 
-    // Add normals to axes and remove parallel axes
-    let normals1 = polygon1.normals;
-    let normals2 = polygon2.normals;
-    let normals = normals1.concat(normals2);
-    let axes = [];
-    outer: for(let normal of normals) {
-      for(let axis of axes) {
-        if(axis.isParallelTo(normal)) {
-          continue outer;
-        }
-      }
-      axes.push(normal);
-    }
-    console.log(axes);
+    // console.log("Polygon1 overlaps Polygon2: " + polygon1.overlapsPolygon(polygon2));
 
-    // cycle through axes and evaluate if the polygons' projections overlap
-    let overlaps = true;
-    for(let axis of axes) {
-      axis.draw(context, new Vector(canvas.width/2, canvas.height/2), 10);
-      console.log("along axis: " + axis);
-      let projection1 = polygon1.project(axis);
-      let projection2 = polygon2.project(axis);
-
-      console.log("proj1: " + projection1);
-      console.log("proj2: " + projection2);
-
-      let thisOverlaps = projection1.overlaps(projection2);
-      console.log(thisOverlaps);
-
-      if(!thisOverlaps) {
-        overlaps = false;
-        // break;
-      }
-      console.log(" ");
-    }
-    if(overlaps) console.log("OVERLAPS");
-    else console.log("NO OVERLAP");
+    console.log("Polygon1 overlaps Circle: " + polygon1.overlapsCircle(circle));
 
 
   </script>

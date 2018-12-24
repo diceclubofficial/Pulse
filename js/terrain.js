@@ -3,7 +3,7 @@ class Terrain {
     // Fill a raw elevation map with noise for each pixel in width
     // Sample the height every x pixels to form a new Array
     this.noise = new Perlin();
-    this.seaLevel = 650;
+    this.seaLevel = 0.8125*canvasGA.height;
 
     this.segmentLength = 20;
     this.noiseStep = 0.005;
@@ -53,7 +53,6 @@ class Terrain {
       return false;
     }
   }
-
 
 
   regenerate() {
