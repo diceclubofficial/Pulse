@@ -1,9 +1,11 @@
 
 todo:
--make bass waves randomly spawn
--make bass wave collision detection with polygon lander
+-try making bass waves' centers also move across the screen
 -make music interpretation
 -make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
+
+issues:
+-bass waves go way too fast and are too large to avoid - need to playtest
 
 wave names:
 -treble - small fast waves (blue, green, and red rectangular waves)

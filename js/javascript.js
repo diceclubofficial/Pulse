@@ -3,21 +3,21 @@
 contextGA.font = '10px Menlo';
 
 const UP = 38,
-RIGHT = 39,
-DOWN = 40,
-LEFT = 37;
+			RIGHT = 39,
+			DOWN = 40,
+			LEFT = 37;
 
 const W = 87,
-A = 65,
-S = 83,
-D = 68;
-
+			A = 65,
+			S = 83,
+			D = 68;
 
 let keys = [];
-let probe = new Lander(canvasGA.width/2, 50);
+
+let probe = new Lander(canvasGA.width/2, 20);
 let terrain = new Terrain();
 let stars = [];
-//randomly generate 15 stars
+// Randomly generate 15 stars
 for(let i = 0; i < 15; i++) {
 	let x = randomValue(0, canvasGA.width);
 	let y = randomValue(0, terrain.seaLevel - canvasGA.height/5);
@@ -25,73 +25,94 @@ for(let i = 0; i < 15; i++) {
 	stars[i] = new Star(x, y, r);
 }
 
+// Spawn points for waves (offscreen bottom)
 const w = canvasGA.width;
 const h = canvasGA.height;
 let spawnPoints = [
-	new Vector(-100, h - 100),
-	new Vector(0, h + 100),
-	new Vector(w/3, h + 100),
-	new Vector(2*w/3, h + 100),
-	new Vector(w, h + 100),
-	new Vector(w + 100, h - 100),
+	new Vector(-10, h - 50),
+	new Vector(0, h + 20),
+	new Vector(w/3, h + 10),
+	new Vector(2*w/3, h + 10),
+	new Vector(w, h + 20),
+	new Vector(w + 10, h - 50),
 ];
+let bassWaveSpawnPoint = 0;
 
 let trebleWaves = [];
 let bassWaves = [];
-let testSpawnPoint = spawnPoints[1];
-// bassWaves.push(new BassWave(100, 100, 10));
 
 setInterval(play, 33);
 
-function play(){
+function play() {
 	// Check array keys for input
 	applyKeyboardInput();
+
+	// Do collision detection
 	collisionDetection();
 
+	// Update all the waves
 	updateWaves();
+
+	// Update the lander
 	probe.applyForce(new Vector(0, 0.05));
 	probe.update();
 
-	// Draw
+	// Draw everything
 	displayEverything();
 }
 
 function displayEverything() {
 	drawBackground();
 
+	// waves
 	for(let trebleWave of trebleWaves) {
-		// trebleWave.showShape();
+		trebleWave.showShape();
 		trebleWave.showSprite();
 	}
 	for(let bassWave of bassWaves) {
 		bassWave.showShape();
 	}
 
+	// terrain
 	terrain.show();
 
-	// probe.showShape();
+	// lander
+	probe.showShape();
 	probe.showSprite();
 }
 
 function updateWaves() {
 	// spawn waves
-	if(trebleWaves.length < 5) {
+	if(trebleWaves.length < 3) {
 		let randomIndex = randomInt(0, spawnPoints.length);
 		let spawnPoint = spawnPoints[randomIndex];
 		let color = randomInt(1, 4);
 		trebleWaves.push(new TrebleWave(spawnPoint.x, spawnPoint.y, color));
 	}
+	if(bassWaves.length < 1) {
+		let spawnPoint = spawnPoints[bassWaveSpawnPoint];
+		bassWaveSpawnPoint++;
+		bassWaveSpawnPoint %= spawnPoints.length;
+		bassWaves.push(new BassWave(spawnPoint.x, spawnPoint.y));
+	}
 
 	// despawn waves
-	let temp = [];
+	let aliveTrebleWaves = [];
 	for(let trebleWave of trebleWaves) {
 		if(trebleWave.alive) {
-			temp.push(trebleWave);
+			aliveTrebleWaves.push(trebleWave);
 		}
 	}
-	trebleWaves = temp;
+	trebleWaves = aliveTrebleWaves;
+	let aliveBassWaves = [];
+	for(let bassWave of bassWaves) {
+		if(bassWave.alive) {
+			aliveBassWaves.push(bassWave);
+		}
+	}
+	bassWaves = aliveBassWaves;
 
-	// update all waves
+	// call update()
 	for(let trebleWave of trebleWaves) {
 		trebleWave.update();
 	}
@@ -120,7 +141,7 @@ function applyKeyboardInput() {
 	}
 }
 
-function collisionDetection(){
+function collisionDetection() {
 	// lander with terrain
 	if (terrain.isPointBelowSurface(probe.x, probe.y) || terrain.isPointBelowSurface(probe.x + probe.width, probe.y) || terrain.isPointBelowSurface(probe.x + probe.width, probe.y + probe.height) || terrain.isPointBelowSurface(probe.x, probe.y + probe.height)) {
 		probe.fillStyle = "rgb(255, 0, 0)";
@@ -128,7 +149,21 @@ function collisionDetection(){
 		probe.fillStyle = "rgb(0, 255, 0)";
 	}
 
-	// waves with lander
+	// lander with bassWaves
+	for(let bassWave of bassWaves) {
+		if(probe.shape.overlapsArc(bassWave.shape, 30)) {
+			console.log("overlaps with bass wave");
+			let towardsLander = new Vector(probe.x, probe.y);
+			towardsLander.sub(bassWave.coordinates);
+			let force = new Vector(towardsLander.x, towardsLander.y);
+			force.magnitude = 3;
+			probe.applyForce(force);
+
+			bassWave.alive = false;
+		}
+	}
+
+	// lander with trebleWaves
 	for(let trebleWave of trebleWaves) {
 		// simple and fast big box collision detection
 		if(probe.x + probe.width > trebleWave.x && probe.x < trebleWave.x + trebleWave.width && probe.y + probe.height > trebleWave.y - trebleWave.width/2 + trebleWave.height/2 && probe.y < trebleWave.y + trebleWave.width) {

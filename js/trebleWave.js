@@ -23,7 +23,6 @@ class TrebleWave {
       speed = randomInt(6, 9);
     }
 
-
     // image data
     this.waveSheet = new Image();
     if(this.type == 1) this.waveSheet.src = "images/blueTrebleWaveSheet.png";

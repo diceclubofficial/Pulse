@@ -2,8 +2,8 @@
 
 class Circle {
 
-  constructor(point, r, start, end) {
-    this.center = point;
+  constructor(c, r, start, end) {
+    this.center = c;
     this.radius = r;
 
     this.startAngle = start;
@@ -53,10 +53,6 @@ class Circle {
     }
 
     let closestVertex = polygon.vertices[minDistancePos];
-
-    //highlight closest vertex
-    context.fillStyle = "black";
-    context.fillRect(closestVertex.x, closestVertex.y, 10, 10);
     return closestVertex;
   }
 
