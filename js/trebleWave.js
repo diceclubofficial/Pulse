@@ -16,11 +16,11 @@ class TrebleWave {
       speed = randomInt(3, 5);
     }
     else if(this.type == 2) {
-      speed = randomInt(4, 7);
+      speed = randomInt(5, 7);
     }
     else if(this.type == 3) {
       this.clockwise = randomInt(0, 2);
-      speed = randomInt(6, 9);
+      speed = randomInt(7, 9);
     }
 
     // image data
@@ -105,11 +105,11 @@ class TrebleWave {
     }
   }
 
-  showShape() {
+  showDev() {
     this.shape.draw(contextGA, this.fillStyle);
   }
 
-  showSprite() {
+  draw() {
     contextGA.save();
     contextGA.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
     contextGA.rotate(this.angle);

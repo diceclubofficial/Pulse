@@ -1,7 +1,13 @@
 
 todo:
--try making bass waves' centers also move across the screen
+-make terrain collision detection stop the lander
+-make terrain collision detection with polygons to realistically bounce off the surface (one vertex after the other)
 -make music interpretation
+-make asteroids that physically crash against the lander (use conservation of momentum)
+-add fuel gauge and other stats (how to do text in canvas?)
+-add game states and title screen
+
+
 -make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
 
 issues:

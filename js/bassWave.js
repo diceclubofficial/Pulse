@@ -5,21 +5,26 @@ class BassWave {
   constructor(x, y){
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = randomInt(10, 15);
+    // this.speed = randomInt(5, 10);
+    this.speed = 8;
 
     // basics
     this.radius = 1;
     this.fillStyle = 'white';
 
-    // calculate angle based on orientation towards the center of the screen
+    // Calculate angle based on orientation towards the center of the screen
     let centerOfScreen = new Vector(canvasGA.width/2, canvasGA.height/2);
 		this.towardsCenter = new Vector(centerOfScreen.x, centerOfScreen.y);
 		this.towardsCenter.sub(this.coordinates);
     this.towardsCenter.magnitude = this.radius;
     let middleAngle = -1*(Math.PI/2 - this.towardsCenter.angle);
-    let angleSpan = 20; // in degrees
+    let angleSpan = 45; // in degrees
     this.startAngle = middleAngle - toRadians(angleSpan/2);
     this.endAngle = middleAngle + toRadians(angleSpan/2);
+
+    // Velocity
+		this.velocity = new Vector(this.towardsCenter.x, this.towardsCenter.y);
+		this.velocity.magnitude = this.speed;
 
     // shape
     this.shape = new Circle(new Vector(this.x, this.y), this.radius, this.startAngle, this.endAngle);
@@ -32,8 +37,9 @@ class BassWave {
   }
 
   update() {
-    // Increase radius
-    this.radius += this.speed;
+    // Move coordinates and increase radius
+    this.coordinates.add(this.velocity);
+    this.radius += this.speed*0.4;
 
     // Update circle shape
     this.shape = new Circle(new Vector(this.x, this.y), this.radius, this.startAngle, this.endAngle);
@@ -56,12 +62,34 @@ class BassWave {
     }
   }
 
-  showShape() {
-    // Draw arc
+  showDev() {
+    contextGA.save();
     contextGA.strokeStyle = this.fillStyle;
+
+    // center
+    contextGA.beginPath();
+    contextGA.arc(this.x, this.y, 5, 0, 2*Math.PI);
+    contextGA.stroke();
+
+    // radius
+    contextGA.beginPath();
+    contextGA.moveTo(this.x, this.y);
+    contextGA.lineTo(this.circumPoint.x, this.circumPoint.y);
+    contextGA.stroke();
+
+    contextGA.restore();
+  }
+
+  draw() {
+    contextGA.save();
+    contextGA.strokeStyle = this.fillStyle;
+
+    // arc
     contextGA.beginPath();
     contextGA.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle);
     contextGA.stroke();
+
+    contextGA.restore();
   }
 
   get x(){

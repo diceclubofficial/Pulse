@@ -97,11 +97,11 @@ class Lander {
     }
   }
 
-  showShape() {
+  showDev() {
     this.shape.draw(contextGA, this.fillStyle);
   }
 
-  showSprite() {
+  draw() {
     contextGA.save();
     contextGA.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
     contextGA.rotate(this.angle);

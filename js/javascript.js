@@ -66,24 +66,35 @@ function displayEverything() {
 
 	// waves
 	for(let trebleWave of trebleWaves) {
-		trebleWave.showShape();
-		trebleWave.showSprite();
+		trebleWave.draw();
 	}
 	for(let bassWave of bassWaves) {
-		bassWave.showShape();
+		bassWave.draw();
 	}
 
 	// terrain
-	terrain.show();
+	terrain.draw();
 
 	// lander
-	probe.showShape();
-	probe.showSprite();
+	probe.draw();
+
+	// show developer-intended hitboxes and additional stuff (comment out this line)
+	// showDeveloperMode();
+}
+
+function showDeveloperMode() {
+	for(let trebleWave of trebleWaves) {
+		trebleWave.showDev();
+	}
+	for(let bassWave of bassWaves) {
+		bassWave.showDev();
+	}
+	probe.showDev();
 }
 
 function updateWaves() {
 	// spawn waves
-	if(trebleWaves.length < 3) {
+	if(trebleWaves.length < 2) {
 		let randomIndex = randomInt(0, spawnPoints.length);
 		let spawnPoint = spawnPoints[randomIndex];
 		let color = randomInt(1, 4);
@@ -172,21 +183,21 @@ function collisionDetection() {
 				// blue wave
 				if(trebleWave.type == 1) {
 					let force = new Vector(trebleWave.velocity.x, trebleWave.velocity.y);
-					force.mult(0.02);
+					force.mult(0.05);
 					probe.applyForce(force);
 					trebleWave.dying = true;
 				}
 				//green wave
 				else if(trebleWave.type == 2) {
 					let force = new Vector(trebleWave.velocity.x, trebleWave.velocity.y);
-					force.mult(0.04);
+					force.mult(0.05);
 					probe.applyForce(force);
 					trebleWave.dying = true;
 				}
 				//red wave
 				else if(trebleWave.type == 3) {
 					let force = new Vector(trebleWave.velocity.x, trebleWave.velocity.y);
-					force.mult(0.06);
+					force.mult(0.05);
 					probe.applyForce(force);
 					probe.applyTorque(trebleWave.clockwise);
 					trebleWave.dying = true;

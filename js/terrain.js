@@ -22,7 +22,7 @@ class Terrain {
     console.log(this.elevationMap);
   }
 
-  show() {
+  draw() {
     let previousStrokeStyle = contextGA.strokeStyle;
     contextGA.strokeStyle = 'rgb(255, 255, 255)';
 
