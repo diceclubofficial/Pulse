@@ -101,7 +101,10 @@ class Vector {
   }
 
   get angle() {
-    return Math.PI/2 + Math.atan2(this.components[1], this.components[0]);
+    // angle in radians measured from vertical (positive is clockwise)
+    let angle = Math.PI/2 + Math.atan2(this.components[1], this.components[0]);
+    if(angle > Math.PI) angle = -(2*Math.PI - angle);
+    return angle;
   }
 
   toString(){

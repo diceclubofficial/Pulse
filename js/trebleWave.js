@@ -2,7 +2,7 @@
 
 class TrebleWave {
 
-  constructor(x, y, color){
+  constructor(x, y, color) {
     // type of wave (1-blue, 2-green, 3-red)
     this.type = 0;
     if(typeof color == "number") this.type = color;
@@ -41,13 +41,13 @@ class TrebleWave {
     // dimensions
     this.width = 120;
     this.height = this.width * (this.spriteHeight / this.spriteWidth); // calculate height based on width and sprite size to not distort the image
-    let verticesRect = [
+    let vertices = [
       new Vector(this.x, this.y),
       new Vector(this.x + this.width, this.y),
       new Vector(this.x + this.width, this.y + this.height),
       new Vector(this.x, this.y + this.height)
     ]; //rectangle
-    this.shape = new Polygon(verticesRect);
+    this.shape = new Polygon(vertices);
 
     // calculate angle based on velocity vector and rotate shape
     this.angle = this.velocity.angle;
@@ -61,7 +61,7 @@ class TrebleWave {
     this.animationTimer = 0;
 
     // for calculating when to start dying
-    this.distanceFromCenter = distance(this.x, this.y, canvasGA.width/2, canvasGA.height/2);;
+    this.distanceFromCenter = distance(this.x, this.y, canvasGA.width/2, canvasGA.height/2);
     this.dying = false;
     this.dyingTimerMax = 20;
     this.dyingTimer = this.dyingTimerMax;
@@ -118,21 +118,52 @@ class TrebleWave {
     contextGA.restore();
   }
 
+  collisionDetection() {
+    // simple and fast big box collision detection
+		if(probe.x + probe.width > this.x && probe.x < this.x + this.width && probe.y + probe.height > this.y - this.width/2 + this.height/2 && probe.y < this.y + this.width) {
+			// if it passes, do more complex and slower polygon collision detection
+			if(this.shape.overlapsPolygon(probe.shape) && this.alive) {
+				// blue wave
+				if(this.type == 1) {
+					let force = new Vector(this.velocity.x, this.velocity.y);
+					force.mult(0.05);
+					probe.applyForce(force);
+					this.dying = true;
+				}
+				//green wave
+				else if(this.type == 2) {
+					let force = new Vector(this.velocity.x, this.velocity.y);
+					force.mult(0.05);
+					probe.applyForce(force);
+					this.dying = true;
+				}
+				//red wave
+				else if(this.type == 3) {
+					let force = new Vector(this.velocity.x, this.velocity.y);
+					force.mult(0.05);
+					probe.applyForce(force);
+					probe.applyTorque(this.clockwise);
+					this.dying = true;
+				}
+			}
+		}
+  }
+
+  // private
   animate() {
     this.currImage += 1;
     if(this.currImage >= this.numImages) this.currImage = 0;
   }
 
-  get x(){
+  get x() {
     return this.coordinates.x;
   }
 
-  get y(){
+  get y() {
     return this.coordinates.y;
   }
 
-  toString(){
+  toString() {
     return (`Acceleration: ${this.acceleration.toString()} \n Velocity: ${this.velocity.toString()} \n Location: ${this.coordinates.toString()}`);
   }
-
 }

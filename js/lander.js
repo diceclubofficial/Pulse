@@ -38,6 +38,12 @@ class Lander {
     this.fuel = 3000;
     this.fillStyle = 'rgb(255, 255, 255)';
 
+    // collision detection with ground
+    this.impactGround = true; //true on first frame of touching ground
+    this.touchingGround = false; //true if at least one vertex is touching the ground
+    this.inGround = false; //true if two or more vertices are touching the ground; lander is then unable to move or take off again
+    this.groundedVertexPositions = [];
+
     // sprite animation
     this.numImages = 3, this.currImage = 0;
     this.animationDirection = 1;
@@ -46,31 +52,13 @@ class Lander {
     this.animationTimer = 0;
   }
 
-  applyForce(force){ // force need be a vector
-    this.acceleration.add(force);
-  }
-
-  applyTorque(clockwise){
-    if (clockwise) {
-      this.angularAcceleration += 0.01;
-    } else {
-      this.angularAcceleration -= 0.01;
-    }
-  }
-
-  applyThrusters(){
-    let thrustForce = new Vector(this.thrusters * Math.cos(this.angle-(Math.PI/2)), this.thrusters * Math.sin(this.angle-(Math.PI/2)));
-
-    this.thrustersOn = true;
-
-    this.acceleration.add(thrustForce)
-  }
-
   update() {
     // Translational motion
-    this.velocity.add(this.acceleration);
-    this.coordinates.add(this.velocity);
-    this.shape.translate(this.velocity);
+    if(!this.inGround) {
+      this.velocity.add(this.acceleration);
+      this.coordinates.add(this.velocity);
+      this.shape.translate(this.velocity);
+    }
 
     this.acceleration.mult(0);
 
@@ -89,6 +77,58 @@ class Lander {
     if(this.animationTimer <= 0) {
       this.animationTimer = this.framesPerAnimation;
       this.animate();
+    }
+
+    if(this.inGround) {
+      this.velocity.mult(0);
+      this.acceleration.mult(0);
+      this.angularVelocity = 0;
+      this.angularAcceleration = 0;
+    }
+
+    // If touchingGround
+    outer: if(this.touchingGround) {
+      this.fillStyle = "rgb(255, 0, 0)";
+      // On first impact, bounce velocity
+      if(this.impactGround) {
+        let velMult = -0.2;
+        this.velocity = new Vector(this.velocity.x*velMult, this.velocity.y*velMult);
+        if(Math.abs(this.velocity.y) < 1) {
+          this.velocity.mult(0);
+        }
+      }
+      else if(this.velocity.y > 0) {
+        this.velocity.mult(0);
+      }
+      this.impactGround = false;
+      // If two or more vertices are touching the ground, the lander is static
+      if(this.groundedVertexPositions.length >= 2 || this.groundedVertexPositions[0] == 0) {
+        this.inGround = true;
+        return;
+      }
+      // Apply torque on vertices
+      let totalTorque = 0;
+      for(let i = 0; i < this.shape.vertices.length; i++) {
+        let vertex = this.shape.vertices[i];
+
+        // If the vertex is not grounded, add torque
+        if(!this.groundedVertexPositions.includes(i)) {
+          let direction = new Vector(vertex.x, vertex.y);
+          direction.sub(this.shape.centroid);
+          let angle = direction.angle;
+          let torque = direction.magnitude*Math.sin(angle);
+          totalTorque += torque;
+        }
+      }
+      if(Math.abs(totalTorque) < 1) totalTorque = 0;
+      let clockwise = totalTorque > 0 ? true : false;
+      let torqueMultiplier = Math.abs(totalTorque)*0.01;
+      this.applyTorque(clockwise, torqueMultiplier);
+    }
+    else {
+      this.fillStyle = "rgb(0, 255, 0)";
+      this.impactGround = true;
+      this.groundedVertexPositions = [];
     }
 
     // If offscreen, print coordinates
@@ -112,6 +152,28 @@ class Lander {
       contextGA.drawImage(this.landerStaticImage, -this.width/2, -this.height/2, this.width, this.height);
     }
     contextGA.restore();
+  }
+
+  applyForce(force) { // force need be a vector
+    this.acceleration.add(force);
+  }
+
+  applyTorque(clockwise, multiplier) {
+    if(multiplier == undefined) multiplier = 1;
+    if(clockwise) {
+      this.angularAcceleration += 0.01 * multiplier;
+    }
+    else {
+      this.angularAcceleration -= 0.01 * multiplier;
+    }
+  }
+
+  applyThrusters() {
+    let thrustForce = new Vector(this.thrusters * Math.cos(this.angle-(Math.PI/2)), this.thrusters * Math.sin(this.angle-(Math.PI/2)));
+
+    this.thrustersOn = true;
+
+    this.acceleration.add(thrustForce)
   }
 
   // private

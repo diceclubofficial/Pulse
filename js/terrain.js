@@ -1,3 +1,5 @@
+"use strict"
+
 class Terrain {
   constructor() {
     // Fill a raw elevation map with noise for each pixel in width
@@ -12,7 +14,7 @@ class Terrain {
     this.rawElevationMap = [];
     this.elevationMap = [];
 
-    for (var i = 0; i < canvasGA.width + this.segmentLength; i++) {
+    for(let i = 0; i < canvasGA.width + this.segmentLength; i++) {
       this.rawElevationMap[i] = this.noise.getValue(this.seed + (i*this.noiseStep))*100;
       if (i%this.segmentLength == 0) {
         this.elevationMap[i/this.segmentLength] = (Math.trunc(this.seaLevel + this.rawElevationMap[i]));
@@ -27,13 +29,28 @@ class Terrain {
     contextGA.strokeStyle = 'rgb(255, 255, 255)';
 
     contextGA.moveTo(0, this.elevationMap[0]);
-    for (var i = 0; i < this.elevationMap.length; i++) {
+    for (let i = 0; i < this.elevationMap.length; i++) {
       contextGA.lineTo(i*this.segmentLength, this.elevationMap[i]);
     }
     contextGA.stroke();
 
 
     contextGA.strokeStyle = previousStrokeStyle;
+  }
+
+  collisionDetection() {
+    // Check vertices of lander polygon
+  	outer: for(let i = 0; i < probe.shape.vertices.length; i++) {
+  		let vertex = probe.shape.vertices[i];
+  		if(this.isPointBelowSurface(vertex.x, vertex.y)) {
+  			probe.touchingGround = true;
+  			if(!probe.groundedVertexPositions.includes(i)) probe.groundedVertexPositions.push(i);
+  			break outer;
+  		}
+  		else {
+  			probe.touchingGround = false;
+  		}
+  	}
   }
 
   getSlopeAt(x) {
@@ -54,7 +71,6 @@ class Terrain {
     }
   }
 
-
   regenerate() {
     // New seed
     this.seed = Math.random()*256;
@@ -69,7 +85,4 @@ class Terrain {
       }
     }
   }
-
-
-
 }

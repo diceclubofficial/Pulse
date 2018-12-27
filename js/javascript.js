@@ -28,7 +28,7 @@ for(let i = 0; i < 15; i++) {
 // Spawn points for waves (offscreen bottom)
 const w = canvasGA.width;
 const h = canvasGA.height;
-let spawnPoints = [
+let waveSpawnPoints = [
 	new Vector(-10, h - 50),
 	new Vector(0, h + 20),
 	new Vector(w/3, h + 10),
@@ -54,7 +54,7 @@ function play() {
 	updateWaves();
 
 	// Update the lander
-	probe.applyForce(new Vector(0, 0.05));
+	if(!probe.inGround) probe.applyForce(new Vector(0, 0.05));
 	probe.update();
 
 	// Draw everything
@@ -94,16 +94,16 @@ function showDeveloperMode() {
 
 function updateWaves() {
 	// spawn waves
-	if(trebleWaves.length < 2) {
-		let randomIndex = randomInt(0, spawnPoints.length);
-		let spawnPoint = spawnPoints[randomIndex];
+	if(trebleWaves.length < 3) {
+		let randomIndex = randomInt(0, waveSpawnPoints.length);
+		let spawnPoint = waveSpawnPoints[randomIndex];
 		let color = randomInt(1, 4);
 		trebleWaves.push(new TrebleWave(spawnPoint.x, spawnPoint.y, color));
 	}
 	if(bassWaves.length < 1) {
-		let spawnPoint = spawnPoints[bassWaveSpawnPoint];
+		let spawnPoint = waveSpawnPoints[bassWaveSpawnPoint];
 		bassWaveSpawnPoint++;
-		bassWaveSpawnPoint %= spawnPoints.length;
+		bassWaveSpawnPoint %= waveSpawnPoints.length;
 		bassWaves.push(new BassWave(spawnPoint.x, spawnPoint.y));
 	}
 
@@ -132,78 +132,37 @@ function updateWaves() {
 	}
 }
 
+function collisionDetection() {
+	// lander with terrain
+	terrain.collisionDetection();
+
+	// lander with bassWaves
+	for(let bassWave of bassWaves) {
+		bassWave.collisionDetection();
+	}
+	// lander with trebleWaves
+	for(let trebleWave of trebleWaves) {
+		trebleWave.collisionDetection();
+	}
+}
+
 function applyKeyboardInput() {
-	if (keys[UP] || keys[W]) {
+	if ((keys[UP] || keys[W]) && !probe.inGround) {
 		probe.applyThrusters();
 	}
 	else {
 		probe.thrustersOn = false;
 	}
-	if (keys[RIGHT] || keys[D]) {
+	if ((keys[RIGHT] || keys[D]) && !probe.inGround) {
 		probe.applyTorque(true);
 	}
 
-	if (keys[LEFT] || keys[A]) {
+	if ((keys[LEFT] || keys[A]) && !probe.inGround) {
 		probe.applyTorque(false);
 	}
 
 	if (keys[DOWN] || keys[S]) {
 		terrain.regenerate();
-	}
-}
-
-function collisionDetection() {
-	// lander with terrain
-	if (terrain.isPointBelowSurface(probe.x, probe.y) || terrain.isPointBelowSurface(probe.x + probe.width, probe.y) || terrain.isPointBelowSurface(probe.x + probe.width, probe.y + probe.height) || terrain.isPointBelowSurface(probe.x, probe.y + probe.height)) {
-		probe.fillStyle = "rgb(255, 0, 0)";
-	} else {
-		probe.fillStyle = "rgb(0, 255, 0)";
-	}
-
-	// lander with bassWaves
-	for(let bassWave of bassWaves) {
-		if(probe.shape.overlapsArc(bassWave.shape, 30)) {
-			console.log("overlaps with bass wave");
-			let towardsLander = new Vector(probe.x, probe.y);
-			towardsLander.sub(bassWave.coordinates);
-			let force = new Vector(towardsLander.x, towardsLander.y);
-			force.magnitude = 3;
-			probe.applyForce(force);
-
-			bassWave.alive = false;
-		}
-	}
-
-	// lander with trebleWaves
-	for(let trebleWave of trebleWaves) {
-		// simple and fast big box collision detection
-		if(probe.x + probe.width > trebleWave.x && probe.x < trebleWave.x + trebleWave.width && probe.y + probe.height > trebleWave.y - trebleWave.width/2 + trebleWave.height/2 && probe.y < trebleWave.y + trebleWave.width) {
-			// if it passes, do more complex and slower polygon collision detection
-			if(trebleWave.shape.overlapsPolygon(probe.shape) && trebleWave.alive) {
-				// blue wave
-				if(trebleWave.type == 1) {
-					let force = new Vector(trebleWave.velocity.x, trebleWave.velocity.y);
-					force.mult(0.05);
-					probe.applyForce(force);
-					trebleWave.dying = true;
-				}
-				//green wave
-				else if(trebleWave.type == 2) {
-					let force = new Vector(trebleWave.velocity.x, trebleWave.velocity.y);
-					force.mult(0.05);
-					probe.applyForce(force);
-					trebleWave.dying = true;
-				}
-				//red wave
-				else if(trebleWave.type == 3) {
-					let force = new Vector(trebleWave.velocity.x, trebleWave.velocity.y);
-					force.mult(0.05);
-					probe.applyForce(force);
-					probe.applyTorque(trebleWave.clockwise);
-					trebleWave.dying = true;
-				}
-			}
-		}
 	}
 }
 
@@ -224,14 +183,6 @@ function drawBackground(){
 
 // PROCESSING USER INPUT
 function processKeyDownInput(event) {
-	// var key = event.key;
-	// if (key == 'ArrowUp' || key == 'w') {
-	// 	probe.applyThrusters();
-	// } else if (key == 'ArrowLeft' || key == 'a') {
-	// 	probe.applyTorque(false);
-	// } else if (key == 'ArrowRight' || key == 'd') {
-	// 	probe.applyTorque(true);
-	// }
 	if(event.key == ' '){
 		console.log(keys);
 	}

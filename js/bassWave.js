@@ -2,7 +2,7 @@
 
 class BassWave {
 
-  constructor(x, y){
+  constructor(x, y) {
     // vector quantities
     this.coordinates = new Vector(x, y);
     // this.speed = randomInt(5, 10);
@@ -90,6 +90,19 @@ class BassWave {
     contextGA.stroke();
 
     contextGA.restore();
+  }
+
+  collisionDetection() {
+    if(probe.shape.overlapsArc(this.shape, 30)) {
+			console.log("overlaps with bass wave");
+			let towardsLander = new Vector(probe.x, probe.y);
+			towardsLander.sub(this.coordinates);
+			let force = new Vector(towardsLander.x, towardsLander.y);
+			force.magnitude = 3;
+			probe.applyForce(force);
+
+			this.alive = false;
+		}
   }
 
   get x(){
