@@ -126,7 +126,7 @@ class Lander {
   }
 
   showDev() {
-    this.shape.draw(contextGA, this.fillStyle);
+    this.shape.draw(contextGA, this.fillStyle, true);
 
     //show width and height
     contextGA.save();

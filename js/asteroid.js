@@ -86,6 +86,9 @@ class Asteroid {
       this.fillStyle = "orange";
     }
 
+    // show asteroid shape with points
+    this.shape.draw(contextGA, this.fillStyle, true);
+
     // show radius
     contextGA.save();
     contextGA.strokeStyle = "Tomato";
@@ -116,8 +119,8 @@ class Asteroid {
   }
 
   draw() {
-    // draw shape
-    this.shape.draw(contextGA, this.fillStyle);
+    // draw shape without points
+    this.shape.draw(contextGA, this.fillStyle, false);
   }
 
   collisionDetection() {

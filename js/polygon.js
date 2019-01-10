@@ -26,7 +26,8 @@ class Polygon {
     }
   }
 
-  draw(context, color) {
+  draw(context, color, drawPoints) {
+    context.save();
     context.strokeStyle = color;
     // draw vertices and edges
     for(let i = 0; i < this.vertices.length; i++) {
@@ -35,20 +36,26 @@ class Polygon {
       if(i == this.vertices.length - 1) nextPoint = this.vertices[0];
       else nextPoint = this.vertices[i + 1];
       // vertex
-      context.beginPath();
-      context.arc(currPoint.x, currPoint.y, 2, 0, 2*Math.PI);
-      context.stroke();
+      if(drawPoints) {
+        context.beginPath();
+        context.arc(currPoint.x, currPoint.y, 2, 0, 2*Math.PI);
+        context.stroke();
+      }
       // edges
+      context.lineWidth = drawPoints ? 1 : 2;
       context.beginPath();
       context.moveTo(currPoint.x, currPoint.y);
       context.lineTo(nextPoint.x, nextPoint.y);
       context.stroke();
     }
 
-    // draw centroid
-    context.beginPath();
-    context.arc(this.centroid.x, this.centroid.y, 2, 0, 2*Math.PI);
-    context.stroke();
+    // centroid
+    if(drawPoints) {
+      context.beginPath();
+      context.arc(this.centroid.x, this.centroid.y, 2, 0, 2*Math.PI);
+      context.stroke();
+    }
+    context.restore();
   }
 
   project(axis) {
