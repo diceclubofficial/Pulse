@@ -108,8 +108,8 @@ class Asteroid {
     contextGA.textAlign = "center";
     contextGA.fillStyle = this.fillStyle;
     let offset = this.height*0.25;
-    // dwarf only if not zero
-    if(this.dwarf != 0) contextGA.fillText(this.dwarf, this.shape.centroid.x, this.shape.centroid.y);
+    // velocity
+    contextGA.fillText(Math.round(this.velocity.x) + ", " + Math.round(this.velocity.y), this.shape.centroid.x, this.shape.centroid.y);
     // energy
     contextGA.fillText(Math.round(this.energy), this.shape.centroid.x, this.shape.centroid.y + offset);
     contextGA.restore();
@@ -199,7 +199,7 @@ class Asteroid {
 
   collisionDetectionWithTerrain() {
     // simple and fast
-    if(this.y + this.height > terrain.seaLevel - terrain.maxDiff) {
+    if(this.y + this.height > terrain.seaLevel - terrain.maxElevationDiff) {
       // check if each vertex is below the terrain
       for(let vertex of this.shape.vertices) {
         if(terrain.isPointBelowSurface(vertex.x, vertex.y)) {

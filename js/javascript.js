@@ -41,10 +41,12 @@ let waveSpawnPoints = [
 ];
 let bassWaveSpawnPoint = 0;
 let trebleWaves = [];
+let maxTrebleWaves = 0;
 let bassWaves = [];
+let maxBassWaves = 0;
 
 let asteroids = [];
-const maxAsteroids = 8;
+let maxAsteroids = 8;
 let offsetX = 250;
 let offsetY = 250;
 let asteroidSpawnPoints = [
@@ -140,13 +142,13 @@ function updateAsteroids() {
 
 function updateWaves() {
 	// spawn waves
-	if(trebleWaves.length < 3) {
+	if(trebleWaves.length < maxTrebleWaves) {
 		let randomIndex = randomInt(0, waveSpawnPoints.length);
 		let spawnPoint = waveSpawnPoints[randomIndex];
 		let color = randomInt(1, 4);
 		trebleWaves.push(new TrebleWave(spawnPoint.x, spawnPoint.y, color));
 	}
-	if(bassWaves.length < 1) {
+	if(bassWaves.length < maxBassWaves) {
 		let spawnPoint = waveSpawnPoints[bassWaveSpawnPoint];
 		bassWaveSpawnPoint++;
 		bassWaveSpawnPoint %= waveSpawnPoints.length;
@@ -195,17 +197,17 @@ function collisionDetection() {
 }
 
 function applyKeyboardInput() {
-	if ((keys[UP] || keys[W]) && !probe.inGround) {
+	if ((keys[UP] || keys[W]) && !probe.touchingGround) {
 		probe.applyThrusters();
 	}
 	else {
 		probe.thrustersOn = false;
 	}
-	if ((keys[RIGHT] || keys[D]) && !probe.inGround) {
+	if ((keys[RIGHT] || keys[D]) && !probe.touchingGround) {
 		probe.applyTorque(true);
 	}
 
-	if ((keys[LEFT] || keys[A]) && !probe.inGround) {
+	if ((keys[LEFT] || keys[A]) && !probe.touchingGround) {
 		probe.applyTorque(false);
 	}
 
