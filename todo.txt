@@ -1,15 +1,27 @@
 
-todo:
--make asteroids/debris that physically crash against the lander (use conservation of momentum) (also find and use MTV)
+todo current:
+-asteroids
+
+todo later:
 -make music interpretation
--make terminal velocity
--add fuel gauge and other stats (how to do text in canvas?)
--add sprites to bassWaves
+-make asteroid sprites generate with the shape
+-do concave polygon collision detection
+-fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center)
+-make rotational collisions and rotational energy
+-increase fps to 60 or 120 and change numbers accurately
+-add "game area" class to handle scrolling up and down (moving from asteroid phase to lander phase)
+-add fuel gauge and other stats
+-add sprites to bassWaves (need more art)
 -add game states and title screen
 -make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
 
 issues:
 -bass waves go way too fast and are too large to avoid - need to playtest
+
+random ideas:
+-have music from planet fade in as lander descends (start with lonely machinery beeping and fade in music as the planet and waves are visible)
+-asteroids collide on the beat in the middle of the screen and explode
+-make terminal velocity for lander
 
 wave names:
 -treble - small fast waves (blue, green, and red rectangular waves)

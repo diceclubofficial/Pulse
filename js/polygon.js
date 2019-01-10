@@ -84,9 +84,15 @@ class Polygon {
     }
   }
 
-  overlapsPolygon(polygon2) {
+  overlapsPolygon(polygon2, returnMTV) {
     let polygon1 = this;
+    if(returnMTV == undefined) returnMTV = false;
     // Add normals to axes and remove parallel axes
+    let minOverlap;
+    let smallestAxis;
+    if(returnMTV) {
+      minOverlap = Number.MAX_SAFE_INTEGER;
+    }
     let normals1 = polygon1.normals;
     let normals2 = polygon2.normals;
     let normals = normals1.concat(normals2);
@@ -108,8 +114,20 @@ class Polygon {
       if(!projection1.overlaps(projection2)) {
         return false;
       }
+      else if(returnMTV) {
+        let overlap = projection1.getOverlap(projection2);
+        if(overlap < minOverlap) {
+          minOverlap = overlap;
+          smallestAxis = axis;
+        }
+      }
     }
-    return true;
+    if(returnMTV) {
+      let mtv = new Vector(smallestAxis.x, smallestAxis.y);
+      mtv.magnitude = minOverlap;
+      return mtv;
+    }
+    else return true;
   }
 
   overlapsCircle(circle) {
@@ -217,6 +235,25 @@ class Polygon {
       normals[i] = this.edges[i].perp();
     }
     return normals;
+  }
+
+  get area() {
+    let area = 0;
+    let j = this.vertices.length - 1;  // The last vertex is the 'previous' one to the first
+
+    for(let i = 0; i < this.vertices.length; i++) {
+      area += (this.vertices[j].x + this.vertices[i].x) * (this.vertices[j].y - this.vertices[i].y);
+      j = i;  //j is previous vertex to i
+    }
+    area /= 2;
+    area = Math.abs(area);
+    return area;
+  }
+
+  set centroid(newCentroid) {
+    let difference = new Vector(newCentroid.x, newCentroid.y);
+    difference.sub(this.x, this.y);
+    this.translate(difference);
   }
 
   toString() {

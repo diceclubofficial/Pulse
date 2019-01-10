@@ -1,7 +1,7 @@
 "use strict"
 class Lander {
 
-  constructor(x, y){
+  constructor(x, y) {
     // image data
     this.landerThrusterSheet = new Image();
     this.landerThrusterSheet.src = "images/landerThrusterSheet.png";
@@ -14,20 +14,8 @@ class Lander {
     this.velocity = new Vector(0, 0);
     this.acceleration = new Vector(0, 0);
 
-    // dimensions
-    this.mass = 1;
-    this.width = 50;
-    this.height = this.width * (this.spriteHeight / this.spriteWidth); // calculate height based on width and sprite size to not distort the image
-    let xs = this.width*(3/42), xl = this.width*(11/42); //x-small and x-large
-    let ys = this.height*(15/50), yl = this.height*(47/50); //y-small and y-large
-    let vertices = [
-      new Vector(this.x + this.width/2, this.y),
-      new Vector(this.x + this.width - xl, this.y + ys),
-      new Vector(this.x + this.width - xs, this.y + yl),
-      new Vector(this.x + xs, this.y + yl),
-      new Vector(this.x + xl, this.y + ys),
-    ]; //pentagon
-    this.shape = new Polygon(vertices);
+    this.shape;
+    this.generateDimensions();
 
     this.angle = 0;
     this.angularVelocity = 0;
@@ -139,6 +127,12 @@ class Lander {
 
   showDev() {
     this.shape.draw(contextGA, this.fillStyle);
+
+    //show width and height
+    contextGA.save();
+    contextGA.strokeStyle = "pink";
+    contextGA.strokeRect(this.x + this.width/2 - this.boxRadius, this.y + this.height/2 - this.boxRadius, 2*this.boxRadius, 2*this.boxRadius);
+    contextGA.restore();
   }
 
   draw() {
@@ -154,7 +148,34 @@ class Lander {
     contextGA.restore();
   }
 
+  generateDimensions() {
+    // dimensions
+    this.width = 50;
+    this.height = this.width * (this.spriteHeight / this.spriteWidth); // calculate height based on width and sprite size to not distort the image
+    let xs = this.width*(3/42), xl = this.width*(11/42); //x-small and x-large
+    let ys = this.height*(15/50), yl = this.height*(47/50); //y-small and y-large
+    let vertices = [
+      new Vector(this.x + this.width/2, this.y),
+      new Vector(this.x + this.width - xl, this.y + ys),
+      new Vector(this.x + this.width - xs, this.y + yl),
+      new Vector(this.x + xs, this.y + yl),
+      new Vector(this.x + xl, this.y + ys),
+    ]; //pentagon
+    this.shape = new Polygon(vertices);
+    this.mass = 1; //equal to 1
+
+    let maxDistance = 0;
+    for(let vertex of this.shape.vertices) {
+      let thisDistance = distance(vertex.x, vertex.y, this.shape.x, this.shape.y);
+      if(thisDistance > maxDistance) {
+        maxDistance = thisDistance;
+      }
+    }
+    this.boxRadius = maxDistance;
+  }
+
   applyForce(force) { // force need be a vector
+    force.div(this.mass);
     this.acceleration.add(force);
   }
 
@@ -173,7 +194,7 @@ class Lander {
 
     this.thrustersOn = true;
 
-    this.acceleration.add(thrustForce)
+    this.applyForce(thrustForce);
   }
 
   // private
@@ -198,11 +219,11 @@ class Lander {
     }
   }
 
-  get x(){
+  get x() {
     return this.coordinates.x;
   }
 
-  get y(){
+  get y() {
     return this.coordinates.y;
   }
 
@@ -214,7 +235,5 @@ class Lander {
 
   toString(){
     return (`Acceleration: ${this.acceleration.toString()} \n Velocity: ${this.velocity.toString()} \n Location: ${this.coordinates.toString()}`);
-
   }
-
 }

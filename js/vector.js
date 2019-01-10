@@ -68,9 +68,9 @@ class Vector {
   }
 
   // to draw a vector from a point and scaled up a certain value
-  draw(context, origin, scalar) {
+  draw(context, origin, scalar, color) {
     context.save();
-    context.strokeStyle = "Tomato";
+    context.strokeStyle = color;
     context.beginPath();
     context.moveTo(origin.x, origin.y);
     let distance = new Vector(this.x, this.y);
@@ -79,7 +79,7 @@ class Vector {
     context.lineTo(target.x, target.y);
     context.stroke();
     context.restore();
-    // console.log("Drawing from (" + origin.x + ", " + origin.y + ") to (" + target.x + ", " + target.y +")")
+    console.log("Drawing from (" + origin.x + ", " + origin.y + ") to (" + target.x + ", " + target.y +")")
   }
 
   get x() {

@@ -1,4 +1,10 @@
 
+function getFinalCollisionVelocity(m1, v1, m2, v2) {
+  let numerator = m1*v1 + m2*v2 + m2*(v2 - v1);
+  let denomenator = m1 + m2;
+  return numerator/denomenator;
+}
+
 function rotatePoint(vector, theta, origin) {
   let x0 = vector.x - origin.x;
   let y0 = vector.y - origin.y;
@@ -10,7 +16,7 @@ function rotatePoint(vector, theta, origin) {
   return new Vector(x1, y1);
 }
 
-function map(value, li, hi, lt, ht){
+function map(value, li, hi, lt, ht) {
 	return (value/(hi-li))*(ht-lt)+lt;
 }
 

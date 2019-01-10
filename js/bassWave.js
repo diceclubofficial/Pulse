@@ -64,7 +64,7 @@ class BassWave {
 
   showDev() {
     contextGA.save();
-    contextGA.strokeStyle = this.fillStyle;
+    contextGA.strokeStyle = "Tomato";
 
     // center
     contextGA.beginPath();

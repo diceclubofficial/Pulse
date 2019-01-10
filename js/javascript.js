@@ -15,6 +15,9 @@ const W = 87,
 let keys = [];
 
 let probe = new Lander(canvasGA.width/2, 20);
+const MASS_CONSTANT = probe.shape.area; // 1 mass unit = the mass of the lander
+const GRAVITY = new Vector(0, 0.05);
+
 let terrain = new Terrain();
 let stars = [];
 // Randomly generate 15 stars
@@ -37,31 +40,40 @@ let waveSpawnPoints = [
 	new Vector(w + 10, h - 50),
 ];
 let bassWaveSpawnPoint = 0;
-
 let trebleWaves = [];
 let bassWaves = [];
 
-setInterval(play, 33);
+let asteroids = [];
+const maxAsteroids = 8;
+let offsetX = 250;
+let offsetY = 250;
+let asteroidSpawnPoints = [
+	new Vector(-offsetX, randomValue(0, canvasGA.height)),
+	new Vector(canvasGA.width + offsetX, randomValue(0, canvasGA.height)),
+	new Vector(randomValue(0, terrain.seaLevel - offsetY), -offsetY),
+];
+
+let fps = 30;
+setInterval(play, 1000/fps);
 
 function play() {
 	// Check array keys for input
 	applyKeyboardInput();
 
-	// Do collision detection
-	collisionDetection();
-
-	// Update all the waves
+	// Update everything
 	updateWaves();
-
-	// Update the lander
-	if(!probe.inGround) probe.applyForce(new Vector(0, 0.05));
+	updateAsteroids();
+	if(!probe.inGround) probe.applyForce(GRAVITY);
 	probe.update();
 
-	// Draw everything
-	displayEverything();
+	collisionDetection();
+
+	drawEverything();
+	// show developer-intended hitboxes and additional stuff (comment out this line)
+	showDeveloperMode();
 }
 
-function displayEverything() {
+function drawEverything() {
 	drawBackground();
 
 	// waves
@@ -72,14 +84,16 @@ function displayEverything() {
 		bassWave.draw();
 	}
 
+	// asteroids
+	for(let asteroid of asteroids) {
+		asteroid.draw();
+	}
+
 	// terrain
 	terrain.draw();
 
 	// lander
 	probe.draw();
-
-	// show developer-intended hitboxes and additional stuff (comment out this line)
-	// showDeveloperMode();
 }
 
 function showDeveloperMode() {
@@ -89,7 +103,39 @@ function showDeveloperMode() {
 	for(let bassWave of bassWaves) {
 		bassWave.showDev();
 	}
+	for(let asteroid of asteroids) {
+		asteroid.showDev();
+	}
+	terrain.showDev();
 	probe.showDev();
+}
+
+function spawnAsteroidOffscreen() {
+	let randomIndex = randomInt(0, asteroidSpawnPoints.length);
+	let spawnPoint = asteroidSpawnPoints[randomIndex];
+	let newAsteroid = new Asteroid(spawnPoint.x, spawnPoint.y);
+	asteroids.push(new Asteroid(spawnPoint.x, spawnPoint.y));
+}
+
+function updateAsteroids() {
+	// Spawn asteroids
+	if(asteroids.length < maxAsteroids) {
+		spawnAsteroidOffscreen();
+	}
+
+	// Despawn asteroids
+	let aliveAsteroids = [];
+	for(let asteroid of asteroids) {
+		if(asteroid.alive) {
+			aliveAsteroids.push(asteroid);
+		}
+	}
+	asteroids = aliveAsteroids;
+
+	// Call update()
+	for(let asteroid of asteroids) {
+		asteroid.update();
+	}
 }
 
 function updateWaves() {
@@ -133,16 +179,18 @@ function updateWaves() {
 }
 
 function collisionDetection() {
-	// lander with terrain
 	terrain.collisionDetection();
 
-	// lander with bassWaves
 	for(let bassWave of bassWaves) {
 		bassWave.collisionDetection();
 	}
-	// lander with trebleWaves
+
 	for(let trebleWave of trebleWaves) {
 		trebleWave.collisionDetection();
+	}
+
+	for(let asteroid of asteroids) {
+		asteroid.collisionDetection();
 	}
 }
 
@@ -200,7 +248,6 @@ function processMouseInput(event) {
 	console.log(relX + ", " + relY);
 }
 
-
 canvasGA.addEventListener('click',processMouseInput);
-window.addEventListener('keydown', processKeyDownInput);
-window.addEventListener('keyup', processKeyUpInput);
+document.addEventListener('keydown', processKeyDownInput);
+document.addEventListener('keyup', processKeyUpInput);

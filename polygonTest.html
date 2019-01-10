@@ -19,24 +19,24 @@
     var context = canvas.getContext("2d");
 
     // Polygon 1
-    let point1 = new Vector(50, 50);
-    let point2 = new Vector(100, 50);
-    let point3 = new Vector(125, 100);
-    let point4 = new Vector(100, 200);
-    let point5 = new Vector(50, 200);
-    let point6 = new Vector(25, 100);
+    let point1 = new Vector(450, 250);
+    let point2 = new Vector(500, 250);
+    let point3 = new Vector(525, 300);
+    let point4 = new Vector(500, 400);
+    let point5 = new Vector(450, 400);
+    let point6 = new Vector(425, 300);
     let points1 = [point1, point2, point3, point4, point5, point6];
     let polygon1 = new Polygon(points1);
+    console.log("area1", polygon1.area);
 
     // Polygon 2
-    let point01 = new Vector(100, 100);
-    let point02 = new Vector(400, 100);
-    let point03 = new Vector(400, 300);
-    let point04 = new Vector(200, 300);
+    let point01 = new Vector(150, 100);
+    let point02 = new Vector(450, 100);
+    let point03 = new Vector(450, 300);
+    let point04 = new Vector(150, 300);
     let points2 = [point01, point02, point03, point04];
     let polygon2 = new Polygon(points2);
-    // polygon2.rotate(Math.PI);
-    polygon2.translate(new Vector(100, 0));
+    console.log("area2", polygon2.area);
 
     // Circle
     let center = new Vector(170, 140);
@@ -46,16 +46,21 @@
     polygon1.draw(context, "blue");
     console.log("Polygon 1:")
     console.log(polygon1);
-    // polygon2.draw(context, "black");
-    // console.log("Polygon 2:")
-    // console.log(polygon2);
-    circle.draw(context, "red");
-    console.log("Circle: ");
-    console.log(circle);
+    polygon2.draw(context, "black");
+    console.log("Polygon 2:")
+    console.log(polygon2);
+    // circle.draw(context, "red");
+    // console.log("Circle: ");
+    // console.log(circle);
 
-    // console.log("Polygon1 overlaps Polygon2: " + polygon1.overlapsPolygon(polygon2));
+    let overlaps = polygon1.overlapsPolygon(polygon2, true);
 
-    console.log("Polygon1 overlaps Circle: " + polygon1.overlapsCircle(circle));
+    console.log("Polygon1 overlaps Polygon2: " + overlaps);
+    if(overlaps != false) {
+      overlaps.draw(context, new Vector(canvas.width/2, canvas.height/2), 2);
+      polygon2.translate(overlaps);
+      polygon2.draw(context, "Tomato");
+    }
 
 
   </script>
