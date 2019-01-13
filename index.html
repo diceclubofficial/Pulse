@@ -4,22 +4,10 @@
 <head>
 	<!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
 </head>
-<style media="screen">
-	#startButton {
-		font-family: sans-serif;
-		font-size: 40px;
-		text-align: center;
-		background-color: #000;
-		color: rgb(229, 66, 244);
-		border: 10px solid rgb(229, 66, 244);
-	}
-	.hidden {
-		display: none;
-	}
-</style>
+<link rel="stylesheet" type="text/css" href="style.css">
 <body>
 
-	<img id="titleScreen" src="images/titlePage1Large.png" alt="Title Page 1" width="800" height="800">
+	<img id="titleScreen" src="images/titlePage1Large.png" alt="Title Page 1" width="750" height="750">
 
 	<div id="startButton">START GAME</div>
 
@@ -27,8 +15,9 @@
 	<audio id="truffes" src="music/billvortexTruffes.mp3" type="audio/mpeg"></audio>
 	<audio id="incendie" src="music/billvortexIncendie.mp3" type="audio/mpeg"></audio>
 
+	<canvas class="hidden" id="game-area" width="800" height="750"></canvas>
 
-	<canvas class="hidden" id="game-area" width="800" height="800"></canvas>
+	<button id="muteButton" class="hidden" type="button" name="button"> Stop Music</button>
 
 	<script type="text/javascript" src="js/initializer.js"></script>
 

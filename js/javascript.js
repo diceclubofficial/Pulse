@@ -57,19 +57,28 @@ let asteroidSpawnPoints = [
 
 let audioContext = new AudioContext();
 audioContext.suspend();
-let audioElement = document.getElementById('incendie');
+let trackID = 'incendie';
+let audioElement = document.getElementById(trackID);
 let source = audioContext.createMediaElementSource(audioElement);
 
 let startButton = document.getElementById('startButton');
+let muteButton = document.getElementById('muteButton');
 window.onload = function() {
 	startButton.addEventListener('click', startGame);
+	muteButton.addEventListener('click', function() {
+		audioElement.pause();
+	});
 }
 
+
+
 function startGame() {
-	// show canvas
+	// remove start button and title screen
 	startButton.classList.add('hidden');
 	document.getElementById('titleScreen').classList.add('hidden');
+	// show canvas and mute button
 	canvasGA.classList.remove('hidden');
+	muteButton.classList.remove('hidden');
 
 	// initialize audioContext and start playing audio
 	audioContext.resume();
@@ -248,8 +257,9 @@ function applyKeyboardInput() {
 function drawBackground(){
 	// background gradient
 	const backgroundGradient = contextGA.createLinearGradient(0, 0, 0, canvasGA.height);
-	backgroundGradient.addColorStop(0, "black");
-	backgroundGradient.addColorStop(1, "#171e26");
+	backgroundGradient.addColorStop(0, "#000");
+	backgroundGradient.addColorStop(0.7, "#171e26");
+	backgroundGradient.addColorStop(1, "#000")
 	// backgroundGradient.addColorStop(1, "#3f586b");
 	contextGA.fillStyle = backgroundGradient;
 	contextGA.fillRect(0, 0, canvasGA.width, canvasGA.height);

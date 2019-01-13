@@ -10,7 +10,6 @@ class Vector {
     if (typeof value == 'number') {
       this.components[0] += value;
       this.components[1] += value;
-
     } else if (typeof value === 'object') { // Conditional must check if the object is a vector
       this.components[0] += value.x;
       this.components[1] += value.y;
@@ -21,7 +20,6 @@ class Vector {
     if (typeof value == 'number') {
       this.components[0] -= value;
       this.components[1] -= value;
-
     } else if (typeof value === 'object') { // Conditional must check if the object is a vector
       this.components[0] -= value.x;
       this.components[1] -= value.y;
@@ -85,21 +83,17 @@ class Vector {
   get x() {
     return this.components[0];
   }
-
   get y() {
     return this.components[1];
   }
-
   get magnitude() {
     return Math.sqrt(Math.pow(this.components[0], 2) + Math.pow(this.components[1], 2));
   }
-
   set magnitude(newMag) {
     let ratio = newMag / this.magnitude;
     this.components[0] = this.components[0] * ratio;
     this.components[1] = this.components[1] * ratio;
   }
-
   get angle() {
     // angle in radians measured from vertical (positive is clockwise)
     let angle = Math.PI/2 + Math.atan2(this.components[1], this.components[0]);
@@ -108,7 +102,6 @@ class Vector {
   }
 
   toString(){
-      return `x: ${this.components[0]}, y: ${this.components[1]}`;
+    return `x: ${this.components[0]}, y: ${this.components[1]}`;
   }
-
 }

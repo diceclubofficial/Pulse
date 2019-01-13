@@ -5,10 +5,8 @@ class BassWave {
   constructor(x, y) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    // this.speed = randomInt(5, 10);
     this.speed = 8;
 
-    // basics
     this.radius = 1;
     this.fillStyle = 'white';
 
@@ -22,14 +20,14 @@ class BassWave {
     this.startAngle = middleAngle - toRadians(angleSpan/2);
     this.endAngle = middleAngle + toRadians(angleSpan/2);
 
-    // Velocity
+    // velocity
 		this.velocity = new Vector(this.towardsCenter.x, this.towardsCenter.y);
 		this.velocity.magnitude = this.speed;
 
     // shape
     this.shape = new Circle(new Vector(this.x, this.y), this.radius, this.startAngle, this.endAngle);
 
-    // For calculating when to die
+    // for calculating when to die
     this.circumPoint = new Vector(this.x, this.y);
     this.circumPoint.add(this.towardsCenter); // circumPoint is the point on the circumference of the circle closest to the center of the screen
     this.distanceFromCenter = distance(this.circumPoint.x, this.circumPoint.y, canvasGA.width/2, canvasGA.height/2);
@@ -55,8 +53,7 @@ class BassWave {
       if(newDistanceFromCenter > this.distanceFromCenter) {
         this.alive = false;
         return;
-      }
-      else {
+      } else {
         this.distanceFromCenter = newDistanceFromCenter;
       }
     }
@@ -84,7 +81,6 @@ class BassWave {
     contextGA.save();
     contextGA.strokeStyle = this.fillStyle;
 
-    // arc
     contextGA.beginPath();
     contextGA.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle);
     contextGA.stroke();
@@ -94,7 +90,6 @@ class BassWave {
 
   collisionDetection() {
     if(probe.shape.overlapsArc(this.shape, 30)) {
-			console.log("overlaps with bass wave");
 			let towardsLander = new Vector(probe.x, probe.y);
 			towardsLander.sub(this.coordinates);
 			let force = new Vector(towardsLander.x, towardsLander.y);
@@ -105,15 +100,14 @@ class BassWave {
 		}
   }
 
-  get x(){
+  get x() {
     return this.coordinates.x;
   }
-  get y(){
+  get y() {
     return this.coordinates.y;
   }
 
-  toString(){
+  toString() {
     return (`Radius: ${this.radius} \n Angle: ${this.endAngle - this.startAngle} \n Location: ${this.coordinates.toString()}`);
   }
-
 }

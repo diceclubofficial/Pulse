@@ -1,6 +1,6 @@
 
 todo current:
--make music interpretation
+-clean up code
 
 todo later:
 -make asteroid sprites generate with the shape

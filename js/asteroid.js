@@ -21,7 +21,7 @@ class Asteroid {
     this.angularVelocity = 0;
     this.angularAcceleration = 0;
 
-    this.momentOfInertia = (.5 * this.mass * Math.pow(this.width/2, 2));
+    this.momentOfInertia = (.5 * this.mass * Math.pow(this.width/2, 2) );
     this.fillStyle = 'rgb(255, 255, 255)';
 
     this.onScreen = false;
@@ -39,7 +39,6 @@ class Asteroid {
     this.velocity.add(this.acceleration);
     this.coordinates.add(this.velocity);
     this.shape.translate(this.velocity);
-
     this.acceleration.mult(0);
 
     // Rotational motion
@@ -48,7 +47,6 @@ class Asteroid {
     this.angularVelocity += this.angularAcceleration;
     this.angle += this.angularVelocity;
     this.shape.rotate(this.angularVelocity);
-
     this.angularAcceleration *= 0;
 
     this.kineticEnergy = 0.5*this.mass*Math.pow(this.velocity.magnitude, 2);
@@ -63,12 +61,10 @@ class Asteroid {
       let newDistanceFromCenter = distance(this.x, this.y, canvasGA.width/2, canvasGA.height/2);
       if(newDistanceFromCenter > this.distanceFromCenter) {
         this.alive = false;
-      }
-      else {
+      } else {
         this.distanceFromCenter = newDistanceFromCenter;
       }
-    }
-    else {
+    } else {
       this.onScreen = true;
     }
   }
@@ -81,8 +77,7 @@ class Asteroid {
     }
     if(this.collidingWithAsteroid >= 1 || this.collidingWithProbe >= 1) {
       this.fillStyle = "rgb(255, 0, 0)";
-    }
-    else if(this.collidingWithAsteroid == 0.5 || this.collidingWithProbe == 0.5) {
+    } else if(this.collidingWithAsteroid == 0.5 || this.collidingWithProbe == 0.5) {
       this.fillStyle = "orange";
     }
 
@@ -132,83 +127,97 @@ class Asteroid {
   collisionDetectionWithAsteroid() {
     let thisAsteroidColliding = 0;
     asteroidLoop: for(let other of asteroids) {
-      if(other != this && other.onScreen && this.onScreen) {
-        // simple and fast big box collision detection
-        if(other.x + other.width > this.x && other.x < this.x + this.width && other.y + other.height > this.y && other.y < this.y + this.width) {
-          // if it passes, do more complex and slower polygon collision detection
-          let overlaps = this.shape.overlapsPolygon(other.shape, true);
-          if(overlaps != false) {
-            thisAsteroidColliding = 1;
-
-            //only do post-collision physics on one asteroid of the two
-            if(this.collidingWithAsteroid != 1 && other.collidingWithAsteroid != 1) {
-              // translate asteroids out of each other
-              let mtv = overlaps;
-              other.coordinates.add(mtv);
-              other.shape.translate(mtv);
-              mtv.mult(-1);
-              this.coordinates.add(mtv);
-              this.shape.translate(mtv);
-
-              // run velocity calculations and shattering
-              let otherCopy = {
-                mass: other.mass,
-                velocity: new Vector(other.velocity.x, other.velocity.y)
-              }
-              other.collideAgainst(this);
-              this.collideAgainst(otherCopy);
-            }
-          }
-          else thisAsteroidColliding = 0.5;
-        }
+      // preliminary checks
+      if(other == this || !other.onScreen || !this.onScreen) {
+        continue asteroidLoop;
       }
+
+      // simple and fast big box collision detection
+      if( !(other.x + other.width > this.x && other.x < this.x + this.width && other.y + other.height > this.y && other.y < this.y + this.width) ) {
+        continue asteroidLoop;
+      }
+
+      // more complex and slower polygon collision detection
+      let overlaps = this.shape.overlapsPolygon(other.shape, true);
+      if(overlaps == false) {
+        thisAsteroidColliding = 0.5;
+        continue asteroidLoop;
+      }
+
+      // actual collision occurs
+      thisAsteroidColliding = 1;
+
+      // only do collision physics on one asteroid of the two
+      if(this.collidingWithAsteroid == 1 || other.collidingWithAsteroid == 1) {
+        continue asteroidLoop;
+      }
+
+      // translate asteroids out of each other
+      let mtv = overlaps;
+      other.coordinates.add(mtv);
+      other.shape.translate(mtv);
+      mtv.mult(-1);
+      this.coordinates.add(mtv);
+      this.shape.translate(mtv);
+
+      // run velocity calculations and shattering
+      let otherCopy = {
+        mass: other.mass,
+        velocity: new Vector(other.velocity.x, other.velocity.y)
+      }
+      other.collideAgainst(this);
+      this.collideAgainst(otherCopy);
     }
     if(thisAsteroidColliding == 1) {
       this.collidingWithAsteroid = (this.collidingWithAsteroid == 0.5) ? 1 : this.collidingWithAsteroid + 1;
-    }
-    else this.collidingWithAsteroid = thisAsteroidColliding;
+    } else this.collidingWithAsteroid = thisAsteroidColliding;
   }
 
   collisionDetectionWithLander() {
     // simple and fast big box collision detection
-    if(probe.x + probe.width > this.x && probe.x < this.x + this.width && probe.y + probe.height > this.y && probe.y < this.y + this.width) {
-      // if it passes, do more complex and slower polygon collision detection
-      let overlaps = probe.shape.overlapsPolygon(this.shape, true);
-      if(overlaps != false) {
-        // translate asteroid way out of lander
-        let mtv = overlaps;
-        mtv.mult(2);
-        this.coordinates.add(mtv);
-        this.shape.translate(mtv);
-
-        // change lander's velocity
-        let velX = getFinalCollisionVelocity(probe.mass, probe.velocity.x, this.mass, this.velocity.x);
-        let velY = getFinalCollisionVelocity(probe.mass, probe.velocity.y, this.mass, this.velocity.y);
-        let newVelocity = new Vector(velX, velY);
-        let forceX = probe.mass*(newVelocity.x - probe.velocity.x);
-        let forceY = probe.mass*(newVelocity.y - probe.velocity.y);
-        let force = new Vector(forceX, forceY);
-        force.mult(0.4);
-        probe.applyForce(force);
-
-        // run velocity calculations and shattering on asteroid
-        this.collideAgainst(probe);
-        this.collidingWithProbe = (this.collidingWithProbe == 0.5) ? 1 : this.collidingWithProbe + 1;
-      }
-      else this.collidingWithProbe = 0.5;
+    if( !(probe.x + probe.width > this.x && probe.x < this.x + this.width && probe.y + probe.height > this.y && probe.y < this.y + this.width) ) {
+      this.collidingWithProbe = 0;
+      return;
     }
-    else this.collidingWithProbe = 0;
+
+    // more complex and slower polygon collision detection
+    let overlaps = probe.shape.overlapsPolygon(this.shape, true);
+    if(overlaps == false) {
+      this.collidingWithProbe = 0.5;
+      return;
+    }
+    // collision occurs:
+    // translate asteroid out of lander
+    let mtv = overlaps;
+    this.coordinates.add(mtv);
+    this.shape.translate(mtv);
+
+    // apply force on lander
+    let velX = getFinalCollisionVelocity(probe.mass, probe.velocity.x, this.mass, this.velocity.x);
+    let velY = getFinalCollisionVelocity(probe.mass, probe.velocity.y, this.mass, this.velocity.y);
+    let newVelocity = new Vector(velX, velY);
+    let forceX = probe.mass * (newVelocity.x - probe.velocity.x);
+    let forceY = probe.mass * (newVelocity.y - probe.velocity.y);
+    let force = new Vector(forceX, forceY);
+    force.mult(0.7);
+    probe.applyForce(force);
+
+    // run velocity calculations and shattering on asteroid
+    this.collideAgainst(probe);
+    this.collidingWithProbe = (this.collidingWithProbe == 0.5) ? 1 : this.collidingWithProbe + 1;
   }
 
   collisionDetectionWithTerrain() {
-    // simple and fast
-    if(this.y + this.height > terrain.seaLevel - terrain.maxElevationDiff) {
-      // check if each vertex is below the terrain
-      for(let vertex of this.shape.vertices) {
-        if(terrain.isPointBelowSurface(vertex.x, vertex.y)) {
-          this.alive = false;
-          return;
-        }
+    // preliminary check
+    if(this.y + this.height < terrain.seaLevel - terrain.maxElevationDiff) {
+      return;
+    }
+
+    // check if each vertex is below the terrain
+    vertexLoop: for(let vertex of this.shape.vertices) {
+      if(terrain.isPointBelowSurface(vertex.x, vertex.y)) {
+        this.alive = false;
+        return;
       }
     }
   }
@@ -279,8 +288,7 @@ class Asteroid {
     if(multiplier == undefined) multiplier = 1;
     if(clockwise) {
       this.angularAcceleration += 0.01 * multiplier;
-    }
-    else {
+    } else {
       this.angularAcceleration -= 0.01 * multiplier;
     }
   }
@@ -333,11 +341,9 @@ class Asteroid {
   get x() {
     return this.coordinates.x;
   }
-
   get y() {
     return this.coordinates.y;
   }
-
   get energy() {
     this.kineticEnergy = 0.5*this.mass*Math.pow(this.velocity.magnitude, 2);
     return this.kineticEnergy;

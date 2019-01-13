@@ -25,6 +25,6 @@ class Projection {
   }
 
   toString(){
-      return `start: ${this.start}, end: ${this.end}`;
+    return `start: ${this.start}, end: ${this.end}`;
   }
 }

@@ -120,8 +120,7 @@ class Polygon {
 
       if(!projection1.overlaps(projection2)) {
         return false;
-      }
-      else if(returnMTV) {
+      } else if(returnMTV) {
         let overlap = projection1.getOverlap(projection2);
         if(overlap < minOverlap) {
           minOverlap = overlap;
@@ -133,8 +132,7 @@ class Polygon {
       let mtv = new Vector(smallestAxis.x, smallestAxis.y);
       mtv.magnitude = minOverlap;
       return mtv;
-    }
-    else return true;
+    } else return true;
   }
 
   overlapsCircle(circle) {
@@ -220,7 +218,6 @@ class Polygon {
   get y() {
     return this.centroid.y;
   }
-
   get centroid() {
     // very similar to center of mass calculation
     // just treat each vertex as a point mass worth equal weight
@@ -234,7 +231,6 @@ class Polygon {
     let centroid = new Vector(centroidX, centroidY);
     return centroid;
   }
-
   // get all the vectors perpendicular to the polygon's edges
   get normals() {
     let normals = [];
@@ -243,7 +239,6 @@ class Polygon {
     }
     return normals;
   }
-
   get area() {
     let area = 0;
     let j = this.vertices.length - 1;  // The last vertex is the 'previous' one to the first
@@ -255,12 +250,6 @@ class Polygon {
     area /= 2;
     area = Math.abs(area);
     return area;
-  }
-
-  set centroid(newCentroid) {
-    let difference = new Vector(newCentroid.x, newCentroid.y);
-    difference.sub(this.x, this.y);
-    this.translate(difference);
   }
 
   toString() {

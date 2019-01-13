@@ -73,12 +73,7 @@ class TrebleWave {
     this.coordinates.add(this.velocity);
     this.shape.translate(this.velocity);
 
-    // Animate through sprite sheets
-    this.animationTimer--;
-    if(this.animationTimer <= 0) {
-      this.animationTimer = this.framesPerAnimation;
-      this.animate();
-    }
+    this.animate();
 
     // If dying, count down until alive is false
     if(this.dying) {
@@ -111,46 +106,65 @@ class TrebleWave {
 
   draw() {
     contextGA.save();
+
     contextGA.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
     contextGA.rotate(this.angle);
     contextGA.globalAlpha = (this.dyingTimer/this.dyingTimerMax); //to have the image fade out as it's dying
     contextGA.drawImage(this.waveSheet, this.currImage*this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.width/2, -this.height/2, this.width, this.height);
+
     contextGA.restore();
   }
 
   collisionDetection() {
+    // preliminary checks
+    if(!this.alive) {
+      return;
+    }
+
     // simple and fast big box collision detection
-		if(probe.x + probe.width > this.x && probe.x < this.x + this.width && probe.y + probe.height > this.y - this.width/2 + this.height/2 && probe.y < this.y + this.width) {
-			// if it passes, do more complex and slower polygon collision detection
-			if(this.shape.overlapsPolygon(probe.shape) && this.alive) {
-				// blue wave
-				if(this.type == 1) {
-					let force = new Vector(this.velocity.x, this.velocity.y);
-					force.mult(0.05);
-					probe.applyForce(force);
-					this.dying = true;
-				}
-				//green wave
-				else if(this.type == 2) {
-					let force = new Vector(this.velocity.x, this.velocity.y);
-					force.mult(0.05);
-					probe.applyForce(force);
-					this.dying = true;
-				}
-				//red wave
-				else if(this.type == 3) {
-					let force = new Vector(this.velocity.x, this.velocity.y);
-					force.mult(0.05);
-					probe.applyForce(force);
-					probe.applyTorque(this.clockwise);
-					this.dying = true;
-				}
-			}
-		}
+    if( !(probe.x + probe.width > this.x && probe.x < this.x + this.width && probe.y + probe.height > this.y - this.width/2 + this.height/2 && probe.y < this.y + this.width) ) {
+      return;
+    }
+
+    // do more complex and slower polygon collision detection
+    if(!this.shape.overlapsPolygon(probe.shape)) {
+      return;
+    }
+
+    // collision occurs:
+    // blue wave
+    if(this.type == 1) {
+      let force = new Vector(this.velocity.x, this.velocity.y);
+      force.mult(0.05);
+      probe.applyForce(force);
+      this.dying = true;
+    }
+    //green wave
+    else if(this.type == 2) {
+      let force = new Vector(this.velocity.x, this.velocity.y);
+      force.mult(0.05);
+      probe.applyForce(force);
+      this.dying = true;
+    }
+    //red wave
+    else if(this.type == 3) {
+      let force = new Vector(this.velocity.x, this.velocity.y);
+      force.mult(0.05);
+      probe.applyForce(force);
+      probe.applyTorque(this.clockwise);
+      this.dying = true;
+    }
   }
 
-  // private
   animate() {
+    // count down animation timer
+    this.animationTimer--;
+    if(this.animationTimer > 0) {
+      return;
+    }
+    this.animationTimer = this.framesPerAnimation;
+
+    // change sprite
     this.currImage += 1;
     if(this.currImage >= this.numImages) this.currImage = 0;
   }
@@ -158,7 +172,6 @@ class TrebleWave {
   get x() {
     return this.coordinates.x;
   }
-
   get y() {
     return this.coordinates.y;
   }

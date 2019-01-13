@@ -1,11 +1,12 @@
 "use strict"
 
 class Terrain {
+
   constructor() {
     // Fill a raw elevation map with noise for each pixel in width
     // Sample the height every x pixels to form a new Array
     this.noise = new Perlin();
-    this.seaLevel = 0.8125*canvasGA.height;
+    this.seaLevel = 0.85*canvasGA.height;
     this.maxElevationDiff = 100;
 
     this.segmentLength = 20;
@@ -52,12 +53,12 @@ class Terrain {
 
   collisionDetection() {
     // Check vertices of lander polygon
-  	outer: for(let i = 0; i < probe.shape.vertices.length; i++) {
+  	vertexLoop: for(let i = 0; i < probe.shape.vertices.length; i++) {
   		let vertex = probe.shape.vertices[i];
   		if(this.isPointBelowSurface(vertex.x, vertex.y)) {
   			probe.touchingGround = true;
   			if(!probe.groundedVertexPositions.includes(i)) probe.groundedVertexPositions.push(i);
-  			break outer;
+  			break vertexLoop;
   		}
   		else {
   			probe.touchingGround = false;
@@ -70,7 +71,6 @@ class Terrain {
     let slope = (this.elevationMap[index+1]-this.elevationMap[index])/this.segmentLength;
     return slope;
   }
-
 
   isPointBelowSurface(x, y) {
     let slope = this.getSlopeAt(x);
