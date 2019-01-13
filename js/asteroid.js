@@ -132,7 +132,7 @@ class Asteroid {
   collisionDetectionWithAsteroid() {
     let thisAsteroidColliding = 0;
     asteroidLoop: for(let other of asteroids) {
-      if(other != this && other.onScreen) {
+      if(other != this && other.onScreen && this.onScreen) {
         // simple and fast big box collision detection
         if(other.x + other.width > this.x && other.x < this.x + this.width && other.y + other.height > this.y && other.y < this.y + this.width) {
           // if it passes, do more complex and slower polygon collision detection
@@ -270,8 +270,9 @@ class Asteroid {
   }
 
   applyForce(force) { // force need be a vector
-    force.div(this.mass);
-    this.acceleration.add(force);
+    let appliedForce = new Vector(force.x, force.y);
+    appliedForce.div(this.mass);
+    this.acceleration.add(appliedForce);
   }
 
   applyTorque(clockwise, multiplier) {

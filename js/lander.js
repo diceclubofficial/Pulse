@@ -175,8 +175,9 @@ class Lander {
   }
 
   applyForce(force) { // force need be a vector
-    force.div(this.mass);
-    this.acceleration.add(force);
+    let appliedForce = new Vector(force.x, force.y);
+    appliedForce.div(this.mass);
+    this.acceleration.add(appliedForce);
   }
 
   applyTorque(clockwise, multiplier) {

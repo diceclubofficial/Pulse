@@ -55,8 +55,32 @@ let asteroidSpawnPoints = [
 	new Vector(randomValue(0, terrain.seaLevel - offsetY), -offsetY),
 ];
 
-let fps = 30;
-setInterval(play, 1000/fps);
+let audioContext = new AudioContext();
+audioContext.suspend();
+let audioElement = document.getElementById('incendie');
+let source = audioContext.createMediaElementSource(audioElement);
+
+let startButton = document.getElementById('startButton');
+window.onload = function() {
+	startButton.addEventListener('click', startGame);
+}
+
+function startGame() {
+	// show canvas
+	startButton.classList.add('hidden');
+	document.getElementById('titleScreen').classList.add('hidden');
+	canvasGA.classList.remove('hidden');
+
+	// initialize audioContext and start playing audio
+	audioContext.resume();
+	source.connect(audioContext.destination);
+	audioElement.play();
+
+	// loop play
+	// drawEverything();
+	let fps = 30;
+	setInterval(play, 1000/fps);
+}
 
 function play() {
 	// Check array keys for input
@@ -68,11 +92,16 @@ function play() {
 	if(!probe.inGround) probe.applyForce(GRAVITY);
 	probe.update();
 
+	updateAudio();
+
 	collisionDetection();
 
 	drawEverything();
 	// show developer-intended hitboxes and additional stuff (comment out this line)
-	showDeveloperMode();
+	// showDeveloperMode();
+}
+
+function updateAudio() {
 }
 
 function drawEverything() {

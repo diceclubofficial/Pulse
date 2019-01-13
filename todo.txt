@@ -1,18 +1,17 @@
 
 todo current:
--asteroids
+-make music interpretation
 
 todo later:
--make music interpretation
 -make asteroid sprites generate with the shape
 -do concave polygon collision detection
 -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
--make rotational collisions and rotational energy
+-make rotational collisions and rotational energy with asteroids
+-add game states and title screen
 -increase fps to 60 or 120 and change numbers accurately
 -add "game area" class to handle scrolling up and down (moving from asteroid phase to lander phase)
 -add fuel gauge and other stats
 -add sprites to bassWaves (need more art)
--add game states and title screen
 -make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
 
 issues:
@@ -21,7 +20,7 @@ issues:
 random ideas:
 -have music from planet fade in as lander descends (start with lonely machinery beeping and fade in music as the planet and waves are visible)
 -asteroids collide on the beat in the middle of the screen and explode
--make terminal velocity for lander
+-make terminal velocity for lander?
 
 wave names:
 -treble - small fast waves (blue, green, and red rectangular waves)
