@@ -6,22 +6,16 @@ class Terrain {
     // Fill a raw elevation map with noise for each pixel in width
     // Sample the height every x pixels to form a new Array
     this.noise = new Perlin();
-    this.seaLevel = 0.85*canvasGA.height;
+    this.startPoint = -canvasGA.width;
+    this.length = 3 * canvasGA.width;
+    this.seaLevel = 0.85 * canvasGA.height;
     this.maxElevationDiff = 100;
 
     this.segmentLength = 20;
     this.noiseStep = 0.005;
     this.seed = Math.random()*256;
 
-    this.rawElevationMap = [];
-    this.elevationMap = [];
-
-    for(let i = 0; i < canvasGA.width + this.segmentLength; i++) {
-      this.rawElevationMap[i] = this.noise.getValue(this.seed + (i*this.noiseStep))*this.maxElevationDiff;
-      if (i%this.segmentLength == 0) {
-        this.elevationMap[i/this.segmentLength] = (Math.trunc(this.seaLevel + this.rawElevationMap[i]));
-      }
-    }
+    this.generate();
 
     console.log("Terrain Elevation Map: ", this.elevationMap);
   }
@@ -31,7 +25,7 @@ class Terrain {
     contextGA.save();
     contextGA.strokeStyle = "brown";
     contextGA.beginPath();
-    let y = this.seaLevel;
+    let y = this.seaLevel - 100;
     contextGA.moveTo(0, y);
     contextGA.lineTo(canvasGA.width, y);
     contextGA.stroke();
@@ -42,9 +36,10 @@ class Terrain {
     let previousStrokeStyle = contextGA.strokeStyle;
     contextGA.strokeStyle = 'rgb(255, 255, 255)';
 
-    contextGA.moveTo(0, this.elevationMap[0]);
+    contextGA.moveTo(this.startPoint, this.elevationMap[0]);
+    // console.log(this.elevationMap.length);
     for (let i = 0; i < this.elevationMap.length; i++) {
-      contextGA.lineTo(i*this.segmentLength, this.elevationMap[i]);
+      contextGA.lineTo(this.startPoint + i * this.segmentLength, this.elevationMap[i]);
     }
     contextGA.stroke();
 
@@ -52,7 +47,12 @@ class Terrain {
   }
 
   collisionDetection() {
-    // Check vertices of lander polygon
+    // preliminary check
+    if(probe.y + probe.height < this.seaLevel - this.maxElevationDiff) {
+      return;
+    }
+
+    // check vertices of lander polygon
   	vertexLoop: for(let i = 0; i < probe.shape.vertices.length; i++) {
   		let vertex = probe.shape.vertices[i];
   		if(this.isPointBelowSurface(vertex.x, vertex.y)) {
@@ -73,28 +73,34 @@ class Terrain {
   }
 
   isPointBelowSurface(x, y) {
-    let slope = this.getSlopeAt(x);
-    let surfaceY = this.elevationMap[Math.floor(x/this.segmentLength)] + (slope * (x % this.segmentLength));
+    let surfaceY = this.elevationMap[Math.floor((x - this.startPoint) / this.segmentLength)] + (this.getSlopeAt(x) * (x % this.segmentLength));
 
-    if (y > surfaceY) {
-      return true;
-    } else {
-      return false;
-    }
+    return y > surfaceY;
   }
 
-  regenerate() {
+  generate(newSeed) {
     // New seed
-    this.seed = Math.random()*256;
-    // Clear arrays
-    this.rawElevationMap.length = 0;
-    this.elevationMap.length = 0;
+    if(newSeed == undefined) newSeed = Math.random() * 256;
+    this.seed = newSeed;
 
-    for(let i = 0; i < canvasGA.width + this.segmentLength; i++) {
+    // Clear arrays
+    this.rawElevationMap = [];
+    this.elevationMap = [];
+
+    // Fill arrays with random data
+    for(let i = 0; i < this.length + this.segmentLength; i++) {
       this.rawElevationMap[i] = this.noise.getValue(this.seed+ (i*this.noiseStep))*this.maxElevationDiff;
       if (i%this.segmentLength == 0) {
         this.elevationMap[i/this.segmentLength] = (Math.trunc(this.seaLevel + this.rawElevationMap[i]));
       }
     }
+  }
+
+  translate(translationVector) {
+    this.seaLevel += translationVector.y;
+    // console.log(this.startPoint);
+    this.startPoint += translationVector.x;
+    // console.log(this.startPoint);
+    this.generate(this.seed);
   }
 }

@@ -220,6 +220,11 @@ class Lander {
     this.applyForce(thrustForce);
   }
 
+  translate(translationVector) {
+    this.coordinates.add(translationVector);
+    this.shape.translate(translationVector);
+  }
+
   get x() {
     return this.coordinates.x;
   }

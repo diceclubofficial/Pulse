@@ -169,6 +169,11 @@ class TrebleWave {
     if(this.currImage >= this.numImages) this.currImage = 0;
   }
 
+  translate(translationVector) {
+    this.coordinates.add(translationVector);
+    this.shape.translate(translationVector);
+  }
+
   get x() {
     return this.coordinates.x;
   }
@@ -177,6 +182,6 @@ class TrebleWave {
   }
 
   toString() {
-    return (`Acceleration: ${this.acceleration.toString()} \n Velocity: ${this.velocity.toString()} \n Location: ${this.coordinates.toString()}`);
+    return (`Velocity: ${this.velocity.toString()} \n Location: ${this.coordinates.toString()}`);
   }
 }

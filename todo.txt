@@ -1,15 +1,17 @@
 
 todo current:
--clean up code
+-add "game area" class to handle scrolling up and down (moving from asteroid phase to lander phase)
 
 todo later:
+-use off canvas origin method - store realOrigin that coordinates are relative to and a new origin
+  -add background to game area to fix the colors
+-make collision detection predictive
 -make asteroid sprites generate with the shape
 -do concave polygon collision detection
 -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
 -make rotational collisions and rotational energy with asteroids
 -add game states and title screen
 -increase fps to 60 or 120 and change numbers accurately
--add "game area" class to handle scrolling up and down (moving from asteroid phase to lander phase)
 -add fuel gauge and other stats
 -add sprites to bassWaves (need more art)
 -make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research

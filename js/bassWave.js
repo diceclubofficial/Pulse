@@ -100,6 +100,10 @@ class BassWave {
 		}
   }
 
+  translate(translationVector) {
+    this.coordinates.add(translationVector);
+  }
+
   get x() {
     return this.coordinates.x;
   }

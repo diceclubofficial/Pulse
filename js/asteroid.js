@@ -123,7 +123,6 @@ class Asteroid {
     this.collisionDetectionWithLander();
     this.collisionDetectionWithTerrain();
   }
-
   collisionDetectionWithAsteroid() {
     let thisAsteroidColliding = 0;
     asteroidLoop: for(let other of asteroids) {
@@ -172,7 +171,6 @@ class Asteroid {
       this.collidingWithAsteroid = (this.collidingWithAsteroid == 0.5) ? 1 : this.collidingWithAsteroid + 1;
     } else this.collidingWithAsteroid = thisAsteroidColliding;
   }
-
   collisionDetectionWithLander() {
     // simple and fast big box collision detection
     if( !(probe.x + probe.width > this.x && probe.x < this.x + this.width && probe.y + probe.height > this.y && probe.y < this.y + this.width) ) {
@@ -206,7 +204,6 @@ class Asteroid {
     this.collideAgainst(probe);
     this.collidingWithProbe = (this.collidingWithProbe == 0.5) ? 1 : this.collidingWithProbe + 1;
   }
-
   collisionDetectionWithTerrain() {
     // preliminary check
     if(this.y + this.height < terrain.seaLevel - terrain.maxElevationDiff) {
@@ -243,7 +240,6 @@ class Asteroid {
       this.applyTorque(randomDir);
     }
   }
-
   shatter(totalVelocity) {
     let fragments = 3;
     let totalEnergy = this.energy;
@@ -283,7 +279,6 @@ class Asteroid {
     appliedForce.div(this.mass);
     this.acceleration.add(appliedForce);
   }
-
   applyTorque(clockwise, multiplier) {
     if(multiplier == undefined) multiplier = 1;
     if(clockwise) {
@@ -297,7 +292,6 @@ class Asteroid {
     this.generateDimensionsPolygonConcave();
     // this.generateDimensionsPolygonRegular(6);
   }
-
   generateDimensionsPolygonRegular(numVertices) {
     let deltaTheta = 2*Math.PI/numVertices;
     this.width = 2 * this.radius; // big box
@@ -314,7 +308,6 @@ class Asteroid {
     this.mass = this.shape.area / MASS_CONSTANT;
     this.kineticEnergy = 0.5*this.mass*Math.pow(this.velocity.magnitude, 2);
   }
-
   generateDimensionsPolygonConcave() {
     let numVertices = 20; // change to depend on radius
     let deltaTheta = 2*Math.PI/numVertices;
@@ -336,6 +329,11 @@ class Asteroid {
     }
     this.shape = new Polygon(vertices);
     this.mass = this.shape.area / MASS_CONSTANT;
+  }
+
+  translate(translationVector) {
+    this.coordinates.add(translationVector);
+    this.shape.translate(translationVector);
   }
 
   get x() {

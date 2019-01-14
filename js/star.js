@@ -3,28 +3,36 @@
 class Star {
 
   constructor(x, y, r) {
-    this.location = new Vector(x, y);
+    this.coordinates = new Vector(x, y);
     this.radius = r;
   }
 
-  show(context) {
-    context.save();
+  draw() {
+    contextGA.save();
 
-    context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-    context.fillStyle = "white";
-    context.shadowColor = "#E3EAEF";
-    context.shadowBlur = 20;
-    context.fill();
-    context.closePath();
-    
-    context.restore();
+    contextGA.beginPath();
+    contextGA.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+    contextGA.fillStyle = "white";
+    contextGA.shadowColor = "#E3EAEF";
+    contextGA.shadowBlur = 20;
+    contextGA.fill();
+    contextGA.closePath();
+
+    contextGA.restore();
+  }
+
+  translate(translationVector) {
+    this.coordinates.add(translationVector);
   }
 
   get x() {
-    return this.location.x;
+    return this.coordinates.x;
   }
   get y() {
-    return this.location.y;
+    return this.coordinates.y;
+  }
+
+  toString() {
+    return "Star at x: " + Math.round(this.x) + " y: " + Math.round(this.y) + " with radius " + this.radius;
   }
 }

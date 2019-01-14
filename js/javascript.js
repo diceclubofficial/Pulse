@@ -1,5 +1,6 @@
 // Javascript File 03
 "use strict"
+
 contextGA.font = '10px Menlo';
 
 const UP = 38,
@@ -46,7 +47,7 @@ let bassWaves = [];
 let maxBassWaves = 0;
 
 let asteroids = [];
-let maxAsteroids = 8;
+let maxAsteroids = 4;
 let offsetX = 250;
 let offsetY = 250;
 let asteroidSpawnPoints = [
@@ -70,6 +71,7 @@ window.onload = function() {
 	});
 }
 
+let gameArea = new GameArea();
 
 
 function startGame() {
@@ -102,6 +104,15 @@ function play() {
 	probe.update();
 
 	updateAudio();
+
+	let gameObjects = [];
+	gameObjects.push(probe);
+	gameObjects.push(terrain);
+	gameObjects = gameObjects.concat(stars);
+	gameObjects = gameObjects.concat(asteroids);
+	gameObjects = gameObjects.concat(trebleWaves);
+	gameObjects = gameObjects.concat(bassWaves);
+	gameArea = new GameArea(gameObjects);
 
 	collisionDetection();
 
@@ -235,26 +246,41 @@ function collisionDetection() {
 }
 
 function applyKeyboardInput() {
-	if ((keys[UP] || keys[W]) && !probe.touchingGround) {
+	// control probe
+	if(keys[W] && !probe.touchingGround) {
 		probe.applyThrusters();
-	}
-	else {
+	} else {
 		probe.thrustersOn = false;
 	}
-	if ((keys[RIGHT] || keys[D]) && !probe.touchingGround) {
+	if(keys[D] && !probe.touchingGround) {
 		probe.applyTorque(true);
 	}
-
-	if ((keys[LEFT] || keys[A]) && !probe.touchingGround) {
+	if(keys[A] && !probe.touchingGround) {
 		probe.applyTorque(false);
 	}
-
-	if (keys[DOWN] || keys[S]) {
-		terrain.regenerate();
+	// regenerate terrain
+	if(keys[S]) {
+		terrain.generate();
 	}
+
+ 	// control gameArea camera
+	let scopeMovement = 5;
+	if(keys[LEFT]) {
+		gameArea.moveScope(new Vector(-scopeMovement, 0));
+	}
+	if(keys[RIGHT]) {
+		gameArea.moveScope(new Vector(scopeMovement, 0));
+	}
+	if(keys[UP]) {
+		gameArea.moveScope(new Vector(0, -scopeMovement));
+	}
+	if(keys[DOWN]) {
+		gameArea.moveScope(new Vector(0, scopeMovement));
+	}
+
 }
 
-function drawBackground(){
+function drawBackground() {
 	// background gradient
 	const backgroundGradient = contextGA.createLinearGradient(0, 0, 0, canvasGA.height);
 	backgroundGradient.addColorStop(0, "#000");
@@ -266,7 +292,7 @@ function drawBackground(){
 
 	// stars
 	for(let star of stars) {
-		star.show(contextGA);
+		star.draw(contextGA);
 	}
 }
 
