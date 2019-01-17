@@ -7,18 +7,16 @@ class Star {
     this.radius = r;
   }
 
-  draw() {
-    contextGA.save();
+  draw(context) {
+    context.save();
 
-    contextGA.beginPath();
-    contextGA.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-    contextGA.fillStyle = "white";
-    contextGA.shadowColor = "#E3EAEF";
-    contextGA.shadowBlur = 20;
-    contextGA.fill();
-    contextGA.closePath();
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+    context.fillStyle = "white";
+    context.fill();
+    context.closePath();
 
-    contextGA.restore();
+    context.restore();
   }
 
   translate(translationVector) {

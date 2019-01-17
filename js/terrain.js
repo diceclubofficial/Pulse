@@ -6,10 +6,11 @@ class Terrain {
     // Fill a raw elevation map with noise for each pixel in width
     // Sample the height every x pixels to form a new Array
     this.noise = new Perlin();
-    this.startPoint = -canvasGA.width;
-    this.length = 3 * canvasGA.width;
-    this.seaLevel = 0.85 * canvasGA.height;
+    this.startPoint = 0;
+    this.endPoint = OFFSCREEN_WIDTH;
+    this.seaLevel = bottomScreenY + 0.85 * HEIGHT; // 85% down on the last screen height
     this.maxElevationDiff = 100;
+    this.highestGround = this.seaLevel - this.maxElevationDiff;
 
     this.segmentLength = 20;
     this.noiseStep = 0.005;
@@ -20,35 +21,39 @@ class Terrain {
     console.log("Terrain Elevation Map: ", this.elevationMap);
   }
 
-  showDev() {
+  showDeveloperStats(context) {
+    context.save();
+    // show highestGround
+    context.strokeStyle = "rgb(139,69,19)";
+    context.beginPath();
+    context.moveTo(0, this.highestGround);
+    context.lineTo(OFFSCREEN_WIDTH, this.highestGround);
+    context.stroke();
     // show seaLevel
-    contextGA.save();
-    contextGA.strokeStyle = "brown";
-    contextGA.beginPath();
-    let y = this.seaLevel - 100;
-    contextGA.moveTo(0, y);
-    contextGA.lineTo(canvasGA.width, y);
-    contextGA.stroke();
-    contextGA.restore();
+    context.strokeStyle = "rgb(0, 0, 255)";
+    context.beginPath();
+    context.moveTo(0, this.seaLevel);
+    context.lineTo(OFFSCREEN_WIDTH, this.seaLevel);
+    context.stroke();
+    context.restore();
   }
 
-  draw() {
-    let previousStrokeStyle = contextGA.strokeStyle;
-    contextGA.strokeStyle = 'rgb(255, 255, 255)';
+  draw(context) {
+    let previousStrokeStyle = context.strokeStyle;
+    context.strokeStyle = 'rgb(255, 255, 255)';
 
-    contextGA.moveTo(this.startPoint, this.elevationMap[0]);
-    // console.log(this.elevationMap.length);
+    context.moveTo(this.startPoint, this.elevationMap[0]);
     for (let i = 0; i < this.elevationMap.length; i++) {
-      contextGA.lineTo(this.startPoint + i * this.segmentLength, this.elevationMap[i]);
+      context.lineTo(this.startPoint + i * this.segmentLength, this.elevationMap[i]);
     }
-    contextGA.stroke();
+    context.stroke();
 
-    contextGA.strokeStyle = previousStrokeStyle;
+    context.strokeStyle = previousStrokeStyle;
   }
 
   collisionDetection() {
     // preliminary check
-    if(probe.y + probe.height < this.seaLevel - this.maxElevationDiff) {
+    if(probe.y + probe.height < this.highestGround) {
       return;
     }
 
@@ -88,7 +93,7 @@ class Terrain {
     this.elevationMap = [];
 
     // Fill arrays with random data
-    for(let i = 0; i < this.length + this.segmentLength; i++) {
+    for(let i = 0; i < this.endPoint + this.segmentLength; i++) {
       this.rawElevationMap[i] = this.noise.getValue(this.seed+ (i*this.noiseStep))*this.maxElevationDiff;
       if (i%this.segmentLength == 0) {
         this.elevationMap[i/this.segmentLength] = (Math.trunc(this.seaLevel + this.rawElevationMap[i]));
@@ -98,9 +103,7 @@ class Terrain {
 
   translate(translationVector) {
     this.seaLevel += translationVector.y;
-    // console.log(this.startPoint);
     this.startPoint += translationVector.x;
-    // console.log(this.startPoint);
     this.generate(this.seed);
   }
 }

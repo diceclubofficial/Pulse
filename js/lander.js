@@ -74,37 +74,54 @@ class Lander {
       this.groundedVertexPositions = [];
     }
 
+    // if approaching the edge of the screen, move the screen
+    let xDiff = 0.333 * WIDTH;
+    let yDiff = 0.4 * HEIGHT;
+    if(this.x < gameAreaOrigin.x + xDiff && this.velocity.x < 0 && gameAreaOrigin.x + this.velocity.x > 0) {
+      gameAreaOrigin.add(new Vector(this.velocity.x, 0));
+    }
+    if(this.x > gameAreaOrigin.x + WIDTH - xDiff && this.velocity.x > 0 && gameAreaOrigin.x + WIDTH + this.velocity.x < OFFSCREEN_WIDTH) {
+      gameAreaOrigin.add(new Vector(this.velocity.x, 0));
+    }
+    if(this.y < gameAreaOrigin.y + yDiff && this.velocity.y < 0 && gameAreaOrigin.y + this.velocity.y > 0) {
+      gameAreaOrigin.add(new Vector(0, this.velocity.y));
+    }
+    if(this.y > gameAreaOrigin.y + HEIGHT - yDiff && this.velocity.y > 0 && gameAreaOrigin.y + HEIGHT + this.velocity.y < OFFSCREEN_HEIGHT) {
+      gameAreaOrigin.add(new Vector(0, this.velocity.y));
+    }
+    
     // If offscreen, print coordinates
-    if(this.x < -this.width || this.x > canvasGA.width || this.y < -this.height || this.y > canvasGA.height) {
+    if(this.x < -this.width || this.x > OFFSCREEN_WIDTH || this.y < -this.height || this.y > OFFSCREEN_HEIGHT) {
       console.log("Lander is offscreen at (" + Math.floor(this.x) + ", " + Math.floor(this.y) + ") with velocity x:" + Math.floor(this.velocity.x) + " y:" + Math.floor(this.velocity.y));
     }
   }
 
-  showDev() {
-    contextGA.save();
+  showDeveloperStats(context) {
+    context.save();
 
     // show shape
-    this.shape.draw(contextGA, this.fillStyle, true);
+    this.shape.draw(context, this.fillStyle, true);
 
     // show big box
-    contextGA.strokeStyle = "pink";
-    contextGA.strokeRect(this.x + this.width/2 - this.boxRadius, this.y + this.height/2 - this.boxRadius, 2*this.boxRadius, 2*this.boxRadius);
+    context.strokeStyle = "pink";
+    context.strokeRect(this.x + this.width/2 - this.boxRadius, this.y + this.height/2 - this.boxRadius, 2*this.boxRadius, 2*this.boxRadius);
 
-    contextGA.restore();
+    context.restore();
   }
 
-  draw() {
-    contextGA.save();
+  draw(context) {
+    context.save();
 
-    contextGA.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
-    contextGA.rotate(this.angle);
+    // draw lander image
+    context.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
+    context.rotate(this.angle);
     if(this.thrustersOn) {
-      contextGA.drawImage(this.landerThrusterSheet, this.currImage*this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.width/2, -this.height/2, this.width, this.height);
+      context.drawImage(this.landerThrusterSheet, this.currImage*this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.width/2, -this.height/2, this.width, this.height);
     } else {
-      contextGA.drawImage(this.landerStaticImage, -this.width/2, -this.height/2, this.width, this.height);
+      context.drawImage(this.landerStaticImage, -this.width/2, -this.height/2, this.width, this.height);
     }
 
-    contextGA.restore();
+    context.restore();
   }
 
   animate() {

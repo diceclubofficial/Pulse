@@ -2,7 +2,7 @@
 
 class TrebleWave {
 
-  constructor(x, y, color) {
+  constructor(x, y, color, screenCoordinates, screenDimensions) {
     // type of wave (1-blue, 2-green, 3-red)
     this.type = 0;
     if(typeof color == "number") this.type = color;
@@ -32,11 +32,15 @@ class TrebleWave {
 
     // vector quantities
     this.coordinates = new Vector(x, y);
-    let centerOfScreen = new Vector(canvasGA.width/2, canvasGA.height/2);
-		let direction = new Vector(centerOfScreen.x, centerOfScreen.y);
+    this.screenCoordinates = new Vector(screenCoordinates.x, screenCoordinates.y);
+    this.screenDimensions = new Vector(screenDimensions.x, screenDimensions.y);
+    this.centerOfScreen = new Vector(this.screenCoordinates.x + this.screenDimensions.x/2, this.screenCoordinates.y + this.screenDimensions.y/2);
+		let direction = new Vector(this.centerOfScreen.x, this.centerOfScreen.y);
 		direction.sub(this.coordinates);
 		this.velocity = new Vector(direction.x, direction.y);
 		this.velocity.magnitude = speed;
+    console.log("coordinates and dimensions", screenCoordinates.toString(), screenDimensions.toString());
+    console.log("center of screen", this.centerOfScreen.toString());
 
     // dimensions
     this.width = 120;
@@ -88,7 +92,7 @@ class TrebleWave {
     }
 
     // If off-screen and distanceFromCenter is increasing, alive is false
-    if(this.x < -this.width || this.x > canvasGA.width || this.y < -this.height || this.y > canvasGA.height) {
+    if(this.x < this.screenCoordinates.x - this.width || this.x > this.screenCoordinates.x + this.screenDimensions.x || this.y < this.screenCoordinates.y - this.height || this.y > this.screenCoordinates.y + this.screenDimensions.y) {
       let newDistanceFromCenter = distance(this.x, this.y, canvasGA.width/2, canvasGA.height/2);
       if(newDistanceFromCenter > this.distanceFromCenter) {
         this.alive = false;
@@ -100,19 +104,30 @@ class TrebleWave {
     }
   }
 
-  showDev() {
-    this.shape.draw(contextGA, this.fillStyle);
+  showDeveloperStats(context) {
+    context.save();
+
+    // show shape
+    this.shape.draw(context, this.fillStyle);
+
+    // show center
+    context.font = "20px Arial";
+    context.fillStyle = "white";
+    context.fillText("Wave Center", this.centerOfScreen.x, this.centerOfScreen.y - 30);
+    context.fillText(this.centerOfScreen.toString(), this.centerOfScreen.x, this.centerOfScreen.y);
+
+    context.restore();
   }
 
-  draw() {
-    contextGA.save();
+  draw(context) {
+    context.save();
 
-    contextGA.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
-    contextGA.rotate(this.angle);
-    contextGA.globalAlpha = (this.dyingTimer/this.dyingTimerMax); //to have the image fade out as it's dying
-    contextGA.drawImage(this.waveSheet, this.currImage*this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.width/2, -this.height/2, this.width, this.height);
+    context.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
+    context.rotate(this.angle);
+    context.globalAlpha = (this.dyingTimer/this.dyingTimerMax); //to have the image fade out as it's dying
+    context.drawImage(this.waveSheet, this.currImage*this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.width/2, -this.height/2, this.width, this.height);
 
-    contextGA.restore();
+    context.restore();
   }
 
   collisionDetection() {
@@ -122,7 +137,7 @@ class TrebleWave {
     }
 
     // simple and fast big box collision detection
-    if( !(probe.x + probe.width > this.x && probe.x < this.x + this.width && probe.y + probe.height > this.y - this.width/2 + this.height/2 && probe.y < this.y + this.width) ) {
+    if( !rectanglesCollide(probe, this) ) {
       return;
     }
 

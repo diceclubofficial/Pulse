@@ -1,7 +1,7 @@
 // Javascript File 03
 "use strict"
 
-contextGA.font = '10px Menlo';
+contextOffscreen.font = '10px Menlo';
 
 const UP = 38,
 			RIGHT = 39,
@@ -15,46 +15,44 @@ const W = 87,
 
 let keys = [];
 
-let probe = new Lander(canvasGA.width/2, 20);
+let probe = new Lander(gameAreaOrigin.x + WIDTH/2, gameAreaOrigin.y + 0.03 * HEIGHT);
 const MASS_CONSTANT = probe.shape.area; // 1 mass unit = the mass of the lander
 const GRAVITY = new Vector(0, 0.05);
 
 let terrain = new Terrain();
 let stars = [];
-// Randomly generate 15 stars
-for(let i = 0; i < 15; i++) {
-	let x = randomValue(0, canvasGA.width);
-	let y = randomValue(0, terrain.seaLevel - canvasGA.height/5);
-	let r = randomValue(1, 3);
+// Randomly generate stars
+let starsPerScreen = 20;
+let totalScreens = (OFFSCREEN_WIDTH/WIDTH) * (OFFSCREEN_HEIGHT/HEIGHT);
+for(let i = 0; i < starsPerScreen*totalScreens; i++) {
+	let x = randomValue(0, OFFSCREEN_WIDTH);
+	let y = randomValue(0, terrain.highestGround);
+	let r = randomValue(0.1, 5);
 	stars[i] = new Star(x, y, r);
 }
 
-// Spawn points for waves (offscreen bottom)
-const w = canvasGA.width;
-const h = canvasGA.height;
+// waves
+let trebleWaves = [];
+const maxTrebleWaves = 0;
+let bassWaves = [];
+const maxBassWaves = 0;
+const waveScreenCoordinates = new Vector(gameAreaOrigin.x, gameAreaOrigin.y);
+const waveScreenDimensions = new Vector(WIDTH, HEIGHT);
 let waveSpawnPoints = [
-	new Vector(-10, h - 50),
-	new Vector(0, h + 20),
-	new Vector(w/3, h + 10),
-	new Vector(2*w/3, h + 10),
-	new Vector(w, h + 20),
-	new Vector(w + 10, h - 50),
+	new Vector(waveScreenCoordinates.x - 10, waveScreenCoordinates.y + waveScreenDimensions.y - 50),
+	new Vector(waveScreenCoordinates.x, waveScreenCoordinates.y + waveScreenDimensions.y + 20),
+	new Vector(waveScreenCoordinates.x + waveScreenDimensions.x/3, waveScreenCoordinates.y + waveScreenDimensions.y + 10),
+	new Vector(waveScreenCoordinates.x + 2*waveScreenDimensions.x/3, waveScreenCoordinates.y + waveScreenDimensions.y + 10),
+	new Vector(waveScreenCoordinates.x + waveScreenDimensions.x, waveScreenCoordinates.y + waveScreenDimensions.y + 20),
+	new Vector(waveScreenCoordinates.x + waveScreenDimensions.x + 10, waveScreenCoordinates.y + waveScreenDimensions.y - 50),
 ];
 let bassWaveSpawnPoint = 0;
-let trebleWaves = [];
-let maxTrebleWaves = 0;
-let bassWaves = [];
-let maxBassWaves = 0;
 
+// asteroids
 let asteroids = [];
-let maxAsteroids = 4;
-let offsetX = 250;
-let offsetY = 250;
-let asteroidSpawnPoints = [
-	new Vector(-offsetX, randomValue(0, canvasGA.height)),
-	new Vector(canvasGA.width + offsetX, randomValue(0, canvasGA.height)),
-	new Vector(randomValue(0, terrain.seaLevel - offsetY), -offsetY),
-];
+const maxAsteroids = 15;
+const asteroidScreenCoordinates = new Vector(gameAreaOrigin.x, gameAreaOrigin.y + HEIGHT);
+const asteroidScreenDimensions = new Vector(WIDTH, HEIGHT);
 
 let audioContext = new AudioContext();
 audioContext.suspend();
@@ -71,8 +69,7 @@ window.onload = function() {
 	});
 }
 
-let gameArea = new GameArea();
-
+const DEV_MODE = true; // change this to toggle showing developer stats
 
 function startGame() {
 	// remove start button and title screen
@@ -85,7 +82,7 @@ function startGame() {
 	// initialize audioContext and start playing audio
 	audioContext.resume();
 	source.connect(audioContext.destination);
-	audioElement.play();
+	// audioElement.play();
 
 	// loop play
 	// drawEverything();
@@ -105,69 +102,111 @@ function play() {
 
 	updateAudio();
 
-	let gameObjects = [];
-	gameObjects.push(probe);
-	gameObjects.push(terrain);
-	gameObjects = gameObjects.concat(stars);
-	gameObjects = gameObjects.concat(asteroids);
-	gameObjects = gameObjects.concat(trebleWaves);
-	gameObjects = gameObjects.concat(bassWaves);
-	gameArea = new GameArea(gameObjects);
-
 	collisionDetection();
 
 	drawEverything();
-	// show developer-intended hitboxes and additional stuff (comment out this line)
-	// showDeveloperMode();
+	// show developer-intended hitboxes and additional stuff
+	if(DEV_MODE) showDeveloperStats();
+
+	// draw onto game area
+	contextGA.fillStyle = "#555";
+	contextGA.fillRect(0, 0, WIDTH, HEIGHT);
+	contextGA.drawImage(canvasOffscreen, gameAreaOrigin.x, gameAreaOrigin.y, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
 }
 
 function updateAudio() {
 }
 
 function drawEverything() {
-	drawBackground();
+	drawBackground(contextOffscreen);
 
 	// waves
 	for(let trebleWave of trebleWaves) {
-		trebleWave.draw();
+		trebleWave.draw(contextOffscreen);
 	}
 	for(let bassWave of bassWaves) {
-		bassWave.draw();
+		bassWave.draw(contextOffscreen);
 	}
 
 	// asteroids
 	for(let asteroid of asteroids) {
-		asteroid.draw();
+		asteroid.draw(contextOffscreen);
 	}
 
 	// terrain
-	terrain.draw();
+	terrain.draw(contextOffscreen);
 
 	// lander
-	probe.draw();
+	probe.draw(contextOffscreen);
 }
+function showDeveloperStats() {
+	// coordinate markers
+	let context = contextOffscreen;
+	context.fillStyle = "Tomato";
+	context.font = "15px Courier";
+	context.textAlign = "center";
+	for(let x = 0; x < OFFSCREEN_WIDTH; x += 1) {
+		// show coordinate text
+		if(x % 200 == 0) {
+			context.fillText(x, x, gameAreaOrigin.y + HEIGHT/2);
+		}
+		// draw vertical bar every WIDTH
+		if(x % WIDTH == 0) {
+			let barWidth = 2, barHeight = 100;
+			context.fillText(x/WIDTH, x, gameAreaOrigin.y + HEIGHT/2 - barHeight/2 - 10);
+			context.fillRect(x, gameAreaOrigin.y + HEIGHT/2 - barHeight/2, barWidth, barHeight);
+		}
+	}
+	for(let y = 0; y < OFFSCREEN_HEIGHT; y += 1) {
+		// show coordinate text
+		if(y % 200 == 0) {
+			context.fillText(y, gameAreaOrigin.x + WIDTH/2, y);
+		}
+		// draw vertical bar every HEIGHT
+		if(y % HEIGHT == 0) {
+			let barWidth = 100, barHeight = 2;
+			context.fillText(y/HEIGHT, gameAreaOrigin.x + WIDTH/2 - barWidth/2 - 10, y);
+			context.fillRect(gameAreaOrigin.x + WIDTH/2 - barWidth/2, y, barWidth, barHeight);
+		}
+	}
 
-function showDeveloperMode() {
 	for(let trebleWave of trebleWaves) {
-		trebleWave.showDev();
+		trebleWave.showDeveloperStats(contextOffscreen);
 	}
 	for(let bassWave of bassWaves) {
-		bassWave.showDev();
+		bassWave.showDeveloperStats(contextOffscreen);
 	}
 	for(let asteroid of asteroids) {
-		asteroid.showDev();
+		asteroid.showDeveloperStats(contextOffscreen);
 	}
-	terrain.showDev();
-	probe.showDev();
+	terrain.showDeveloperStats(contextOffscreen);
+	probe.showDeveloperStats(contextOffscreen);
 }
 
 function spawnAsteroidOffscreen() {
-	let randomIndex = randomInt(0, asteroidSpawnPoints.length);
-	let spawnPoint = asteroidSpawnPoints[randomIndex];
-	let newAsteroid = new Asteroid(spawnPoint.x, spawnPoint.y);
-	asteroids.push(new Asteroid(spawnPoint.x, spawnPoint.y));
+	let offsetX = 0.3125*WIDTH;
+	let offsetY = 0.3125*HEIGHT;
+	let randomSpawnPoint = randomInt(0, 4);
+	let spawnPoint;
+	console.log(asteroidScreenCoordinates.toString(), asteroidScreenDimensions.toString());
+	switch(randomSpawnPoint) {
+		case 0: // left
+			spawnPoint = new Vector(asteroidScreenCoordinates.x - offsetX, asteroidScreenCoordinates.y + randomValue(0, asteroidScreenDimensions.y));
+			break;
+		case 1: // right
+			spawnPoint = new Vector(asteroidScreenCoordinates.x + asteroidScreenDimensions.x + offsetX, asteroidScreenCoordinates.y + randomValue(0, asteroidScreenDimensions.y));
+			break;
+		case 2: // top
+			spawnPoint = new Vector(asteroidScreenCoordinates.x + randomValue(0, asteroidScreenDimensions.x), asteroidScreenCoordinates.y - offsetY);
+			break;
+		case 3: // bottom
+			spawnPoint = new Vector(asteroidScreenCoordinates.x + 	randomValue(0, asteroidScreenDimensions.x), asteroidScreenCoordinates.y + asteroidScreenDimensions.y + offsetY);
+			break;
+	}
+	// console.log("asteroid spawn point", spawnPoint.toString(), randomSpawnPoint);
+	let newAsteroid = new Asteroid(spawnPoint.x, spawnPoint.y, asteroidScreenCoordinates, asteroidScreenDimensions);
+	asteroids.push(newAsteroid);
 }
-
 function updateAsteroids() {
 	// Spawn asteroids
 	if(asteroids.length < maxAsteroids) {
@@ -195,13 +234,13 @@ function updateWaves() {
 		let randomIndex = randomInt(0, waveSpawnPoints.length);
 		let spawnPoint = waveSpawnPoints[randomIndex];
 		let color = randomInt(1, 4);
-		trebleWaves.push(new TrebleWave(spawnPoint.x, spawnPoint.y, color));
+		trebleWaves.push(new TrebleWave(spawnPoint.x, spawnPoint.y, color, waveScreenCoordinates, waveScreenDimensions));
 	}
 	if(bassWaves.length < maxBassWaves) {
 		let spawnPoint = waveSpawnPoints[bassWaveSpawnPoint];
 		bassWaveSpawnPoint++;
 		bassWaveSpawnPoint %= waveSpawnPoints.length;
-		bassWaves.push(new BassWave(spawnPoint.x, spawnPoint.y));
+		bassWaves.push(new BassWave(spawnPoint.x, spawnPoint.y, waveScreenCoordinates, waveScreenDimensions));
 	}
 
 	// despawn waves
@@ -245,6 +284,30 @@ function collisionDetection() {
 	}
 }
 
+function drawBackground(context) {
+	context.save();
+
+	// black background most everywhere
+	context.fillStyle = "#000";
+	context.fillRect(0, 0, OFFSCREEN_WIDTH, bottomScreenY);
+
+	// atmosphere background near terrain
+	const backgroundGradient = context.createLinearGradient(0, bottomScreenY, 0, OFFSCREEN_HEIGHT);
+	backgroundGradient.addColorStop(0, "#000");
+	backgroundGradient.addColorStop(0.7, "#171e26");
+	// backgroundGradient.addColorStop(0.7, "#3f586b");
+	backgroundGradient.addColorStop(1, "#000");
+	context.fillStyle = backgroundGradient;
+	context.fillRect(0, bottomScreenY, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
+
+	// stars
+	for(let star of stars) {
+		star.draw(context);
+	}
+
+	context.restore();
+}
+
 function applyKeyboardInput() {
 	// control probe
 	if(keys[W] && !probe.touchingGround) {
@@ -263,58 +326,44 @@ function applyKeyboardInput() {
 		terrain.generate();
 	}
 
- 	// control gameArea camera
-	let scopeMovement = 5;
-	if(keys[LEFT]) {
-		gameArea.moveScope(new Vector(-scopeMovement, 0));
-	}
-	if(keys[RIGHT]) {
-		gameArea.moveScope(new Vector(scopeMovement, 0));
-	}
-	if(keys[UP]) {
-		gameArea.moveScope(new Vector(0, -scopeMovement));
-	}
-	if(keys[DOWN]) {
-		gameArea.moveScope(new Vector(0, scopeMovement));
-	}
-
-}
-
-function drawBackground() {
-	// background gradient
-	const backgroundGradient = contextGA.createLinearGradient(0, 0, 0, canvasGA.height);
-	backgroundGradient.addColorStop(0, "#000");
-	backgroundGradient.addColorStop(0.7, "#171e26");
-	backgroundGradient.addColorStop(1, "#000")
-	// backgroundGradient.addColorStop(1, "#3f586b");
-	contextGA.fillStyle = backgroundGradient;
-	contextGA.fillRect(0, 0, canvasGA.width, canvasGA.height);
-
-	// stars
-	for(let star of stars) {
-		star.draw(contextGA);
+ 	// control camera
+	if(DEV_MODE) {
+		let screenMovement = 10;
+		if(keys[LEFT]) {
+			gameAreaOrigin.add(new Vector(-screenMovement, 0));
+			console.log("new game origin", gameAreaOrigin.toString());
+		}
+		if(keys[RIGHT]) {
+			gameAreaOrigin.add(new Vector(screenMovement, 0));
+			console.log("new game origin", gameAreaOrigin.toString());
+		}
+		if(keys[UP]) {
+			gameAreaOrigin.add(new Vector(0, -screenMovement));
+			console.log("new game origin", gameAreaOrigin.toString());
+		}
+		if(keys[DOWN]) {
+			gameAreaOrigin.add(new Vector(0, screenMovement));
+			console.log("new game origin", gameAreaOrigin.toString());
+		}
 	}
 }
 
 // PROCESSING USER INPUT
+document.addEventListener('keydown', processKeyDownInput);
 function processKeyDownInput(event) {
 	if(event.key == ' '){
 		console.log(keys);
 	}
 	keys[event.keyCode] = true;
 }
-
+document.addEventListener('keyup', processKeyUpInput);
 function processKeyUpInput(event) {
 	//var key = event.key;
 	keys[event.keyCode] = false;
 }
-
+canvasGA.addEventListener('click',processMouseInput);
 function processMouseInput(event) {
 	var relX = (event.clientX - canvasGA.offsetLeft);
 	var relY = (event.clientY - canvasGA.offsetTop);
 	console.log(relX + ", " + relY);
 }
-
-canvasGA.addEventListener('click',processMouseInput);
-document.addEventListener('keydown', processKeyDownInput);
-document.addEventListener('keyup', processKeyUpInput);

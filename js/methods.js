@@ -1,4 +1,12 @@
 
+function rectanglesCollide(rect1, rect2) {
+  return (rect1.x + rect1.width > rect2.x
+    && rect1.x < rect2.x + rect2.width
+    && rect1.y + rect1.height > rect2.y
+    && rect1.y < rect2.y + rect2.width
+  );
+}
+
 function getFinalCollisionVelocity(m1, v1, m2, v2) {
   let numerator = m1*v1 + m2*v2 + m2*(v2 - v1);
   let denomenator = m1 + m2;
@@ -8,7 +16,6 @@ function getFinalCollisionVelocity(m1, v1, m2, v2) {
 function rotatePoint(vector, theta, origin) {
   let x0 = vector.x - origin.x;
   let y0 = vector.y - origin.y;
-  // console.log(x0, y0);
   let x1 = origin.x + (x0*Math.cos(theta) - y0*Math.sin(theta));
   let y1 = origin.y + (y0*Math.cos(theta) + x0*Math.sin(theta));
   let degrees = theta*(180/Math.PI);

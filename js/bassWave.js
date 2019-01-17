@@ -2,17 +2,18 @@
 
 class BassWave {
 
-  constructor(x, y) {
+  constructor(x, y, screenCoordinates, screenDimensions) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = 8;
-
+    this.speed = 3.2;
     this.radius = 1;
     this.fillStyle = 'white';
 
     // Calculate angle based on orientation towards the center of the screen
-    let centerOfScreen = new Vector(canvasGA.width/2, canvasGA.height/2);
-		this.towardsCenter = new Vector(centerOfScreen.x, centerOfScreen.y);
+    this.screenCoordinates = new Vector(screenCoordinates.x, screenCoordinates.y);
+    this.screenDimensions = new Vector(screenDimensions.x, screenDimensions.y);
+    this.centerOfScreen = new Vector(screenCoordinates.x + screenDimensions.x/2, screenCoordinates.y + screenDimensions.y/2);
+		this.towardsCenter = new Vector(this.centerOfScreen.x, this.centerOfScreen.y);
 		this.towardsCenter.sub(this.coordinates);
     this.towardsCenter.magnitude = this.radius;
     let middleAngle = -1*(Math.PI/2 - this.towardsCenter.angle);
@@ -30,14 +31,14 @@ class BassWave {
     // for calculating when to die
     this.circumPoint = new Vector(this.x, this.y);
     this.circumPoint.add(this.towardsCenter); // circumPoint is the point on the circumference of the circle closest to the center of the screen
-    this.distanceFromCenter = distance(this.circumPoint.x, this.circumPoint.y, canvasGA.width/2, canvasGA.height/2);
+    this.distanceFromCenter = distance(this.circumPoint.x, this.circumPoint.y, this.centerOfScreen.x, this.centerOfScreen.y);
     this.alive = true;
   }
 
   update() {
     // Move coordinates and increase radius
     this.coordinates.add(this.velocity);
-    this.radius += this.speed*0.4;
+    this.radius += this.speed;
 
     // Update circle shape
     this.shape = new Circle(new Vector(this.x, this.y), this.radius, this.startAngle, this.endAngle);
@@ -48,8 +49,8 @@ class BassWave {
     this.circumPoint.add(this.towardsCenter);
 
     // If circumPoint is off-screen and distance from center is increasing, alive is false
-    if(this.circumPoint.x < 0 || this.circumPoint.x > canvasGA.width || this.circumPoint.y < 0 || this.circumPoint.y > canvasGA.height) {
-      let newDistanceFromCenter = distance(this.circumPoint.x, this.circumPoint.y, canvasGA.width/2, canvasGA.height/2);
+    if(this.circumPoint.x < this.screenCoordinates.x || this.circumPoint.x > this.screenCoordinates.x + this.screenDimensions.x || this.circumPoint.y < this.screenCoordinates.y || this.circumPoint.y > this.screenCoordinates.y + this.screenDimensions.y) {
+      let newDistanceFromCenter = distance(this.circumPoint.x, this.circumPoint.y, this.centerOfScreen.x, this.centerOfScreen.y);
       if(newDistanceFromCenter > this.distanceFromCenter) {
         this.alive = false;
         return;
@@ -59,33 +60,39 @@ class BassWave {
     }
   }
 
-  showDev() {
-    contextGA.save();
-    contextGA.strokeStyle = "Tomato";
+  showDeveloperStats(context) {
+    context.save();
+    context.strokeStyle = "Tomato";
 
     // center
-    contextGA.beginPath();
-    contextGA.arc(this.x, this.y, 5, 0, 2*Math.PI);
-    contextGA.stroke();
+    context.beginPath();
+    context.arc(this.x, this.y, 5, 0, 2*Math.PI);
+    context.stroke();
 
     // radius
-    contextGA.beginPath();
-    contextGA.moveTo(this.x, this.y);
-    contextGA.lineTo(this.circumPoint.x, this.circumPoint.y);
-    contextGA.stroke();
+    context.beginPath();
+    context.moveTo(this.x, this.y);
+    context.lineTo(this.circumPoint.x, this.circumPoint.y);
+    context.stroke();
 
-    contextGA.restore();
+    // center
+    context.font = "20px Arial";
+    context.fillStyle = "white";
+    context.fillText("Wave Center", this.centerOfScreen.x, this.centerOfScreen.y - 30);
+    context.fillText(this.centerOfScreen.toString(), this.centerOfScreen.x, this.centerOfScreen.y);
+
+    context.restore();
   }
 
-  draw() {
-    contextGA.save();
-    contextGA.strokeStyle = this.fillStyle;
+  draw(context) {
+    context.save();
+    context.strokeStyle = this.fillStyle;
 
-    contextGA.beginPath();
-    contextGA.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle);
-    contextGA.stroke();
+    context.beginPath();
+    context.arc(this.x, this.y, this.radius, this.startAngle, this.endAngle);
+    context.stroke();
 
-    contextGA.restore();
+    context.restore();
   }
 
   collisionDetection() {

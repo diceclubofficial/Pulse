@@ -2,7 +2,7 @@
 
 class Asteroid {
 
-  constructor(x, y) {
+  constructor(x, y, screenCoordinates, screenDimensions) {
     // vector quantities
     this.coordinates = new Vector(x, y);
     this.speed = randomValue(3, 8);
@@ -20,12 +20,15 @@ class Asteroid {
     this.angle = 0;
     this.angularVelocity = 0;
     this.angularAcceleration = 0;
-
     this.momentOfInertia = (.5 * this.mass * Math.pow(this.width/2, 2) );
+
     this.fillStyle = 'rgb(255, 255, 255)';
 
     this.onScreen = false;
-    this.distanceFromCenter = distance(this.x, this.y, canvasGA.width/2, canvasGA.height/2);
+    this.screenCoordinates = new Vector(screenCoordinates.x, screenCoordinates.y);
+    this.screenDimensions = new Vector(screenDimensions.x, screenDimensions.y);
+    this.centerOfScreen = new Vector(this.screenCoordinates.x + this.screenDimensions.x/2, this.screenCoordinates.y + this.screenDimensions.y/2);
+    this.distanceFromCenter = distance(this.x, this.y, this.centerOfScreen.x, this.centerOfScreen.y);
     this.alive = true;
 
     this.collidingWithAsteroid = 0; // 1 when polygons intersect, 0.5 when big boxes intersect, 0 when no collision
@@ -56,9 +59,9 @@ class Asteroid {
     if(this.radius < 3) this.alive = false;
 
     // If offscreen and distanceFromCenter is increasing, alive is false
-    if(this.x < -this.width || this.x > canvasGA.width || this.y < -this.height || this.y > canvasGA.height) {
+    if(this.x < this.screenCoordinates.x - this.width || this.x > this.screenCoordinates.x + this.screenDimensions.x || this.y < this.screenCoordinates.y - this.height || this.y > this.screenCoordinates.y + this.screenDimensions.y) {
       this.onScreen = false;
-      let newDistanceFromCenter = distance(this.x, this.y, canvasGA.width/2, canvasGA.height/2);
+      let newDistanceFromCenter = distance(this.x, this.y, this.centerOfScreen.x, this.centerOfScreen.y);
       if(newDistanceFromCenter > this.distanceFromCenter) {
         this.alive = false;
       } else {
@@ -69,7 +72,7 @@ class Asteroid {
     }
   }
 
-  showDev() {
+  showDeveloperStats(context) {
     // fillStyle
     this.fillStyle = "rgb(255, 255, 255)";
     if(this.dwarf > 0) {
@@ -82,40 +85,45 @@ class Asteroid {
     }
 
     // show asteroid shape with points
-    this.shape.draw(contextGA, this.fillStyle, true);
+    this.shape.draw(context, this.fillStyle, true);
 
     // show radius
-    contextGA.save();
-    contextGA.strokeStyle = "Tomato";
-    contextGA.beginPath();
-    contextGA.moveTo(this.shape.centroid.x, this.shape.centroid.y);
-    contextGA.lineTo(this.shape.centroid.x + this.radius, this.shape.centroid.y);
-    contextGA.stroke();
-    contextGA.restore();
+    context.save();
+    context.strokeStyle = "Tomato";
+    context.beginPath();
+    context.moveTo(this.shape.centroid.x, this.shape.centroid.y);
+    context.lineTo(this.shape.centroid.x + this.radius, this.shape.centroid.y);
+    context.stroke();
+    context.restore();
 
     // show width and height
-    contextGA.save();
-    contextGA.strokeStyle = "pink";
-    contextGA.strokeRect(this.x, this.y, this.width, this.height);
-    contextGA.restore();
+    context.save();
+    context.strokeStyle = "pink";
+    context.strokeRect(this.x, this.y, this.width, this.height);
+    context.restore();
 
     // print text
-    contextGA.save();
+    context.save();
     let fontSize = this.height*0.3;
-    contextGA.font = fontSize + "px Arial";
-    contextGA.textAlign = "center";
-    contextGA.fillStyle = this.fillStyle;
+    context.font = fontSize + "px Arial";
+    context.textAlign = "center";
+    context.fillStyle = this.fillStyle;
     let offset = this.height*0.25;
     // velocity
-    contextGA.fillText(Math.round(this.velocity.x) + ", " + Math.round(this.velocity.y), this.shape.centroid.x, this.shape.centroid.y);
+    context.fillText(Math.round(this.velocity.x) + ", " + Math.round(this.velocity.y), this.shape.centroid.x, this.shape.centroid.y);
     // energy
-    contextGA.fillText(Math.round(this.energy), this.shape.centroid.x, this.shape.centroid.y + offset);
-    contextGA.restore();
+    context.fillText(Math.round(this.energy), this.shape.centroid.x, this.shape.centroid.y + offset);
+    // center
+    context.fillStyle = "white";
+    context.font = "20px Arial";
+    context.fillText("Asteroid Center", this.centerOfScreen.x, this.centerOfScreen.y - 30);
+    context.fillText(this.centerOfScreen.toString(), this.centerOfScreen.x, this.centerOfScreen.y);
+    context.restore();
   }
 
-  draw() {
+  draw(context) {
     // draw shape without points
-    this.shape.draw(contextGA, this.fillStyle, false);
+    this.shape.draw(context, this.fillStyle, false);
   }
 
   collisionDetection() {
@@ -132,7 +140,7 @@ class Asteroid {
       }
 
       // simple and fast big box collision detection
-      if( !(other.x + other.width > this.x && other.x < this.x + this.width && other.y + other.height > this.y && other.y < this.y + this.width) ) {
+      if( !rectanglesCollide(this, other) ) {
         continue asteroidLoop;
       }
 
@@ -173,7 +181,7 @@ class Asteroid {
   }
   collisionDetectionWithLander() {
     // simple and fast big box collision detection
-    if( !(probe.x + probe.width > this.x && probe.x < this.x + this.width && probe.y + probe.height > this.y && probe.y < this.y + this.width) ) {
+    if(!rectanglesCollide(probe, this)) {
       this.collidingWithProbe = 0;
       return;
     }
@@ -251,7 +259,7 @@ class Asteroid {
     for(let i = 0; i < fragments; i++) {
       // energy = 0.5*mass*speed^2
       // so speed = (2*energy/mass)^1/2
-      let newAsteroid = new Asteroid(this.x, this.y);
+      let newAsteroid = new Asteroid(this.x, this.y, this.screenCoordinates, this.screenDimensions);
       let randomRadius = randomValue(minRadius, maxRadius);
       newAsteroid.radius = randomRadius;
       newAsteroid.generateDimensions();

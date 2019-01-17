@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 body {
   background-color: #000;
 }
@@ -16,5 +19,5 @@ body {
   display: none;
 }
 canvas {
-  border: 5px solid rgb(171, 0, 186);
+  border: 1px solid rgb(171, 0, 186);
 }
