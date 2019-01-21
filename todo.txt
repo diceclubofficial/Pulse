@@ -1,23 +1,31 @@
 
-todo current:
--clean up code
+todo current commit:
+-add mini gun to lander
 
 todo later:
--make collision detection predictive
--make asteroid sprites generate with the shape
--do concave polygon collision detection
--make rotational collisions and rotational energy with asteroids
--fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
--add game states and title screen
+-make camera position itself based on where the lander is facing
+-make asteroid sprites generate with the shape (Jason)
+-make Animation class to show effects like explosions (parameters: spritesheet src, width/height of sprite, width/height of sheet, speed of animation (frames/sprite), times to repeat (0 or more)) (Jason)
+-fix collision detection
+  -make collision detection predictive (figure out if two objects will collide next frame; if so, translate them right next to each other and apply velocity changes to guarantee one frame looks like they collide)
+  -do concave polygon collision detection
+  -make rotational collisions and rotational energy with asteroids
+  -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
+-add game states (success/gameOver screen and 8 levels)
 -increase fps to 60 or 120 and change numbers accurately
--add fuel gauge and other stats
+-add fuel gauge, gun ammo, and other stats in a nice-looking display
+-telegraph if the lander is going to hit the ground at too high speed with speed lines like from anime and mariokart
 -add sprites to bassWaves (need more art)
 -make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
 
 issues:
+-sometimes when asteroids shatter() they spawn asteroids larger than themselves (entropy ?)
+-asteroid generation based on Perlin sometimes has jagged cuts because of Perlin resetting
 -bass waves go way too fast and are too large to avoid - need to playtest
 
-smaller ideas:
+ideas:
+-lander has dash action (lateral thrusters do a small burst) to get away from obstacles fast but it consumes a lot of fuel
+-something cool happens when you use fire from the thrusters on something else (like R.O.B.'s aerials in smash)
 -have music from planet fade in as lander descends (start with lonely machinery beeping and fade in music as the planet and waves are visible)
 -asteroids collide on the beat in the middle of the screen and explode?
 -make terminal velocity for lander?
@@ -26,11 +34,11 @@ smaller ideas:
 -pick out a color scheme to design by
 -make gravity increase as you approach the surface
 
-wave names:
+wave naming convention:
 -treble - small fast waves (blue, green, and red rectangular waves)
 -bass - large slower waves (waves that radiate out)
 -alto - atmospheric wind
--tenor
+-tenor - air geysers from surface of planet on beat (going up)
 -soprano
 -baritone
 -subbass

@@ -8,6 +8,8 @@ const UP = 38,
 			DOWN = 40,
 			LEFT = 37;
 
+const SPACEBAR = 32;
+
 const W = 87,
 			A = 65,
 			S = 83,
@@ -22,8 +24,7 @@ const GRAVITY = new Vector(0, 0.05);
 let terrain = new Terrain();
 let stars = [];
 // Randomly generate stars
-let starsPerScreen = 20;
-let totalScreens = (OFFSCREEN_WIDTH/WIDTH) * (OFFSCREEN_HEIGHT/HEIGHT);
+const starsPerScreen = 20;
 for(let i = 0; i < starsPerScreen*totalScreens; i++) {
 	let x = randomValue(0, OFFSCREEN_WIDTH);
 	let y = randomValue(0, terrain.highestGround);
@@ -50,9 +51,12 @@ let bassWaveSpawnPoint = 0;
 
 // asteroids
 let asteroids = [];
-const maxAsteroids = 15;
-const asteroidScreenCoordinates = new Vector(gameAreaOrigin.x, gameAreaOrigin.y + HEIGHT);
-const asteroidScreenDimensions = new Vector(WIDTH, HEIGHT);
+const maxAsteroids = 45;
+const asteroidScreenCoordinates = new Vector(gameAreaOrigin.x, gameAreaOrigin.y);
+const asteroidScreenDimensions = new Vector(WIDTH, 2 * HEIGHT);
+
+// bullets
+let bullets = [];
 
 let audioContext = new AudioContext();
 audioContext.suspend();
@@ -69,7 +73,7 @@ window.onload = function() {
 	});
 }
 
-const DEV_MODE = true; // change this to toggle showing developer stats
+const DEV_MODE = false; // change this to toggle showing developer stats
 
 function startGame() {
 	// remove start button and title screen
@@ -97,6 +101,7 @@ function play() {
 	// Update everything
 	updateWaves();
 	updateAsteroids();
+	updateBullets();
 	if(!probe.inGround) probe.applyForce(GRAVITY);
 	probe.update();
 
@@ -115,6 +120,23 @@ function play() {
 }
 
 function updateAudio() {
+	// do audio stuff here
+}
+
+function updateBullets() {
+	// Update bullets
+	for(let bullet of bullets) {
+		bullet.update();
+	}
+
+	// Despawn bullets
+	let aliveBullets = [];
+	for(let bullet of bullets) {
+		if(bullet.alive) {
+			aliveBullets.push(bullet);
+		}
+	}
+	bullets = aliveBullets;
 }
 
 function drawEverything() {
@@ -133,11 +155,18 @@ function drawEverything() {
 		asteroid.draw(contextOffscreen);
 	}
 
+	// bullets
+	for(let bullet of bullets) {
+		bullet.draw(contextOffscreen);
+	}
+
 	// terrain
 	terrain.draw(contextOffscreen);
 
 	// lander
 	probe.draw(contextOffscreen);
+
+	drawForeground(contextOffscreen);
 }
 function showDeveloperStats() {
 	// coordinate markers
@@ -179,6 +208,9 @@ function showDeveloperStats() {
 	for(let asteroid of asteroids) {
 		asteroid.showDeveloperStats(contextOffscreen);
 	}
+	for(let bullet of bullets) {
+		bullet.showDeveloperStats(contextOffscreen);
+	}
 	terrain.showDeveloperStats(contextOffscreen);
 	probe.showDeveloperStats(contextOffscreen);
 }
@@ -188,7 +220,6 @@ function spawnAsteroidOffscreen() {
 	let offsetY = 0.3125*HEIGHT;
 	let randomSpawnPoint = randomInt(0, 4);
 	let spawnPoint;
-	console.log(asteroidScreenCoordinates.toString(), asteroidScreenDimensions.toString());
 	switch(randomSpawnPoint) {
 		case 0: // left
 			spawnPoint = new Vector(asteroidScreenCoordinates.x - offsetX, asteroidScreenCoordinates.y + randomValue(0, asteroidScreenDimensions.y));
@@ -282,6 +313,10 @@ function collisionDetection() {
 	for(let asteroid of asteroids) {
 		asteroid.collisionDetection();
 	}
+
+	for(let bullet of bullets) {
+		bullet.collisionDetection();
+	}
 }
 
 function drawBackground(context) {
@@ -307,6 +342,20 @@ function drawBackground(context) {
 
 	context.restore();
 }
+function drawForeground(context) {
+	context.save();
+
+	let padding = 20;
+	let fontSize = 20;
+	context.font = fontSize + "px Courier New";
+	context.textAlign = "left";
+	context.textBaseline = "top";
+	context.fillStyle = "white";
+	context.fillText("Fuel: " + probe.fuel, gameAreaOrigin.x + 30, gameAreaOrigin.y + 30);
+	context.fillText("Ammo: " + probe.ammo, gameAreaOrigin.x + 30, gameAreaOrigin.y + 30 + padding);
+
+	context.restore();
+}
 
 function applyKeyboardInput() {
 	// control probe
@@ -324,6 +373,11 @@ function applyKeyboardInput() {
 	// regenerate terrain
 	if(keys[S]) {
 		terrain.generate();
+	}
+
+	// fire gun
+	if(keys[SPACEBAR]) {
+		probe.fireBullet();
 	}
 
  	// control camera
@@ -351,17 +405,16 @@ function applyKeyboardInput() {
 // PROCESSING USER INPUT
 document.addEventListener('keydown', processKeyDownInput);
 function processKeyDownInput(event) {
-	if(event.key == ' '){
+	if(event.key == 'z'){
 		console.log(keys);
 	}
 	keys[event.keyCode] = true;
 }
 document.addEventListener('keyup', processKeyUpInput);
 function processKeyUpInput(event) {
-	//var key = event.key;
 	keys[event.keyCode] = false;
 }
-canvasGA.addEventListener('click',processMouseInput);
+canvasGA.addEventListener('click', processMouseInput);
 function processMouseInput(event) {
 	var relX = (event.clientX - canvasGA.offsetLeft);
 	var relY = (event.clientY - canvasGA.offsetTop);

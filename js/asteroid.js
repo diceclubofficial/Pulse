@@ -127,9 +127,11 @@ class Asteroid {
   }
 
   collisionDetection() {
-    this.collisionDetectionWithAsteroid();
-    this.collisionDetectionWithLander();
-    this.collisionDetectionWithTerrain();
+    if(this.onScreen) {
+      this.collisionDetectionWithAsteroid();
+      this.collisionDetectionWithLander();
+      this.collisionDetectionWithTerrain();
+    }
   }
   collisionDetectionWithAsteroid() {
     let thisAsteroidColliding = 0;
@@ -227,7 +229,7 @@ class Asteroid {
     }
   }
 
-  collideAgainst(otherObject, shatter) {
+  collideAgainst(otherObject, shatter = false) {
     // calculate new velocity
     let velX = getFinalCollisionVelocity(this.mass, this.velocity.x, otherObject.mass, otherObject.velocity.x);
     let velY = getFinalCollisionVelocity(this.mass, this.velocity.y, otherObject.mass, otherObject.velocity.y);
@@ -235,7 +237,7 @@ class Asteroid {
 
     // break into pieces
     let newEnergy = 0.5*this.mass*Math.pow(newVelocity.magnitude, 2);
-    if(this.dwarf <= 0 && (shatter || newEnergy > 30)) {
+    if(shatter || (this.dwarf <= 0 && newEnergy > 30)) {
       this.shatter(newVelocity);
     }
     // or bounce elastically
