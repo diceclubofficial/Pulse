@@ -1,13 +1,12 @@
 
 todo current commit:
--add mini gun to lander
+-make collision detection predictive (figure out if two objects will collide next frame; if so, translate them right next to each other and apply velocity changes to guarantee one frame looks like they collide)
 
 todo later:
 -make camera position itself based on where the lander is facing
 -make asteroid sprites generate with the shape (Jason)
 -make Animation class to show effects like explosions (parameters: spritesheet src, width/height of sprite, width/height of sheet, speed of animation (frames/sprite), times to repeat (0 or more)) (Jason)
 -fix collision detection
-  -make collision detection predictive (figure out if two objects will collide next frame; if so, translate them right next to each other and apply velocity changes to guarantee one frame looks like they collide)
   -do concave polygon collision detection
   -make rotational collisions and rotational energy with asteroids
   -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
@@ -19,6 +18,7 @@ todo later:
 -make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
 
 issues:
+-gun too strong? stronger than thruster? needs playtesting
 -sometimes when asteroids shatter() they spawn asteroids larger than themselves (entropy ?)
 -asteroid generation based on Perlin sometimes has jagged cuts because of Perlin resetting
 -bass waves go way too fast and are too large to avoid - need to playtest
