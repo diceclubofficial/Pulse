@@ -136,15 +136,36 @@ class TrebleWave {
       return;
     }
 
+    // prime is next frame rectangles
+    let probeRectPrime = {
+      x: probe.x + probe.velocity.x,
+      y: probe.y + probe.velocity.y,
+      width: probe.width,
+      height: probe.height,
+    }
+    let thisRectPrime = {
+      x: this.x + this.velocity.x,
+      y: this.y + this.velocity.y,
+      width: this.width,
+      height: this.height,
+    }
     // simple and fast big box collision detection
-    if( !rectanglesCollide(probe, this) ) {
+    if( !rectanglesCollide(probeRectPrime, thisRectPrime) ) {
       return;
     }
 
+    // translate to next frame
+    this.translate(this.velocity);
+    probe.translate(probe.velocity);
     // do more complex and slower polygon collision detection
     if(!this.shape.overlapsPolygon(probe.shape)) {
+      // undo translation to next frame
+      this.translate(new Vector(-this.velocity.x, -this.velocity.y));
+      probe.translate(new Vector(-probe.velocity.x, -probe.velocity.y));
       return;
     }
+    this.translate(new Vector(-this.velocity.x, -this.velocity.y));
+    probe.translate(new Vector(-probe.velocity.x, -probe.velocity.y));
 
     // collision occurs:
     // blue wave

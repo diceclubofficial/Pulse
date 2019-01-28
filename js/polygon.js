@@ -254,7 +254,7 @@ class Polygon {
 
   toString() {
     let returned = "Polygon with points: "
-    for(let point of points) {
+    for(let point of this.vertices) {
       returned += "(" + point.x + ", " + point.y + ") ";
     }
     return returned;

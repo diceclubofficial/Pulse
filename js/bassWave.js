@@ -96,6 +96,8 @@ class BassWave {
   }
 
   collisionDetection() {
+    probe.translate(probe.velocity);
+    this.translate(this.velocity);
     if(probe.shape.overlapsArc(this.shape, 30)) {
 			let towardsLander = new Vector(probe.x, probe.y);
 			towardsLander.sub(this.coordinates);
@@ -104,7 +106,10 @@ class BassWave {
 			probe.applyForce(force);
 
 			this.alive = false;
-		}
+		} else { // translate back
+      probe.translate(new Vector(-probe.velocity.x, -probe.velocity.y));
+      this.translate(new Vector(-this.velocity.x, -this.velocity.y));
+    }
   }
 
   translate(translationVector) {
