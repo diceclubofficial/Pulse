@@ -2,9 +2,10 @@ class Animation {
 
 
 
-  constructor(position, spriteSheetInformation, framesPerSprite = 3, scale = 1, repeat = false) {
+  constructor(type, position, spriteSheetInformation, framesPerSprite = 3, scale = 1, repeat = false) {
     //spriteSheetSource, sheetWidth, sheetHeight, spriteWidth, spriteHeight, numSprites = -1
-    this.coordinates = new Vector(position.x, position.y);
+    this.type = type;
+    this.coordinates = position;
     this.spriteSheet = new Image();
     this.spriteSheet.src = spriteSheetInformation.src;
     this.sheetWidth = spriteSheetInformation.sheetWidth;
@@ -33,7 +34,7 @@ class Animation {
   }
 
   update() {
-    console.log(this.alive);
+    console.log(this.coordinates.toString());
     //dont update if animation is only supposed to play once and it has finished one cycle
     if (this.oneCycleCompleted == true && this.repeat == false) {
       this.alive = false;
@@ -97,10 +98,12 @@ class Animation {
         this.currentImagePosY * this.spriteHeight, //Y Pos on sheet
         this.spriteWidth, //Sprite width
         this.spriteHeight, //Sprite Height
-        this.coordinates.x - this.spriteWidth / 2, //X Pos on canvas (center)
-        this.coordinates.y - this.spriteHeight / 2, //Y Pos on canvas (center)
+        this.coordinates.x - this.spriteWidth * this.scale / 2, //X Pos on canvas (center)
+        this.coordinates.y - this.spriteHeight * this.scale / 2, //Y Pos on canvas (center)
         this.spriteWidth * this.scale, //Width on screen
         this.spriteHeight * this.scale); //Height on screen
+
+      console.log("Sprite coords from class:", this.coordinates.x - this.spriteWidth * this.scale / 2 + " ", this.coordinates.y - this.spriteHeight * this.scale / 2);
     }
   }
 }

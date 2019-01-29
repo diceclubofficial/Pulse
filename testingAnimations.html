@@ -5,7 +5,11 @@
 <script type="text/javascript">
   var canvas = document.getElementById("canvas");
   var context = canvas.getContext("2d");
-  var sheetSource = "images/explosions.png"
+  var sheetSource = "images/Explosions.png"
+
+  var rectX = 300;
+  var rectY = 233;
+
 
 
   let information = {
@@ -18,7 +22,11 @@
   }
 
 
-  var mySheetObj1 = new Animation(new Vector(100, 100), information, 5, 3, false);
+  var mySheetObj1 = new Animation("none", new Vector(rectX, rectY), information, 5, 3, true);
+
+
+
+
 
   function clearBackground(){
     context.fillStyle = "rgb(50, 50, 50)";
@@ -29,6 +37,14 @@
     clearBackground();
     mySheetObj1.update();
     mySheetObj1.draw(context);
+    context.fillStyle = "yellow";
+    context.fillRect(rectX, rectY, 5, 5);
+
+    context.strokeStyle = "yellow";
+    context.strokeRect(rectX - mySheetObj1.spriteWidth/2, rectY - mySheetObj1.spriteHeight/2, mySheetObj1.spriteWidth, mySheetObj1.spriteHeight);
+    context.strokeRect(mySheetObj1.coordinates.x - mySheetObj1.spriteWidth * mySheetObj1.scale / 2, mySheetObj1.coordinates.y - mySheetObj1.spriteHeight * mySheetObj1.scale / 2, mySheetObj1.spriteWidth * mySheetObj1.scale, mySheetObj1.spriteHeight * mySheetObj1.scale);
+
+
   }
 
   setInterval(run, 1000/30);

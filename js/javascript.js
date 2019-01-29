@@ -148,6 +148,10 @@ function updateAnimations() {
   let aliveAnimations = [];
   for (let animation of animations) {
     animation.update();
+
+    // explosion always is at tip of lander
+    if (animation.type == "explosion") animation.coordinates = probe.shape.vertices[0];
+
     if (animation.alive) {
       aliveAnimations.push(animation);
     }
@@ -386,8 +390,9 @@ function drawForeground(context) {
 
 function spawnExplosion() {
   let x = probe.shape.vertices[0].x;
-  let y = probe.shape.vertices[0].y
-  let position = new Vector(x, y);
+  let y = probe.shape.vertices[0].y;
+  //let position = new Vector(x, y);
+  let position = probe.shape.vertices[0];
 
   let information = {
     src: "images/explosions.png",
@@ -398,11 +403,11 @@ function spawnExplosion() {
     numSprites: 5
   }
 
-  let framesPerSprite = 3;
+  let framesPerSprite = 1;
   let scale = 1;
   let repeat = false;
 
-  let animation = new Animation(position, information, framesPerSprite, scale, repeat);
+  let animation = new Animation("explosion", position, information, framesPerSprite, scale, repeat);
 
   animations.push(animation);
 }
@@ -428,7 +433,6 @@ function applyKeyboardInput() {
   // fire gun
   if (keys[SPACEBAR]) {
     probe.fireBullet();
-    spawnExplosion();
   }
 
   // control camera

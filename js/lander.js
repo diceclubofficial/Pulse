@@ -22,7 +22,7 @@ class Lander {
     this.angularAcceleration = 0;
 
     this.thrusterPower = 0.15;
-    this.momentOfInertia = (.5 * this.mass * Math.pow(this.width/2, 2) );
+    this.momentOfInertia = (.5 * this.mass * Math.pow(this.width / 2, 2));
     this.fillStyle = 'rgb(255, 255, 255)';
 
     // collision detection with ground
@@ -48,7 +48,7 @@ class Lander {
   }
 
   update() {
-    if(this.inGround) {
+    if (this.inGround) {
       this.velocity.mult(0);
       this.acceleration.mult(0);
       this.angularVelocity = 0;
@@ -63,7 +63,7 @@ class Lander {
 
     // Rotational motion
     //this.angularAcceleration += ((-this.angularVelocity*.9)/this.momentOfInertia);
-    this.angularAcceleration += (-this.angularVelocity*.05);
+    this.angularAcceleration += (-this.angularVelocity * .05);
     this.angularVelocity += this.angularAcceleration;
     this.angle += this.angularVelocity;
     this.shape.rotate(this.angularVelocity);
@@ -73,10 +73,9 @@ class Lander {
 
     this.bulletTimer--;
 
-    if(this.touchingGround) {
+    if (this.touchingGround) {
       this.collideWithGround();
-    }
-    else {
+    } else {
       this.fillStyle = "rgb(0, 255, 0)";
       this.impactGround = true;
       this.groundedVertexPositions = [];
@@ -85,21 +84,21 @@ class Lander {
     // if approaching the edge of the screen, move the screen
     let xDiff = 0.333 * WIDTH;
     let yDiff = 0.4 * HEIGHT;
-    if(this.x < gameAreaOrigin.x + xDiff && this.velocity.x < 0 && gameAreaOrigin.x + this.velocity.x > 0) {
+    if (this.x < gameAreaOrigin.x + xDiff && this.velocity.x < 0 && gameAreaOrigin.x + this.velocity.x > 0) {
       gameAreaOrigin.add(new Vector(this.velocity.x, 0));
     }
-    if(this.x > gameAreaOrigin.x + WIDTH - xDiff && this.velocity.x > 0 && gameAreaOrigin.x + WIDTH + this.velocity.x < OFFSCREEN_WIDTH) {
+    if (this.x > gameAreaOrigin.x + WIDTH - xDiff && this.velocity.x > 0 && gameAreaOrigin.x + WIDTH + this.velocity.x < OFFSCREEN_WIDTH) {
       gameAreaOrigin.add(new Vector(this.velocity.x, 0));
     }
-    if(this.y < gameAreaOrigin.y + yDiff && this.velocity.y < 0 && gameAreaOrigin.y + this.velocity.y > 0) {
+    if (this.y < gameAreaOrigin.y + yDiff && this.velocity.y < 0 && gameAreaOrigin.y + this.velocity.y > 0) {
       gameAreaOrigin.add(new Vector(0, this.velocity.y));
     }
-    if(this.y > gameAreaOrigin.y + HEIGHT - yDiff && this.velocity.y > 0 && gameAreaOrigin.y + HEIGHT + this.velocity.y < OFFSCREEN_HEIGHT) {
+    if (this.y > gameAreaOrigin.y + HEIGHT - yDiff && this.velocity.y > 0 && gameAreaOrigin.y + HEIGHT + this.velocity.y < OFFSCREEN_HEIGHT) {
       gameAreaOrigin.add(new Vector(0, this.velocity.y));
     }
 
     // If offscreen, print coordinates
-    if(this.x < -this.width || this.x > OFFSCREEN_WIDTH || this.y < -this.height || this.y > OFFSCREEN_HEIGHT) {
+    if (this.x < -this.width || this.x > OFFSCREEN_WIDTH || this.y < -this.height || this.y > OFFSCREEN_HEIGHT) {
       console.log("Lander is offscreen at (" + Math.floor(this.x) + ", " + Math.floor(this.y) + ") with velocity x:" + Math.floor(this.velocity.x) + " y:" + Math.floor(this.velocity.y));
     }
   }
@@ -121,12 +120,12 @@ class Lander {
     context.save();
 
     // draw lander image
-    context.translate(this.x + this.width/2, this.y + this.height/2);
+    context.translate(this.x + this.width / 2, this.y + this.height / 2);
     context.rotate(this.angle);
-    if(this.thrustersOn) {
-      context.drawImage(this.landerThrusterSheet, this.currImage*this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.imageWidth/2, -this.imageHeight/2, this.imageWidth, this.imageHeight);
+    if (this.thrustersOn) {
+      context.drawImage(this.landerThrusterSheet, this.currImage * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
     } else {
-      context.drawImage(this.landerStaticImage, -this.imageWidth/2, -this.imageHeight/2, this.imageWidth, this.imageHeight);
+      context.drawImage(this.landerStaticImage, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
     }
 
     context.restore();
@@ -135,21 +134,21 @@ class Lander {
   animate() {
     // Decrease timer
     this.animationTimer--;
-    if(this.animationTimer > 0) {
+    if (this.animationTimer > 0) {
       return;
     }
     this.animationTimer = this.framesPerAnimation;
 
     // Change sprite:
     // if thrusters are on, cycle through the images
-    if(this.thrustersOn) {
+    if (this.thrustersOn) {
       this.currImage += this.animationDirection;
 
       // switch animation direction back and forth
-      if(this.currImage >= this.numImages - 1) {
+      if (this.currImage >= this.numImages - 1) {
         this.currImage = 2;
         this.animationDirection = -1;
-      } else if(this.currImage <= 0) {
+      } else if (this.currImage <= 0) {
         this.currImage = 0;
         this.animationDirection = 1;
       }
@@ -161,49 +160,50 @@ class Lander {
   collideWithGround() {
     this.fillStyle = "rgb(255, 0, 0)";
     // On first impact, bounce velocity
-    if(this.impactGround) {
+    if (this.impactGround) {
       let velMult = -0.2;
-      this.velocity = new Vector(this.velocity.x*velMult, this.velocity.y*velMult);
-      if(Math.abs(this.velocity.y) < 1) {
+      this.velocity = new Vector(this.velocity.x * velMult, this.velocity.y * velMult);
+      if (Math.abs(this.velocity.y) < 1) {
         this.velocity.mult(0);
       }
-    }
-    else if(this.velocity.y > 0) {
+    } else if (this.velocity.y > 0) {
       this.velocity.mult(0);
     }
     this.impactGround = false;
     // If two or more vertices are touching the ground, the lander is static
-    if(this.groundedVertexPositions.length >= 2 || this.groundedVertexPositions[0] == 0) {
+    if (this.groundedVertexPositions.length >= 2 || this.groundedVertexPositions[0] == 0) {
       this.inGround = true;
       return;
     }
     // Apply torque on vertices
     let totalTorque = 0;
-    for(let i = 0; i < this.shape.vertices.length; i++) {
+    for (let i = 0; i < this.shape.vertices.length; i++) {
       let vertex = this.shape.vertices[i];
 
       // If the vertex is not grounded, add torque
-      if(!this.groundedVertexPositions.includes(i)) {
+      if (!this.groundedVertexPositions.includes(i)) {
         let direction = new Vector(vertex.x, vertex.y);
         direction.sub(this.shape.centroid);
         let angle = direction.angle;
-        let torque = direction.magnitude*Math.sin(angle);
+        let torque = direction.magnitude * Math.sin(angle);
         totalTorque += torque;
       }
     }
-    if(Math.abs(totalTorque) < 1) totalTorque = 0;
+    if (Math.abs(totalTorque) < 1) totalTorque = 0;
     let clockwise = totalTorque > 0 ? true : false;
-    let torqueMultiplier = Math.abs(totalTorque)*0.01;
+    let torqueMultiplier = Math.abs(totalTorque) * 0.01;
     this.applyTorque(clockwise, torqueMultiplier);
   }
 
   generateDimensions() {
     this.imageWidth = 50;
     this.imageHeight = this.imageWidth * (this.spriteHeight / this.spriteWidth); // calculate height based on width and sprite size to not distort the image
-    let xs = this.imageWidth*(3/42), xl = this.imageWidth*(11/42); //x-small and x-large
-    let ys = this.imageHeight*(15/50), yl = this.imageHeight*(47/50); //y-small and y-large
+    let xs = this.imageWidth * (3 / 42),
+      xl = this.imageWidth * (11 / 42); //x-small and x-large
+    let ys = this.imageHeight * (15 / 50),
+      yl = this.imageHeight * (47 / 50); //y-small and y-large
     let vertices = [
-      new Vector(this.imageWidth/2, 0),
+      new Vector(this.imageWidth / 2, 0),
       new Vector(this.imageWidth - xl, ys),
       new Vector(this.imageWidth - xs, yl),
       new Vector(xs, yl),
@@ -213,16 +213,16 @@ class Lander {
 
     // find maxDistance (kinda like radius)
     let maxDistance = 0;
-    for(let vertex of this.shape.vertices) {
+    for (let vertex of this.shape.vertices) {
       let thisDistance = distance(vertex.x, vertex.y, this.shape.x, this.shape.y);
-      if(thisDistance > maxDistance) {
+      if (thisDistance > maxDistance) {
         maxDistance = thisDistance;
       }
     }
 
     this.width = this.height = 2 * maxDistance;
 
-    let translateVector = new Vector(this.x + this.width/2 - this.imageWidth/2, this.y + this.height/2 - this.imageHeight/2);
+    let translateVector = new Vector(this.x + this.width / 2 - this.imageWidth / 2, this.y + this.height / 2 - this.imageHeight / 2);
     this.shape.translate(translateVector);
 
     this.mass = 1;
@@ -234,20 +234,20 @@ class Lander {
     this.acceleration.add(appliedForce);
   }
   applyTorque(clockwise, multiplier) {
-    if(multiplier == undefined) multiplier = 1;
-    if(clockwise) {
+    if (multiplier == undefined) multiplier = 1;
+    if (clockwise) {
       this.angularAcceleration += 0.01 * multiplier;
     } else {
       this.angularAcceleration -= 0.01 * multiplier;
     }
   }
   applyThrusters() {
-    if(this.fuel <= 0) {
+    if (this.fuel <= 0) {
       this.thrustersOn = false;
       return;
     }
 
-    let thrustForce = new Vector(Math.cos(this.angle-(Math.PI/2)), Math.sin(this.angle-(Math.PI/2)));
+    let thrustForce = new Vector(Math.cos(this.angle - (Math.PI / 2)), Math.sin(this.angle - (Math.PI / 2)));
     thrustForce.mult(this.thrusterPower);
 
     this.thrustersOn = true;
@@ -258,13 +258,13 @@ class Lander {
 
   fireBullet() {
     // Check timer
-    if(this.bulletTimer > 0) {
+    if (this.bulletTimer > 0) {
       return;
     }
     this.bulletTimer = this.framesPerBullet;
 
     // Check ammo
-    if(this.ammo <= 0) {
+    if (this.ammo <= 0) {
       return;
     }
 
@@ -272,15 +272,18 @@ class Lander {
     let noseVertex = this.shape.vertices[0];
     let coordinates = new Vector(noseVertex.x, noseVertex.y);
     let angleDiff = toRadians(this.bulletSpread);
-    let randomAngle = this.angle + randomValue(-angleDiff/2, angleDiff/2);
-    let direction = new Vector(Math.cos(randomAngle-(Math.PI/2)), Math.sin(randomAngle-(Math.PI/2)));
-		let newBullet = new Bullet(coordinates.x, coordinates.y, direction);
-		bullets.push(newBullet);
+    let randomAngle = this.angle + randomValue(-angleDiff / 2, angleDiff / 2);
+    let direction = new Vector(Math.cos(randomAngle - (Math.PI / 2)), Math.sin(randomAngle - (Math.PI / 2)));
+    let newBullet = new Bullet(coordinates.x, coordinates.y, direction);
+    bullets.push(newBullet);
     this.ammo--;
 
     // Apply recoil
     direction.mult(-this.recoilForce);
     this.applyForce(direction);
+
+    //Spanw animation
+    spawnExplosion();
   }
 
   translate(translationVector) {
