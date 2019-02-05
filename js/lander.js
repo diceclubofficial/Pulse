@@ -43,7 +43,7 @@ class Lander {
     this.framesPerBullet = 5;
     this.bulletTimer = 0;
     this.bulletSpread = 18; // total range of bullet directions in degrees
-    this.recoilForce = 1.5;
+    this.recoilForce = 0; //1.5
     this.ammo = 1000;
   }
 
@@ -278,12 +278,13 @@ class Lander {
     bullets.push(newBullet);
     this.ammo--;
 
+    // Spawn bullet particle animations
+    spawnBulletParticles(this.shape.vertices[0].x, this.shape.vertices[0].y, this.angle);
+
+
     // Apply recoil
     direction.mult(-this.recoilForce);
     this.applyForce(direction);
-
-    //Spanw animation
-    spawnExplosion();
   }
 
   translate(translationVector) {

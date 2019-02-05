@@ -20,21 +20,21 @@ class Asteroid {
     this.angle = 0;
     this.angularVelocity = 0;
     this.angularAcceleration = 0;
-    this.momentOfInertia = (.5 * this.mass * Math.pow(this.width/2, 2) );
+    this.momentOfInertia = (.5 * this.mass * Math.pow(this.width / 2, 2));
 
     this.fillStyle = 'rgb(255, 255, 255)';
 
     this.onScreen = false;
     this.screenCoordinates = new Vector(screenCoordinates.x, screenCoordinates.y);
     this.screenDimensions = new Vector(screenDimensions.x, screenDimensions.y);
-    this.centerOfScreen = new Vector(this.screenCoordinates.x + this.screenDimensions.x/2, this.screenCoordinates.y + this.screenDimensions.y/2);
+    this.centerOfScreen = new Vector(this.screenCoordinates.x + this.screenDimensions.x / 2, this.screenCoordinates.y + this.screenDimensions.y / 2);
     this.distanceFromCenter = distance(this.x, this.y, this.centerOfScreen.x, this.centerOfScreen.y);
     this.alive = true;
 
     this.collidingWithAsteroid = 0; // 1 when polygons intersect, 0.5 when big boxes intersect, 0 when no collision
     this.collidingWithProbe = 0;
     this.dwarf = 0; // 0 when not a dwarf asteroid, greater than 0 when recently spawned (counts down)
-    this.kineticEnergy = 0.5*this.mass*Math.pow(this.velocity.magnitude, 2);
+    this.kineticEnergy = 0.5 * this.mass * Math.pow(this.velocity.magnitude, 2);
   }
 
   update() {
@@ -46,23 +46,23 @@ class Asteroid {
 
     // Rotational motion
     //this.angularAcceleration += ((-this.angularVelocity*.9)/this.momentOfInertia);
-    this.angularAcceleration += (-this.angularVelocity*.005);
+    this.angularAcceleration += (-this.angularVelocity * .005);
     this.angularVelocity += this.angularAcceleration;
     this.angle += this.angularVelocity;
     this.shape.rotate(this.angularVelocity);
     this.angularAcceleration *= 0;
 
-    this.kineticEnergy = 0.5*this.mass*Math.pow(this.velocity.magnitude, 2);
+    this.kineticEnergy = 0.5 * this.mass * Math.pow(this.velocity.magnitude, 2);
 
     this.dwarf--;
-    if(this.dwarf < 0) this.dwarf = 0;
-    if(this.radius < 3) this.alive = false;
+    if (this.dwarf < 0) this.dwarf = 0;
+    if (this.radius < 3) this.alive = false;
 
     // If offscreen and distanceFromCenter is increasing, alive is false
-    if(this.x < this.screenCoordinates.x - this.width || this.x > this.screenCoordinates.x + this.screenDimensions.x || this.y < this.screenCoordinates.y - this.height || this.y > this.screenCoordinates.y + this.screenDimensions.y) {
+    if (this.x < this.screenCoordinates.x - this.width || this.x > this.screenCoordinates.x + this.screenDimensions.x || this.y < this.screenCoordinates.y - this.height || this.y > this.screenCoordinates.y + this.screenDimensions.y) {
       this.onScreen = false;
       let newDistanceFromCenter = distance(this.x, this.y, this.centerOfScreen.x, this.centerOfScreen.y);
-      if(newDistanceFromCenter > this.distanceFromCenter) {
+      if (newDistanceFromCenter > this.distanceFromCenter) {
         this.alive = false;
       } else {
         this.distanceFromCenter = newDistanceFromCenter;
@@ -75,12 +75,12 @@ class Asteroid {
   showDeveloperStats(context) {
     // fillStyle
     this.fillStyle = "rgb(255, 255, 255)";
-    if(this.dwarf > 0) {
+    if (this.dwarf > 0) {
       this.fillStyle = "pink";
     }
-    if(this.collidingWithAsteroid >= 1 || this.collidingWithProbe >= 1) {
+    if (this.collidingWithAsteroid >= 1 || this.collidingWithProbe >= 1) {
       this.fillStyle = "rgb(255, 0, 0)";
-    } else if(this.collidingWithAsteroid == 0.5 || this.collidingWithProbe == 0.5) {
+    } else if (this.collidingWithAsteroid == 0.5 || this.collidingWithProbe == 0.5) {
       this.fillStyle = "orange";
     }
 
@@ -104,11 +104,11 @@ class Asteroid {
 
     // print text
     context.save();
-    let fontSize = this.height*0.3;
+    let fontSize = this.height * 0.3;
     context.font = fontSize + "px Arial";
     context.textAlign = "center";
     context.fillStyle = this.fillStyle;
-    let offset = this.height*0.25;
+    let offset = this.height * 0.25;
     // velocity
     context.fillText(Math.round(this.velocity.x) + ", " + Math.round(this.velocity.y), this.shape.centroid.x, this.shape.centroid.y);
     // energy
@@ -127,7 +127,7 @@ class Asteroid {
   }
 
   collisionDetection() {
-    if(this.onScreen) {
+    if (this.onScreen) {
       this.collisionDetectionWithAsteroid();
       this.collisionDetectionWithLander();
       this.collisionDetectionWithTerrain();
@@ -135,9 +135,9 @@ class Asteroid {
   }
   collisionDetectionWithAsteroid() {
     let thisAsteroidColliding = 0;
-    asteroidLoop: for(let other of asteroids) {
+    asteroidLoop: for (let other of asteroids) {
       // preliminary checks
-      if(other == this || !other.onScreen || !this.onScreen) {
+      if (other == this || !other.onScreen || !this.onScreen) {
         continue asteroidLoop;
       }
 
@@ -156,7 +156,7 @@ class Asteroid {
       }
 
       // simple and fast big box collision detection
-      if( !rectanglesCollide(thisRectPrime, otherRectPrime) ) {
+      if (!rectanglesCollide(thisRectPrime, otherRectPrime)) {
         continue asteroidLoop;
       }
 
@@ -165,7 +165,7 @@ class Asteroid {
       this.translate(this.velocity);
       other.translate(other.velocity);
       let overlaps = this.shape.overlapsPolygon(other.shape, true);
-      if(overlaps == false) {
+      if (overlaps == false) {
         thisAsteroidColliding = 0.5;
         // reverse translation from next frame
         this.translate(new Vector(-this.velocity.x, -this.velocity.y));
@@ -177,7 +177,7 @@ class Asteroid {
       thisAsteroidColliding = 1;
 
       // only do collision physics on one asteroid of the two
-      if(this.collidingWithAsteroid == 1 || other.collidingWithAsteroid == 1) {
+      if (this.collidingWithAsteroid == 1 || other.collidingWithAsteroid == 1) {
         continue asteroidLoop;
       }
 
@@ -189,6 +189,7 @@ class Asteroid {
       this.coordinates.add(mtv);
       this.shape.translate(mtv);
 
+
       // run velocity calculations and shattering
       let otherCopy = {
         mass: other.mass,
@@ -197,7 +198,7 @@ class Asteroid {
       other.collideAgainst(this);
       this.collideAgainst(otherCopy);
     }
-    if(thisAsteroidColliding == 1) {
+    if (thisAsteroidColliding == 1) {
       this.collidingWithAsteroid = (this.collidingWithAsteroid == 0.5) ? 1 : this.collidingWithAsteroid + 1;
     } else this.collidingWithAsteroid = thisAsteroidColliding;
   }
@@ -218,7 +219,7 @@ class Asteroid {
     }
 
     // simple and fast big box collision detection
-    if(!rectanglesCollide(probeRectPrime, thisRectPrime)) {
+    if (!rectanglesCollide(probeRectPrime, thisRectPrime)) {
       this.collidingWithProbe = 0;
       return;
     }
@@ -227,7 +228,7 @@ class Asteroid {
     probe.translate(probe.velocity);
     this.translate(this.velocity);
     let overlaps = probe.shape.overlapsPolygon(this.shape, true);
-    if(overlaps == false) {
+    if (overlaps == false) {
       this.collidingWithProbe = 0.5;
       probe.translate(new Vector(-probe.velocity.x, -probe.velocity.y));
       this.translate(new Vector(-this.velocity.x, -this.velocity.y));
@@ -256,13 +257,13 @@ class Asteroid {
   }
   collisionDetectionWithTerrain() {
     // preliminary check
-    if(this.y + this.height + this.velocity.y < terrain.seaLevel - terrain.maxElevationDiff) {
+    if (this.y + this.height + this.velocity.y < terrain.seaLevel - terrain.maxElevationDiff) {
       return;
     }
 
     // check if each vertex is below the terrain
-    vertexLoop: for(let vertex of this.shape.vertices) {
-      if(terrain.isPointBelowSurface(vertex.x + this.velocity.x, vertex.y + this.velocity.y)) {
+    vertexLoop: for (let vertex of this.shape.vertices) {
+      if (terrain.isPointBelowSurface(vertex.x + this.velocity.x, vertex.y + this.velocity.y)) {
         this.alive = false;
         return;
       }
@@ -274,10 +275,17 @@ class Asteroid {
     let velX = getFinalCollisionVelocity(this.mass, this.velocity.x, otherObject.mass, otherObject.velocity.x);
     let velY = getFinalCollisionVelocity(this.mass, this.velocity.y, otherObject.mass, otherObject.velocity.y);
     let newVelocity = new Vector(velX, velY);
+    let newEnergy = 0.5 * this.mass * Math.pow(newVelocity.magnitude, 2);
+
+    //spawn animation asteroid dust
+    if (newEnergy >= 15) {
+      let animationPosition = new Vector(this.shape.centroid.x, this.shape.centroid.y);
+      animationPosition.sub(newVelocity);
+      spawnAsteroidCollisionDust(animationPosition.x, animationPosition.y);
+    }
 
     // break into pieces
-    let newEnergy = 0.5*this.mass*Math.pow(newVelocity.magnitude, 2);
-    if(shatter || (this.dwarf <= 0 && newEnergy > 30)) {
+    if (shatter || (this.dwarf <= 0 && newEnergy > 30)) {
       this.shatter(newVelocity);
     } else { // or bounce elastically
       this.velocity = newVelocity;
@@ -289,21 +297,22 @@ class Asteroid {
   shatter(totalVelocity) {
     let fragments = 3;
     let totalEnergy = this.energy;
-    let fragmentEnergy = totalEnergy/fragments;
+    let fragmentEnergy = totalEnergy / fragments;
 
-    let minRadius = 5, maxRadius = 30;
+    let minRadius = 5,
+      maxRadius = 30;
     let velocitySum = new Vector(0, 0);
 
-    for(let i = 0; i < fragments; i++) {
+    for (let i = 0; i < fragments; i++) {
       // energy = 0.5*mass*speed^2
       // so speed = (2*energy/mass)^1/2
       let newAsteroid = new Asteroid(this.x, this.y, this.screenCoordinates, this.screenDimensions);
       let randomRadius = randomValue(minRadius, maxRadius);
       newAsteroid.radius = randomRadius;
       newAsteroid.generateDimensions();
-      let speed = Math.pow((2*fragmentEnergy)/newAsteroid.mass, 1/2);
+      let speed = Math.pow((2 * fragmentEnergy) / newAsteroid.mass, 1 / 2);
       // last asteroid corrects the velocity direction
-      if(i == fragments - 1) {
+      if (i == fragments - 1) {
         totalVelocity.sub(velocitySum);
         newAsteroid.velocity = new Vector(totalVelocity.x, totalVelocity.y);
         newAsteroid.velocity.magnitude = speed;
@@ -326,8 +335,8 @@ class Asteroid {
     this.acceleration.add(appliedForce);
   }
   applyTorque(clockwise, multiplier) {
-    if(multiplier == undefined) multiplier = 1;
-    if(clockwise) {
+    if (multiplier == undefined) multiplier = 1;
+    if (clockwise) {
       this.angularAcceleration += 0.01 * multiplier;
     } else {
       this.angularAcceleration -= 0.01 * multiplier;
@@ -339,38 +348,38 @@ class Asteroid {
     // this.generateDimensionsPolygonRegular(6);
   }
   generateDimensionsPolygonRegular(numVertices) {
-    let deltaTheta = 2*Math.PI/numVertices;
+    let deltaTheta = 2 * Math.PI / numVertices;
     this.width = 2 * this.radius; // big box
     this.height = 2 * this.radius;
 
-    let center = new Vector(this.x + this.width/2, this.y + this.height/2);
+    let center = new Vector(this.x + this.width / 2, this.y + this.height / 2);
     let vertices = [];
-    for(let i = 0; i < numVertices; i++) {
+    for (let i = 0; i < numVertices; i++) {
       let point = new Vector(center.x, center.y - this.radius);
       let rotatedPoint = rotatePoint(point, i * deltaTheta, center);
       vertices.push(rotatedPoint);
     }
     this.shape = new Polygon(vertices);
     this.mass = this.shape.area / MASS_CONSTANT;
-    this.kineticEnergy = 0.5*this.mass*Math.pow(this.velocity.magnitude, 2);
+    this.kineticEnergy = 0.5 * this.mass * Math.pow(this.velocity.magnitude, 2);
   }
   generateDimensionsPolygonConcave() {
     let numVertices = 20; // change to depend on radius
-    let deltaTheta = 2*Math.PI/numVertices;
+    let deltaTheta = 2 * Math.PI / numVertices;
 
     let noise = new Perlin();
     let noiseStep = 0.2;
     let seed = 256 * Math.random();
-    let maxDiff = 0.4*this.radius; // maximum noise value (amplitude if noise was a wave)
+    let maxDiff = 0.4 * this.radius; // maximum noise value (amplitude if noise was a wave)
     this.width = 2 * (this.radius + maxDiff); // make big box
     this.height = 2 * (this.radius + maxDiff);
 
-    let center = new Vector(this.x + this.width/2, this.y + this.height/2);
+    let center = new Vector(this.x + this.width / 2, this.y + this.height / 2);
     let vertices = [];
-    for(let i = 0; i < numVertices; i++) {
+    for (let i = 0; i < numVertices; i++) {
       let randomDiff = maxDiff * noise.getValue(seed + (i * noiseStep));
       let point = new Vector(center.x, center.y - this.radius + randomDiff);
-      let rotatedPoint = rotatePoint(point, deltaTheta*i, center);
+      let rotatedPoint = rotatePoint(point, deltaTheta * i, center);
       vertices.push(rotatedPoint);
     }
     this.shape = new Polygon(vertices);
@@ -389,7 +398,7 @@ class Asteroid {
     return this.coordinates.y;
   }
   get energy() {
-    this.kineticEnergy = 0.5*this.mass*Math.pow(this.velocity.magnitude, 2);
+    this.kineticEnergy = 0.5 * this.mass * Math.pow(this.velocity.magnitude, 2);
     return this.kineticEnergy;
   }
 

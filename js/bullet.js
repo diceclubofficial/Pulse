@@ -31,7 +31,7 @@ class Bullet {
     this.acceleration.mult(0);
 
     // If offscreen, alive is false
-    if(this.shape.centroid.x + this.boxRadius < gameAreaOrigin.x || this.shape.centroid.x - this.boxRadius > gameAreaOrigin.x + WIDTH || this.shape.centroid.y + this.boxRadius < gameAreaOrigin.y || this.shape.centroid.y - this.boxRadius > gameAreaOrigin.y + HEIGHT) {
+    if (this.shape.centroid.x + this.boxRadius < gameAreaOrigin.x || this.shape.centroid.x - this.boxRadius > gameAreaOrigin.x + WIDTH || this.shape.centroid.y + this.boxRadius < gameAreaOrigin.y || this.shape.centroid.y - this.boxRadius > gameAreaOrigin.y + HEIGHT) {
       this.alive = false;
     }
   }
@@ -63,15 +63,15 @@ class Bullet {
 
     // find maxDistance (kinda like radius)
     let maxDistance = 0;
-    for(let vertex of this.shape.vertices) {
+    for (let vertex of this.shape.vertices) {
       let thisDistance = distance(vertex.x, vertex.y, this.shape.x, this.shape.y);
-      if(thisDistance > maxDistance) {
+      if (thisDistance > maxDistance) {
         maxDistance = thisDistance;
       }
     }
     this.width = this.height = 2 * maxDistance;
 
-    let translateVector = new Vector(this.x + this.width/2 - this.imageWidth/2, this.y + this.height/2 - this.imageHeight/2);
+    let translateVector = new Vector(this.x + this.width / 2 - this.imageWidth / 2, this.y + this.height / 2 - this.imageHeight / 2);
     this.shape.translate(translateVector);
 
     this.mass = this.density * (this.shape.area / MASS_CONSTANT);
@@ -80,22 +80,25 @@ class Bullet {
   collisionDetection() {
     this.collisionDetectionWithAsteroid();
   }
+
   collisionDetectionWithAsteroid() {
-    asteroidLoop: for(let asteroid of asteroids) {
+    asteroidLoop: for (let asteroid of asteroids) {
       // big box collision detection
-      if( !rectanglesCollide(this, asteroid)) {
+      if (!rectanglesCollide(this, asteroid)) {
         continue asteroidLoop;
       }
 
       // more complex and slower polygon collision detection
       let overlaps = this.shape.overlapsPolygon(asteroid.shape, true);
-      if(overlaps == false) {
+      if (overlaps == false) {
         continue asteroidLoop;
       }
 
       // collision occurs
+
       this.alive = false;
       asteroid.collideAgainst(this);
+      spawnExplosion(this.x, this.y);
     }
   }
 
@@ -105,8 +108,8 @@ class Bullet {
     this.acceleration.add(appliedForce);
   }
   applyTorque(clockwise, multiplier) {
-    if(multiplier == undefined) multiplier = 1;
-    if(clockwise) {
+    if (multiplier == undefined) multiplier = 1;
+    if (clockwise) {
       this.angularAcceleration += 0.01 * multiplier;
     } else {
       this.angularAcceleration -= 0.01 * multiplier;

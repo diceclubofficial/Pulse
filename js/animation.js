@@ -1,8 +1,6 @@
 class Animation {
 
-
-
-  constructor(type, position, spriteSheetInformation, framesPerSprite = 3, scale = 1, repeat = false) {
+  constructor(type, position, spriteSheetInformation, framesPerSprite = 3, scale = 1, rotationAngle = 0, repeat = false) {
     //spriteSheetSource, sheetWidth, sheetHeight, spriteWidth, spriteHeight, numSprites = -1
     this.type = type;
     this.coordinates = position;
@@ -14,12 +12,13 @@ class Animation {
     this.spriteHeight = spriteSheetInformation.spriteHeight;
     this.numSprites = spriteSheetInformation.numSprites;
     this.spriteCounter = 0;
-    if (framesPerSprite <= 0) {
-      this.framesPerSprite = 0;
+    if (framesPerSprite <= 1) {
+      this.framesPerSprite = 1;
     } else {
       this.framesPerSprite = framesPerSprite;
     }
     this.scale = scale;
+    this.rotationAngle = rotationAngle;
     this.repeat = repeat;
     this.oneCycleCompleted = false;
     this.alive = true;
@@ -34,7 +33,13 @@ class Animation {
   }
 
   update() {
-    console.log(this.coordinates.toString());
+
+    if (this.type == "bulletParticles") {
+      this.coordinates = probe.shape.vertices[0];
+      this.rotationAngle = probe.angle;
+    }
+
+    //console.log(this.coordinates.x, this.coordinates.y);
     //dont update if animation is only supposed to play once and it has finished one cycle
     if (this.oneCycleCompleted == true && this.repeat == false) {
       this.alive = false;
@@ -87,10 +92,17 @@ class Animation {
 
   draw(context) {
 
+    context.save();
+
     //dont draw if animation is only supposed to play once and it has finished one cycle
     if (this.oneCycleCompleted == true && this.repeat == false) {
 
     } else {
+
+      // rotate animation
+
+      context.translate(this.coordinates.x, this.coordinates.y);
+      context.rotate(this.rotationAngle);
 
       //display sprite
       context.drawImage(this.spriteSheet, //Sprite sheet source
@@ -98,12 +110,13 @@ class Animation {
         this.currentImagePosY * this.spriteHeight, //Y Pos on sheet
         this.spriteWidth, //Sprite width
         this.spriteHeight, //Sprite Height
-        this.coordinates.x - this.spriteWidth * this.scale / 2, //X Pos on canvas (center)
-        this.coordinates.y - this.spriteHeight * this.scale / 2, //Y Pos on canvas (center)
+        0 - this.spriteWidth * this.scale / 2, //X Pos on canvas (center)
+        0 - this.spriteHeight * this.scale / 2, //Y Pos on canvas (center)
         this.spriteWidth * this.scale, //Width on screen
         this.spriteHeight * this.scale); //Height on screen
 
-      console.log("Sprite coords from class:", this.coordinates.x - this.spriteWidth * this.scale / 2 + " ", this.coordinates.y - this.spriteHeight * this.scale / 2);
+      //console.log("Sprite coords from class:", this.coordinates.x - this.spriteWidth * this.scale / 2 + " ", this.coordinates.y - this.spriteHeight * this.scale / 2);
+      context.restore();
     }
   }
 }

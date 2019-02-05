@@ -1,11 +1,10 @@
 
 todo current commit:
--make collision detection predictive (figure out if two objects will collide next frame; if so, translate them right next to each other and apply velocity changes to guarantee one frame looks like they collide)
+
 
 todo later:
 -make camera position itself based on where the lander is facing
 -make asteroid sprites generate with the shape (Jason)
--make Animation class to show effects like explosions (parameters: spritesheet src, width/height of sprite, width/height of sheet, speed of animation (frames/sprite), times to repeat (0 or more)) (Jason)
 -fix collision detection
   -do concave polygon collision detection
   -make rotational collisions and rotational energy with asteroids

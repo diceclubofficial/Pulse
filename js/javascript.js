@@ -149,9 +149,6 @@ function updateAnimations() {
   for (let animation of animations) {
     animation.update();
 
-    // explosion always is at tip of lander
-    if (animation.type == "explosion") animation.coordinates = probe.shape.vertices[0];
-
     if (animation.alive) {
       aliveAnimations.push(animation);
     }
@@ -388,11 +385,39 @@ function drawForeground(context) {
   context.restore();
 }
 
-function spawnExplosion() {
-  let x = probe.shape.vertices[0].x;
-  let y = probe.shape.vertices[0].y;
-  //let position = new Vector(x, y);
-  let position = probe.shape.vertices[0];
+function spawnBulletParticles(x, y, angle) {
+  let position = new Vector(x, y);
+
+  // let information = {
+  //   src: "images/shootingAnimationTest2.png",
+  //   sheetWidth: 256,
+  //   sheetHeight: 256,
+  //   spriteWidth: 128,
+  //   spriteHeight: 128,
+  //   numSprites: 3
+  // }
+
+  let information = {
+    src: "images/shootingAnimationTest4.png",
+    sheetWidth: 128,
+    sheetHeight: 256,
+    spriteWidth: 128,
+    spriteHeight: 128,
+    numSprites: 2
+  }
+
+  let framesPerSprite = 1;
+  let scale = 0.75;
+  let rotationAngle = angle;
+  let repeat = false;
+
+  let animation = new Animation("bulletParticles", position, information, framesPerSprite, scale, rotationAngle, repeat);
+
+  animations.push(animation);
+}
+
+function spawnExplosion(x, y) {
+  let position = new Vector(x, y);
 
   let information = {
     src: "images/explosions.png",
@@ -404,10 +429,33 @@ function spawnExplosion() {
   }
 
   let framesPerSprite = 1;
-  let scale = 1;
+  let scale = 1.5;
+  let rotationAngle = randomValue(0, 2 * Math.PI);
   let repeat = false;
 
-  let animation = new Animation("explosion", position, information, framesPerSprite, scale, repeat);
+  let animation = new Animation("explosion", position, information, framesPerSprite, scale, rotationAngle, repeat);
+
+  animations.push(animation);
+}
+
+function spawnAsteroidCollisionDust(x, y) {
+  let position = new Vector(x, y);
+
+  let information = {
+    src: "images/asteroidCollisionDust.png",
+    sheetWidth: 256,
+    sheetHeight: 256,
+    spriteWidth: 128,
+    spriteHeight: 128,
+    numSprites: 4
+  }
+
+  let framesPerSprite = 1;
+  let scale = 1;
+  let rotationAngle = randomValue(0, 2 * Math.PI);
+  let repeat = false;
+
+  let animation = new Animation("dust", position, information, framesPerSprite, scale, rotationAngle, repeat);
 
   animations.push(animation);
 }
