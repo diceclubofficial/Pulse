@@ -123,40 +123,6 @@ function play() {
   contextGA.drawImage(canvasOffscreen, gameAreaOrigin.x, gameAreaOrigin.y, WIDTH, HEIGHT, 0, 0, WIDTH, HEIGHT);
 }
 
-function updateAudio() {
-  // do audio stuff here
-}
-
-function updateBullets() {
-  // Update bullets
-  for (let bullet of bullets) {
-    bullet.update();
-  }
-
-  // Despawn bullets
-  let aliveBullets = [];
-  for (let bullet of bullets) {
-    if (bullet.alive) {
-      aliveBullets.push(bullet);
-    }
-  }
-  bullets = aliveBullets;
-}
-
-function updateAnimations() {
-
-  let aliveAnimations = [];
-  for (let animation of animations) {
-    animation.update();
-
-    if (animation.alive) {
-      aliveAnimations.push(animation);
-    }
-  }
-
-  animations = aliveAnimations;
-}
-
 function drawEverything() {
   drawBackground(contextOffscreen);
 
@@ -191,7 +157,6 @@ function drawEverything() {
 
   drawForeground(contextOffscreen);
 }
-
 function showDeveloperStats() {
   // coordinate markers
   let context = contextOffscreen;
@@ -264,7 +229,6 @@ function spawnAsteroidOffscreen() {
   let newAsteroid = new Asteroid(spawnPoint.x, spawnPoint.y, asteroidScreenCoordinates, asteroidScreenDimensions);
   asteroids.push(newAsteroid);
 }
-
 function updateAsteroids() {
   // Spawn asteroids
   if (asteroids.length < maxAsteroids) {
@@ -285,7 +249,6 @@ function updateAsteroids() {
     asteroid.update();
   }
 }
-
 function updateWaves() {
   // spawn waves
   if (trebleWaves.length < maxTrebleWaves) {
@@ -324,6 +287,37 @@ function updateWaves() {
   for (let bassWave of bassWaves) {
     bassWave.update();
   }
+}
+function updateAudio() {
+  // do audio stuff here
+}
+function updateBullets() {
+  // Update bullets
+  for (let bullet of bullets) {
+    bullet.update();
+  }
+
+  // Despawn bullets
+  let aliveBullets = [];
+  for (let bullet of bullets) {
+    if (bullet.alive) {
+      aliveBullets.push(bullet);
+    }
+  }
+  bullets = aliveBullets;
+}
+function updateAnimations() {
+
+  let aliveAnimations = [];
+  for (let animation of animations) {
+    animation.update();
+
+    if (animation.alive) {
+      aliveAnimations.push(animation);
+    }
+  }
+
+  animations = aliveAnimations;
 }
 
 function collisionDetection() {
@@ -369,7 +363,6 @@ function drawBackground(context) {
 
   context.restore();
 }
-
 function drawForeground(context) {
   context.save();
 
@@ -388,22 +381,13 @@ function drawForeground(context) {
 function spawnBulletParticles(x, y, angle) {
   let position = new Vector(x, y);
 
-  // let information = {
-  //   src: "images/shootingAnimationTest2.png",
-  //   sheetWidth: 256,
-  //   sheetHeight: 256,
-  //   spriteWidth: 128,
-  //   spriteHeight: 128,
-  //   numSprites: 3
-  // }
-
   let information = {
     src: "images/shootingAnimationTest4.png",
     sheetWidth: 128,
     sheetHeight: 256,
     spriteWidth: 128,
     spriteHeight: 128,
-    numSprites: 2
+    numSprites: 2,
   }
 
   let framesPerSprite = 1;
@@ -415,7 +399,6 @@ function spawnBulletParticles(x, y, angle) {
 
   animations.push(animation);
 }
-
 function spawnExplosion(x, y) {
   let position = new Vector(x, y);
 
@@ -428,7 +411,7 @@ function spawnExplosion(x, y) {
     numSprites: 5
   }
 
-  let framesPerSprite = 1;
+  let framesPerSprite = 2;
   let scale = 1.5;
   let rotationAngle = randomValue(0, 2 * Math.PI);
   let repeat = false;
@@ -437,8 +420,7 @@ function spawnExplosion(x, y) {
 
   animations.push(animation);
 }
-
-function spawnAsteroidCollisionDust(x, y) {
+function spawnAsteroidCollisionDust(x, y, scale = 1) {
   let position = new Vector(x, y);
 
   let information = {
@@ -451,7 +433,6 @@ function spawnAsteroidCollisionDust(x, y) {
   }
 
   let framesPerSprite = 1;
-  let scale = 1;
   let rotationAngle = randomValue(0, 2 * Math.PI);
   let repeat = false;
 

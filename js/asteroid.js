@@ -278,11 +278,9 @@ class Asteroid {
     let newEnergy = 0.5 * this.mass * Math.pow(newVelocity.magnitude, 2);
 
     //spawn animation asteroid dust
-    if (newEnergy >= 15) {
-      let animationPosition = new Vector(this.shape.centroid.x, this.shape.centroid.y);
-      animationPosition.sub(newVelocity);
-      spawnAsteroidCollisionDust(animationPosition.x, animationPosition.y);
-    }
+    let animationPosition = new Vector(this.shape.centroid.x, this.shape.centroid.y);
+    animationPosition.sub(newVelocity);
+    spawnAsteroidCollisionDust(animationPosition.x, animationPosition.y, 0.05*this.radius);
 
     // break into pieces
     if (shatter || (this.dwarf <= 0 && newEnergy > 30)) {
@@ -300,7 +298,7 @@ class Asteroid {
     let fragmentEnergy = totalEnergy / fragments;
 
     let minRadius = 5,
-      maxRadius = 30;
+      maxRadius = this.radius;
     let velocitySum = new Vector(0, 0);
 
     for (let i = 0; i < fragments; i++) {

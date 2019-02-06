@@ -1,24 +1,23 @@
 
 todo current commit:
-
+-sometimes when asteroids shatter() they spawn asteroids larger than themselves (entropy ?)
 
 todo later:
 -make camera position itself based on where the lander is facing
 -make asteroid sprites generate with the shape (Jason)
 -fix collision detection
-  -do concave polygon collision detection
   -make rotational collisions and rotational energy with asteroids
   -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
+  -do concave polygon collision detection (in progress but postponed)
 -add game states (success/gameOver screen and 8 levels)
 -increase fps to 60 or 120 and change numbers accurately
--add fuel gauge, gun ammo, and other stats in a nice-looking display
 -telegraph if the lander is going to hit the ground at too high speed with speed lines like from anime and mariokart
 -add sprites to bassWaves (need more art)
 -make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
+-make the display for fuel, ammo, and speed nice-looking
 
 issues:
 -gun too strong? stronger than thruster? needs playtesting
--sometimes when asteroids shatter() they spawn asteroids larger than themselves (entropy ?)
 -asteroid generation based on Perlin sometimes has jagged cuts because of Perlin resetting
 -bass waves go way too fast and are too large to avoid - need to playtest
 
