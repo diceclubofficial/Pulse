@@ -26,9 +26,11 @@ class Lander {
     this.fillStyle = 'rgb(255, 255, 255)';
 
     // collision detection with ground
-    this.impactGround = true; //true on first frame of touching ground
-    this.touchingGround = false; //true if at least one vertex is touching the ground
-    this.inGround = false; //true if two or more vertices are touching the ground; lander is then unable to move or take off again
+    this.OFF_GROUND = 0; // completely off the ground
+    this.TOUCHING_GROUND = 1; // at least one vertex is touching the ground
+    this.IN_GROUND = 2; // two or more vertices are touching the ground
+    this.groundState = this.OFF_GROUND;
+    this.impactGround = false; // first frame of touching ground
     this.groundedVertexPositions = [];
 
     // sprite animation
@@ -52,7 +54,7 @@ class Lander {
   }
 
   update() {
-    if (this.inGround) {
+    if (this.groundState == this.IN_GROUND) {
       this.velocity.mult(0);
       this.acceleration.mult(0);
       this.angularVelocity = 0;
@@ -78,7 +80,7 @@ class Lander {
     this.bulletTimer--;
     this.dashTimer--;
 
-    if (this.touchingGround) {
+    if (this.groundState == this.TOUCHING_GROUND) {
       this.collideWithGround();
     } else {
       this.fillStyle = "rgb(0, 255, 0)";
@@ -177,7 +179,7 @@ class Lander {
     this.impactGround = false;
     // If two or more vertices are touching the ground, the lander is static
     if (this.groundedVertexPositions.length >= 2 || this.groundedVertexPositions[0] == 0) {
-      this.inGround = true;
+      this.groundState = this.IN_GROUND;
       return;
     }
     // Apply torque on vertices

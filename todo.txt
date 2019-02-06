@@ -1,11 +1,10 @@
 
 todo current commit:
--give lander dash action with arrow keys (lateral thrusters do a small burst) to get away from obstacles fast but it consumes a lot of fuel
+-make lander touching ground booleans into a state machine
 
 todo later:
 -add animations for dashes (huge flames)
 -add air resistance
--make lander touching ground booleans into a state machine
 -make camera position itself based on where the lander is facing
 -make asteroid sprites generate with the shape (Jason)
 -fix collision detection

@@ -1,3 +1,5 @@
+"use strict"
+
 class Animation {
 
   constructor(type, position, spriteSheetInformation, framesPerSprite = 3, scale = 1, rotationAngle = 0, repeat = false) {
@@ -12,17 +14,12 @@ class Animation {
     this.spriteHeight = spriteSheetInformation.spriteHeight;
     this.numSprites = spriteSheetInformation.numSprites;
     this.spriteCounter = 0;
-    if (framesPerSprite <= 1) {
-      this.framesPerSprite = 1;
-    } else {
-      this.framesPerSprite = framesPerSprite;
-    }
+    this.framesPerSprite = (framesPerSprite < 1) ? 1 : framesPerSprite;
     this.scale = scale;
     this.rotationAngle = rotationAngle;
     this.repeat = repeat;
     this.oneCycleCompleted = false;
     this.alive = true;
-
 
     this.counter = 0;
     this.currentImagePosX = 0;
@@ -40,11 +37,10 @@ class Animation {
     }
 
     //console.log(this.coordinates.x, this.coordinates.y);
-    //dont update if animation is only supposed to play once and it has finished one cycle
+    // Don't update if animation is only supposed to play once and it has finished one cycle
     if (this.oneCycleCompleted == true && this.repeat == false) {
       this.alive = false;
     } else {
-
       //update counter
       if (this.counter < this.framesPerSprite) {
         this.counter++;
@@ -74,7 +70,6 @@ class Animation {
           }
         }
 
-
         //if numSprites is defined, make sure you don't load more sprites than there are on the sheet
         if (this.numSprites != -1) {
           if (this.spriteCounter >= this.numSprites) {
@@ -91,32 +86,30 @@ class Animation {
   }
 
   draw(context) {
-
     context.save();
 
     //dont draw if animation is only supposed to play once and it has finished one cycle
     if (this.oneCycleCompleted == true && this.repeat == false) {
-
-    } else {
-
-      // rotate animation
-
-      context.translate(this.coordinates.x, this.coordinates.y);
-      context.rotate(this.rotationAngle);
-
-      //display sprite
-      context.drawImage(this.spriteSheet, //Sprite sheet source
-        this.currentImagePosX * this.spriteWidth, //X Pos on sheet
-        this.currentImagePosY * this.spriteHeight, //Y Pos on sheet
-        this.spriteWidth, //Sprite width
-        this.spriteHeight, //Sprite Height
-        0 - this.spriteWidth * this.scale / 2, //X Pos on canvas (center)
-        0 - this.spriteHeight * this.scale / 2, //Y Pos on canvas (center)
-        this.spriteWidth * this.scale, //Width on screen
-        this.spriteHeight * this.scale); //Height on screen
-
-      //console.log("Sprite coords from class:", this.coordinates.x - this.spriteWidth * this.scale / 2 + " ", this.coordinates.y - this.spriteHeight * this.scale / 2);
-      context.restore();
+      return;
     }
+
+    // rotate animation
+    context.translate(this.coordinates.x, this.coordinates.y);
+    context.rotate(this.rotationAngle);
+
+    //display sprite
+    context.drawImage(this.spriteSheet, //Sprite sheet source
+      this.currentImagePosX * this.spriteWidth, //X Pos on sheet
+      this.currentImagePosY * this.spriteHeight, //Y Pos on sheet
+      this.spriteWidth, //Sprite width
+      this.spriteHeight, //Sprite Height
+      0 - this.spriteWidth * this.scale / 2, //X Pos on canvas (center)
+      0 - this.spriteHeight * this.scale / 2, //Y Pos on canvas (center)
+      this.spriteWidth * this.scale, //Width on screen
+      this.spriteHeight * this.scale); //Height on screen
+
+    //console.log("Sprite coords from class:", this.coordinates.x - this.spriteWidth * this.scale / 2 + " ", this.coordinates.y - this.spriteHeight * this.scale / 2);
+
+    context.restore();
   }
 }

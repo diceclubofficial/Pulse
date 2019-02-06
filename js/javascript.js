@@ -448,15 +448,15 @@ function spawnAsteroidCollisionDust(x, y, scale = 1) {
 
 function applyKeyboardInput() {
   // control probe
-  if (keys[W] && !probe.touchingGround) {
+  if (keys[W] && probe.groundState == probe.OFF_GROUND) {
     probe.applyThrusters();
   } else {
     probe.thrustersOn = false;
   }
-  if (keys[D] && !probe.touchingGround) {
+  if (keys[D] && probe.groundState == probe.OFF_GROUND) {
     probe.applyTorque(true);
   }
-  if (keys[A] && !probe.touchingGround) {
+  if (keys[A] && probe.groundState == probe.OFF_GROUND) {
     probe.applyTorque(false);
   }
   // regenerate terrain
