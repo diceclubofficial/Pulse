@@ -45,6 +45,10 @@ class Lander {
     this.bulletSpread = 18; // total range of bullet directions in degrees
     this.recoilForce = 0; //1.5
     this.ammo = 1000;
+
+    // dashing
+    this.dashTimer = 0;
+    this.dashCooldown = 10;
   }
 
   update() {
@@ -72,6 +76,7 @@ class Lander {
     this.animate();
 
     this.bulletTimer--;
+    this.dashTimer--;
 
     if (this.touchingGround) {
       this.collideWithGround();
@@ -257,10 +262,7 @@ class Lander {
   }
 
   fireBullet() {
-    // Check timer
-    if (this.bulletTimer > 0) {
-      return;
-    }
+    // Reset timer
     this.bulletTimer = this.framesPerBullet;
 
     // Check ammo
@@ -285,6 +287,34 @@ class Lander {
     // Apply recoil
     direction.mult(-this.recoilForce);
     this.applyForce(direction);
+  }
+
+  dash(direction) {
+    // Reset timer
+    this.dashTimer = this.dashCooldown;
+
+    // Check fuel
+    if(this.fuel <= 0) {
+      return;
+    }
+
+    // Dash forward
+    let dashMagnitude = 50;
+    if(direction == "forward") {
+      let thrustForce = new Vector(Math.cos(this.angle - (Math.PI / 2)), Math.sin(this.angle - (Math.PI / 2)));
+      thrustForce.mult(dashMagnitude * this.thrusterPower);
+      this.applyForce(thrustForce);
+    } else if(direction == "right") {
+      let thrustForce = new Vector( Math.cos(this.angle), Math.sin(this.angle) );
+      thrustForce.mult(dashMagnitude * this.thrusterPower);
+      this.applyForce(thrustForce);
+    } else if(direction == "left") {
+      let thrustForce = new Vector( Math.cos(this.angle - Math.PI), Math.sin(this.angle - Math.PI) );
+      thrustForce.mult(dashMagnitude * this.thrusterPower);
+      this.applyForce(thrustForce);
+    }
+
+    this.fuel -= dashMagnitude;
   }
 
   translate(translationVector) {

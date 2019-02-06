@@ -3,6 +3,8 @@
 
 contextOffscreen.font = '10px Menlo';
 
+const DEV_MODE = false; // change this to toggle showing developer stats
+
 const UP = 38,
   RIGHT = 39,
   DOWN = 40,
@@ -14,6 +16,11 @@ const W = 87,
   A = 65,
   S = 83,
   D = 68;
+
+const I = 73,
+      J = 74,
+      K = 75,
+      L = 76;
 
 let keys = [];
 
@@ -75,8 +82,6 @@ window.onload = function() {
     audioElement.pause();
   });
 }
-
-const DEV_MODE = false; // change this to toggle showing developer stats
 
 function startGame() {
   // remove start button and title screen
@@ -460,26 +465,37 @@ function applyKeyboardInput() {
   }
 
   // fire gun
-  if (keys[SPACEBAR]) {
+  if (keys[SPACEBAR] && probe.bulletTimer <= 0) {
     probe.fireBullet();
+  }
+
+  // dash
+  if(keys[UP] && probe.dashTimer <= 0) {
+    probe.dash("forward");
+  }
+  if(keys[RIGHT] && probe.dashTimer <= 0) {
+    probe.dash("right");
+  }
+  if(keys[LEFT] && probe.dashTimer <= 0) {
+    probe.dash("left");
   }
 
   // control camera
   if (DEV_MODE) {
     let screenMovement = 10;
-    if (keys[LEFT]) {
+    if (keys[J]) {
       gameAreaOrigin.add(new Vector(-screenMovement, 0));
       console.log("new game origin", gameAreaOrigin.toString());
     }
-    if (keys[RIGHT]) {
+    if (keys[L]) {
       gameAreaOrigin.add(new Vector(screenMovement, 0));
       console.log("new game origin", gameAreaOrigin.toString());
     }
-    if (keys[UP]) {
+    if (keys[I]) {
       gameAreaOrigin.add(new Vector(0, -screenMovement));
       console.log("new game origin", gameAreaOrigin.toString());
     }
-    if (keys[DOWN]) {
+    if (keys[K]) {
       gameAreaOrigin.add(new Vector(0, screenMovement));
       console.log("new game origin", gameAreaOrigin.toString());
     }
@@ -488,7 +504,6 @@ function applyKeyboardInput() {
 
 // PROCESSING USER INPUT
 document.addEventListener('keydown', processKeyDownInput);
-
 function processKeyDownInput(event) {
   if (event.key == 'z') {
     console.log(keys);
@@ -496,12 +511,10 @@ function processKeyDownInput(event) {
   keys[event.keyCode] = true;
 }
 document.addEventListener('keyup', processKeyUpInput);
-
 function processKeyUpInput(event) {
   keys[event.keyCode] = false;
 }
 canvasGA.addEventListener('click', processMouseInput);
-
 function processMouseInput(event) {
   var relX = (event.clientX - canvasGA.offsetLeft);
   var relY = (event.clientY - canvasGA.offsetTop);
