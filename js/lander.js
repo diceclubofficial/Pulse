@@ -5,9 +5,11 @@ class Lander {
   constructor(x, y) {
     // image data
     this.landerThrusterSheet = new Image();
-    this.landerThrusterSheet.src = "images/landerThrusterSheet.png";
+    this.landerThrusterSheet.src = "images/landerThrusterSheetRed.png";
     this.landerStaticImage = new Image();
     this.landerStaticImage.src = "images/landerStaticImage.png";
+    this.landerDashForwardSheet = new Image();
+    this.landerDashForwardSheet.src = "images/landerDashForwardSheetRed.png";
     this.spriteWidth = 42, this.spriteHeight = 50;
 
     // vector quantities
@@ -26,16 +28,18 @@ class Lander {
     this.fillStyle = 'rgb(255, 255, 255)';
 
     // collision detection with ground
-    this.impactGround = true; //true on first frame of touching ground
-    this.touchingGround = false; //true if at least one vertex is touching the ground
-    this.inGround = false; //true if two or more vertices are touching the ground; lander is then unable to move or take off again
+    this.OFF_GROUND = 0; // completely off the ground
+    this.TOUCHING_GROUND = 1; // at least one vertex is touching the ground
+    this.IN_GROUND = 2; // two or more vertices are touching the ground
+    this.groundState = this.OFF_GROUND;
+    this.impactGround = false; // first frame of touching ground
     this.groundedVertexPositions = [];
 
     // sprite animation
-    this.numImages = 3, this.currImage = 0;
-    this.animationDirection = 1;
+    this.numImages = 4;
+    this.currImage = 0;
     this.thrustersOn = false;
-    this.framesPerAnimation = 3; // change this to change the animation speed
+    this.framesPerAnimation = 5; // animation speed
     this.animationTimer = 0;
     this.fuel = 3000;
 
@@ -45,10 +49,16 @@ class Lander {
     this.bulletSpread = 18; // total range of bullet directions in degrees
     this.recoilForce = 1.5; //1.5
     this.ammo = 1000;
+
+    // dashing
+    this.inDashingAnimation = false;
+    this.dashingNumImages = 3;
+    this.dashTimer = 0;
+    this.dashCooldown = 20;
   }
 
   update() {
-    if (this.inGround) {
+    if (this.groundState == this.IN_GROUND) {
       this.velocity.mult(0);
       this.acceleration.mult(0);
       this.angularVelocity = 0;
@@ -72,8 +82,9 @@ class Lander {
     this.animate();
 
     this.bulletTimer--;
+    this.dashTimer--;
 
-    if (this.touchingGround) {
+    if (this.groundState == this.TOUCHING_GROUND) {
       this.collideWithGround();
     } else {
       this.fillStyle = "rgb(0, 255, 0)";
@@ -127,7 +138,10 @@ class Lander {
     // draw lander image
     context.translate(this.x + this.width / 2, this.y + this.height / 2);
     context.rotate(this.angle);
-    if (this.thrustersOn) {
+    if(this.inDashingAnimation) {
+      context.drawImage(this.landerDashForwardSheet, this.currImage * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
+    }
+    else if (this.thrustersOn) {
       context.drawImage(this.landerThrusterSheet, this.currImage * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
     } else {
       context.drawImage(this.landerStaticImage, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
@@ -146,17 +160,16 @@ class Lander {
 
     // Change sprite:
     // if thrusters are on, cycle through the images
-    if (this.thrustersOn) {
-      this.currImage += this.animationDirection;
-
-      // switch animation direction back and forth
-      if (this.currImage >= this.numImages - 1) {
+    if(this.inDashingAnimation) {
+      this.currImage++;
+      if(this.currImage >= this.dashingNumImages) {
+        this.inDashingAnimation = false;
         this.currImage = 2;
-        this.animationDirection = -1;
-      } else if (this.currImage <= 0) {
-        this.currImage = 0;
-        this.animationDirection = 1;
       }
+    }
+    else if (this.thrustersOn) {
+      this.currImage++;
+      this.currImage %= this.numImages;
     } else {
       this.currImage = 2; // when the thrusters first come on, the flame starts small
     }
@@ -177,7 +190,7 @@ class Lander {
     this.impactGround = false;
     // If two or more vertices are touching the ground, the lander is static
     if (this.groundedVertexPositions.length >= 2 || this.groundedVertexPositions[0] == 0) {
-      this.inGround = true;
+      this.groundState = this.IN_GROUND;
       return;
     }
     // Apply torque on vertices
@@ -238,8 +251,7 @@ class Lander {
     appliedForce.div(this.mass);
     this.acceleration.add(appliedForce);
   }
-  applyTorque(clockwise, multiplier) {
-    if (multiplier == undefined) multiplier = 1;
+  applyTorque(clockwise, multiplier = 1) {
     if (clockwise) {
       this.angularAcceleration += 0.01 * multiplier;
     } else {
@@ -262,10 +274,7 @@ class Lander {
   }
 
   fireBullet() {
-    // Check timer
-    if (this.bulletTimer > 0) {
-      return;
-    }
+    // Reset timer
     this.bulletTimer = this.framesPerBullet;
 
     // Check ammo
@@ -290,6 +299,39 @@ class Lander {
     // Apply recoil
     direction.mult(-this.recoilForce);
     this.applyForce(direction);
+  }
+
+  dash(direction) {
+    // Reset timer
+    this.dashTimer = this.dashCooldown;
+
+    let dashMagnitude = 50;
+
+    // Check fuel
+    if(this.fuel <= dashMagnitude) {
+      return;
+    }
+
+    // Dash forward
+
+    if(direction == "forward") {
+      let thrustForce = new Vector(Math.cos(this.angle - (Math.PI / 2)), Math.sin(this.angle - (Math.PI / 2)));
+      thrustForce.mult(dashMagnitude * this.thrusterPower);
+      this.applyForce(thrustForce);
+    } else if(direction == "right") {
+      let thrustForce = new Vector( Math.cos(this.angle), Math.sin(this.angle) );
+      thrustForce.mult(dashMagnitude * this.thrusterPower);
+      this.applyForce(thrustForce);
+    } else if(direction == "left") {
+      let thrustForce = new Vector( Math.cos(this.angle - Math.PI), Math.sin(this.angle - Math.PI) );
+      thrustForce.mult(dashMagnitude * this.thrusterPower);
+      this.applyForce(thrustForce);
+    }
+
+    this.fuel -= dashMagnitude;
+
+    this.inDashingAnimation = true;
+    this.currImage = 0;
   }
 
   translate(translationVector) {

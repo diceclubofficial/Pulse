@@ -1,8 +1,9 @@
 
 todo current commit:
--sometimes when asteroids shatter() they spawn asteroids larger than themselves (entropy ?)
+-add animations for dashes (huge flames)
 
 todo later:
+-add air resistance
 -make camera position itself based on where the lander is facing
 -make asteroid sprites generate with the shape (Jason)
 -fix collision detection
@@ -13,7 +14,7 @@ todo later:
 -increase fps to 60 or 120 and change numbers accurately
 -telegraph if the lander is going to hit the ground at too high speed with speed lines like from anime and mariokart
 -add sprites to bassWaves (need more art)
--make all wave classes inherit properties and abstract methods from parent Wave class ? - need to research
+-make bullet firing charge up when you're not firing (nerf machine-gun firing and incentivize intentional aiming and firing at asteroids)
 -make the display for fuel, ammo, and speed nice-looking
 
 issues:
@@ -22,7 +23,6 @@ issues:
 -bass waves go way too fast and are too large to avoid - need to playtest
 
 ideas:
--lander has dash action (lateral thrusters do a small burst) to get away from obstacles fast but it consumes a lot of fuel
 -something cool happens when you use fire from the thrusters on something else (like R.O.B.'s aerials in smash)
 -have music from planet fade in as lander descends (start with lonely machinery beeping and fade in music as the planet and waves are visible)
 -asteroids collide on the beat in the middle of the screen and explode?

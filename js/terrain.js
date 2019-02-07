@@ -61,12 +61,12 @@ class Terrain {
   	vertexLoop: for(let i = 0; i < probe.shape.vertices.length; i++) {
   		let vertex = probe.shape.vertices[i];
   		if(this.isPointBelowSurface(vertex.x, vertex.y)) {
-  			probe.touchingGround = true;
+  			probe.groundState = probe.TOUCHING_GROUND;
   			if(!probe.groundedVertexPositions.includes(i)) probe.groundedVertexPositions.push(i);
   			break vertexLoop;
   		}
   		else {
-  			probe.touchingGround = false;
+  			probe.groundState = probe.OFF_GROUND;
   		}
   	}
   }

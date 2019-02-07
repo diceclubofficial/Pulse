@@ -3,6 +3,8 @@
 
 contextOffscreen.font = '10px Menlo';
 
+const DEV_MODE = false; // change this to toggle showing developer stats
+
 const UP = 38,
   RIGHT = 39,
   DOWN = 40,
@@ -14,6 +16,11 @@ const W = 87,
   A = 65,
   S = 83,
   D = 68;
+
+const I = 73,
+  J = 74,
+  K = 75,
+  L = 76;
 
 let keys = [];
 
@@ -76,7 +83,6 @@ window.onload = function() {
   });
 }
 
-const DEV_MODE = false; // change this to toggle showing developer stats
 
 function changeScene(newScene) {
   for (let scene of sceneNames) {
@@ -420,7 +426,7 @@ function spawnBulletParticles(x, y, angle) {
     numSprites: 2,
   }
 
-  let framesPerSprite = 1;
+  let framesPerSprite = 3;
   let scale = 0.75;
   let rotationAngle = angle;
   let repeat = false;
@@ -475,15 +481,15 @@ function spawnAsteroidCollisionDust(x, y, scale = 1) {
 
 function applyKeyboardInput() {
   // control probe
-  if (keys[W] && !probe.touchingGround) {
+  if (keys[W] && probe.groundState == probe.OFF_GROUND) {
     probe.applyThrusters();
   } else {
     probe.thrustersOn = false;
   }
-  if (keys[D] && !probe.touchingGround) {
+  if (keys[D] && probe.groundState == probe.OFF_GROUND) {
     probe.applyTorque(true);
   }
-  if (keys[A] && !probe.touchingGround) {
+  if (keys[A] && probe.groundState == probe.OFF_GROUND) {
     probe.applyTorque(false);
   }
   // regenerate terrain
@@ -492,26 +498,37 @@ function applyKeyboardInput() {
   }
 
   // fire gun
-  if (keys[SPACEBAR]) {
+  if (keys[SPACEBAR] && probe.bulletTimer <= 0) {
     probe.fireBullet();
+  }
+
+  // dash
+  if (keys[UP] && probe.dashTimer <= 0) {
+    probe.dash("forward");
+  }
+  if (keys[RIGHT] && probe.dashTimer <= 0) {
+    probe.dash("right");
+  }
+  if (keys[LEFT] && probe.dashTimer <= 0) {
+    probe.dash("left");
   }
 
   // control camera
   if (DEV_MODE) {
     let screenMovement = 10;
-    if (keys[LEFT]) {
+    if (keys[J]) {
       gameAreaOrigin.add(new Vector(-screenMovement, 0));
       console.log("new game origin", gameAreaOrigin.toString());
     }
-    if (keys[RIGHT]) {
+    if (keys[L]) {
       gameAreaOrigin.add(new Vector(screenMovement, 0));
       console.log("new game origin", gameAreaOrigin.toString());
     }
-    if (keys[UP]) {
+    if (keys[I]) {
       gameAreaOrigin.add(new Vector(0, -screenMovement));
       console.log("new game origin", gameAreaOrigin.toString());
     }
-    if (keys[DOWN]) {
+    if (keys[K]) {
       gameAreaOrigin.add(new Vector(0, screenMovement));
       console.log("new game origin", gameAreaOrigin.toString());
     }
