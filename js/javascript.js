@@ -83,13 +83,37 @@ window.onload = function() {
   });
 }
 
+
+function changeScene(newScene) {
+  for (let scene of sceneNames) {
+
+    //set all elements with class id of the scene in argument to remove "hidden" class
+    if (scene == newScene) {
+      let classList = document.getElementsByClassName(scene);
+      for (let tempElement of classList) {
+        tempElement.classList.remove("hidden");
+      }
+
+      //get all elements withOUT class id of the scene in argument to add "hidden" class
+    } else {
+      let classList = document.getElementsByClassName(scene);
+      for (let tempElement of classList) {
+        tempElement.classList.add("hidden");
+      }
+    }
+  }
+}
+
 function startGame() {
-  // remove start button and title screen
-  startButton.classList.add('hidden');
-  document.getElementById('titleScreen').classList.add('hidden');
-  // show canvas and mute button
-  canvasGA.classList.remove('hidden');
-  muteButton.classList.remove('hidden');
+  // // remove start button and title screen
+  // startButton.classList.add('hidden');
+  // document.getElementById('titleScreen').classList.add('hidden');
+  // // show canvas and mute button
+  // canvasGA.classList.remove('hidden');
+  // muteButton.classList.remove('hidden');
+
+  //change scene to game screen
+  changeScene("scene-gameMain");
 
   // initialize audioContext and start playing audio
   audioContext.resume();
@@ -158,6 +182,7 @@ function drawEverything() {
 
   drawForeground(contextOffscreen);
 }
+
 function showDeveloperStats() {
   // coordinate markers
   let context = contextOffscreen;
@@ -230,6 +255,7 @@ function spawnAsteroidOffscreen() {
   let newAsteroid = new Asteroid(spawnPoint.x, spawnPoint.y, asteroidScreenCoordinates, asteroidScreenDimensions);
   asteroids.push(newAsteroid);
 }
+
 function updateAsteroids() {
   // Spawn asteroids
   if (asteroids.length < maxAsteroids) {
@@ -250,6 +276,7 @@ function updateAsteroids() {
     asteroid.update();
   }
 }
+
 function updateWaves() {
   // spawn waves
   if (trebleWaves.length < maxTrebleWaves) {
@@ -304,6 +331,7 @@ function updateBullets() {
   }
   bullets = aliveBullets;
 }
+
 function updateAnimations() {
 
   let aliveAnimations = [];
@@ -361,6 +389,7 @@ function drawBackground(context) {
 
   context.restore();
 }
+
 function drawForeground(context) {
   context.save();
 
@@ -397,6 +426,7 @@ function spawnBulletParticles(x, y, angle) {
 
   animations.push(animation);
 }
+
 function spawnExplosion(x, y) {
   let position = new Vector(x, y);
 
@@ -418,6 +448,7 @@ function spawnExplosion(x, y) {
 
   animations.push(animation);
 }
+
 function spawnAsteroidCollisionDust(x, y, scale = 1) {
   let position = new Vector(x, y);
 
@@ -463,13 +494,13 @@ function applyKeyboardInput() {
   }
 
   // dash
-  if(keys[UP] && probe.dashTimer <= 0) {
+  if (keys[UP] && probe.dashTimer <= 0) {
     probe.dash("forward");
   }
-  if(keys[RIGHT] && probe.dashTimer <= 0) {
+  if (keys[RIGHT] && probe.dashTimer <= 0) {
     probe.dash("right");
   }
-  if(keys[LEFT] && probe.dashTimer <= 0) {
+  if (keys[LEFT] && probe.dashTimer <= 0) {
     probe.dash("left");
   }
 
@@ -497,6 +528,7 @@ function applyKeyboardInput() {
 
 // PROCESSING USER INPUT
 document.addEventListener('keydown', processKeyDownInput);
+
 function processKeyDownInput(event) {
   if (event.key == 'z') {
     console.log(keys);
@@ -504,10 +536,12 @@ function processKeyDownInput(event) {
   keys[event.keyCode] = true;
 }
 document.addEventListener('keyup', processKeyUpInput);
+
 function processKeyUpInput(event) {
   keys[event.keyCode] = false;
 }
 canvasGA.addEventListener('click', processMouseInput);
+
 function processMouseInput(event) {
   var relX = (event.clientX - canvasGA.offsetLeft);
   var relY = (event.clientY - canvasGA.offsetTop);

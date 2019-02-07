@@ -17,4 +17,10 @@ canvasOffscreen.height = OFFSCREEN_HEIGHT;
 let gameAreaOrigin = new Vector(0, 0);
 let bottomScreenY = OFFSCREEN_HEIGHT - HEIGHT;
 
-let totalScreens = (OFFSCREEN_WIDTH/WIDTH) * (OFFSCREEN_HEIGHT/HEIGHT);
+let totalScreens = (OFFSCREEN_WIDTH / WIDTH) * (OFFSCREEN_HEIGHT / HEIGHT);
+
+let sceneNames = [
+  "scene-titleScreen",
+  "scene-gameMain",
+  "scene-successScreen",
+];

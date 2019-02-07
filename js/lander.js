@@ -112,6 +112,11 @@ class Lander {
     if (this.x < -this.width || this.x > OFFSCREEN_WIDTH || this.y < -this.height || this.y > OFFSCREEN_HEIGHT) {
       console.log("Lander is offscreen at (" + Math.floor(this.x) + ", " + Math.floor(this.y) + ") with velocity x:" + Math.floor(this.velocity.x) + " y:" + Math.floor(this.velocity.y));
     }
+
+    //if the lander is not off the ground, show success screen
+    if (this.inGround) {
+      changeScene("scene-successScreen");
+    }
   }
 
   showDeveloperStats(context) {
