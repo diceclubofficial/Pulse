@@ -1,32 +1,32 @@
-// Javascript File 03
 "use strict"
 
 contextOffscreen.font = '10px Menlo';
 
 const DEV_MODE = false; // change this to toggle showing developer stats
 
+const FPS = 60;
+const MS_PER_FRAME = 1000 / FPS;
+console.log("Running at " + Math.round(FPS) + " frames/second and " + Math.round(MS_PER_FRAME) + " ms/frame.");
+
 const UP = 38,
-  RIGHT = 39,
-  DOWN = 40,
-  LEFT = 37;
-
+      RIGHT = 39,
+      DOWN = 40,
+      LEFT = 37;
 const SPACEBAR = 32;
-
 const W = 87,
-  A = 65,
-  S = 83,
-  D = 68;
-
+      A = 65,
+      S = 83,
+      D = 68;
 const I = 73,
       J = 74,
       K = 75,
       L = 76;
-
 let keys = [];
 
 let probe = new Lander(gameAreaOrigin.x + WIDTH / 2, gameAreaOrigin.y + 0.03 * HEIGHT);
 const MASS_CONSTANT = probe.shape.area; // 1 mass unit = the mass of the lander
-const GRAVITY = new Vector(0, 0.05);
+const GRAVITY = new Vector(0, 0.0015 * MS_PER_FRAME);
+console.log("Gravity is " + GRAVITY.y/MS_PER_FRAME + " N/ms and "+ GRAVITY.y + " N/frame");
 
 let terrain = new Terrain();
 let stars = [];
@@ -97,9 +97,7 @@ function startGame() {
   // audioElement.play();
 
   // loop play
-  // drawEverything();
-  let fps = 30;
-  setInterval(play, 1000 / fps);
+  setInterval(play, MS_PER_FRAME);
 }
 
 function play() {
@@ -111,10 +109,8 @@ function play() {
   updateAsteroids();
   updateAnimations();
   updateBullets();
-  if (!probe.inGround) probe.applyForce(GRAVITY);
+  if (probe.groundState != probe.IN_GROUND) probe.applyForce(GRAVITY);
   probe.update();
-
-  updateAudio();
 
   collisionDetection();
 
@@ -293,9 +289,6 @@ function updateWaves() {
     bassWave.update();
   }
 }
-function updateAudio() {
-  // do audio stuff here
-}
 function updateBullets() {
   // Update bullets
   for (let bullet of bullets) {
@@ -395,7 +388,7 @@ function spawnBulletParticles(x, y, angle) {
     numSprites: 2,
   }
 
-  let framesPerSprite = 3;
+  let framesPerSprite = 99 / MS_PER_FRAME;
   let scale = 0.75;
   let rotationAngle = angle;
   let repeat = false;
@@ -416,7 +409,7 @@ function spawnExplosion(x, y) {
     numSprites: 5
   }
 
-  let framesPerSprite = 2;
+  let framesPerSprite = 66 / MS_PER_FRAME;
   let scale = 1.5;
   let rotationAngle = randomValue(0, 2 * Math.PI);
   let repeat = false;
@@ -437,7 +430,7 @@ function spawnAsteroidCollisionDust(x, y, scale = 1) {
     numSprites: 4
   }
 
-  let framesPerSprite = 1;
+  let framesPerSprite = 33 / MS_PER_FRAME;
   let rotationAngle = randomValue(0, 2 * Math.PI);
   let repeat = false;
 

@@ -204,7 +204,6 @@ class Polygon {
 
     // Check if polygon is close to the actual sector rather than just inside but close to the center
     let polygonDistance = towardsPolygon.magnitude;
-    console.log(polygonDistance, circle.radius);
     if(polygonDistance > circle.radius + arcMargin/2 || polygonDistance < circle.radius - arcMargin/2) {
       return false;
     }

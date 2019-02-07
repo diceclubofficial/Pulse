@@ -1,6 +1,10 @@
 
 todo current commit:
--add animations for dashes (huge flames)
+-change fps to make it easily changeable
+
+todo Colin:
+-game states (waiting for Jason)
+-air resistance
 
 todo later:
 -add air resistance

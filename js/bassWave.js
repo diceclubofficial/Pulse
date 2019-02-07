@@ -5,7 +5,7 @@ class BassWave {
   constructor(x, y, screenCoordinates, screenDimensions) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = 3.2;
+    this.speed = 0.096 * MS_PER_FRAME;
     this.radius = 1;
     this.fillStyle = 'white';
 
@@ -102,7 +102,7 @@ class BassWave {
 			let towardsLander = new Vector(probe.x, probe.y);
 			towardsLander.sub(this.coordinates);
 			let force = new Vector(towardsLander.x, towardsLander.y);
-			force.magnitude = 3;
+			force.magnitude = 0.09 * MS_PER_FRAME;
 			probe.applyForce(force);
 
 			this.alive = false;

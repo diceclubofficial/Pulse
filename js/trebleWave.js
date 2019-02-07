@@ -13,14 +13,14 @@ class TrebleWave {
     // type-specific data
     let speed;
     if(this.type == 1) {
-      speed = randomInt(3, 5);
+      speed = MS_PER_FRAME * randomValue(0.09, 0.15);
     }
     else if(this.type == 2) {
-      speed = randomInt(5, 7);
+      speed = MS_PER_FRAME * randomValue(0.15, 0.21);
     }
     else if(this.type == 3) {
       this.clockwise = randomInt(0, 2);
-      speed = randomInt(7, 9);
+      speed = MS_PER_FRAME * randomValue(0.21, 0.27);
     }
 
     // image data
@@ -61,13 +61,13 @@ class TrebleWave {
 
     // sprite animation
     this.numImages = 2, this.currImage = 0;
-    this.framesPerAnimation = 5; // change this to change the animation speed
+    this.framesPerAnimation = 165 / MS_PER_FRAME; // change this to change the animation speed
     this.animationTimer = 0;
 
     // for calculating when to start dying
     this.distanceFromCenter = distance(this.x, this.y, canvasGA.width/2, canvasGA.height/2);
     this.dying = false;
-    this.dyingTimerMax = 20;
+    this.dyingTimerMax = 660 / MS_PER_FRAME;
     this.dyingTimer = this.dyingTimerMax;
     this.alive = true;
   }
@@ -171,21 +171,21 @@ class TrebleWave {
     // blue wave
     if(this.type == 1) {
       let force = new Vector(this.velocity.x, this.velocity.y);
-      force.mult(0.05);
+      force.mult(0.0015 * MS_PER_FRAME);
       probe.applyForce(force);
       this.dying = true;
     }
     //green wave
     else if(this.type == 2) {
       let force = new Vector(this.velocity.x, this.velocity.y);
-      force.mult(0.05);
+      force.mult(0.0015 * MS_PER_FRAME);
       probe.applyForce(force);
       this.dying = true;
     }
     //red wave
     else if(this.type == 3) {
       let force = new Vector(this.velocity.x, this.velocity.y);
-      force.mult(0.05);
+      force.mult(0.0015 * MS_PER_FRAME);
       probe.applyForce(force);
       probe.applyTorque(this.clockwise);
       this.dying = true;

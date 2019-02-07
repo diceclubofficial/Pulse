@@ -5,7 +5,7 @@ class Bullet {
   constructor(x, y, direction) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = 30;
+    this.speed = 0.909 * MS_PER_FRAME;
     this.velocity = new Vector(direction.x, direction.y);
     this.velocity.magnitude = this.speed;
     this.acceleration = new Vector(0, 0);
@@ -99,20 +99,6 @@ class Bullet {
       this.alive = false;
       asteroid.collideAgainst(this);
       spawnExplosion(this.x, this.y);
-    }
-  }
-
-  applyForce(force) { // force need be a vector
-    let appliedForce = new Vector(force.x, force.y);
-    appliedForce.div(this.mass);
-    this.acceleration.add(appliedForce);
-  }
-  applyTorque(clockwise, multiplier) {
-    if (multiplier == undefined) multiplier = 1;
-    if (clockwise) {
-      this.angularAcceleration += 0.01 * multiplier;
-    } else {
-      this.angularAcceleration -= 0.01 * multiplier;
     }
   }
 

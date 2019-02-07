@@ -23,7 +23,7 @@ class Lander {
     this.angularVelocity = 0;
     this.angularAcceleration = 0;
 
-    this.thrusterPower = 0.15;
+    this.thrusterPower = 0.0045 * MS_PER_FRAME;
     this.momentOfInertia = (.5 * this.mass * Math.pow(this.width / 2, 2));
     this.fillStyle = 'rgb(255, 255, 255)';
 
@@ -39,22 +39,22 @@ class Lander {
     this.numImages = 4;
     this.currImage = 0;
     this.thrustersOn = false;
-    this.framesPerAnimation = 5; // animation speed
+    this.framesPerAnimation = 165 / MS_PER_FRAME; // animation speed
     this.animationTimer = 0;
     this.fuel = 3000;
 
     // bullet firing
-    this.framesPerBullet = 5;
+    this.framesPerBullet = 165 / MS_PER_FRAME;
     this.bulletTimer = 0;
     this.bulletSpread = 18; // total range of bullet directions in degrees
-    this.recoilForce = 0; //1.5
+    this.recoilForce = 0.7; //1.5
     this.ammo = 1000;
 
     // dashing
     this.inDashingAnimation = false;
     this.dashingNumImages = 3;
     this.dashTimer = 0;
-    this.dashCooldown = 20;
+    this.dashCooldown = 660 / MS_PER_FRAME;
   }
 
   update() {
@@ -248,9 +248,9 @@ class Lander {
   }
   applyTorque(clockwise, multiplier = 1) {
     if (clockwise) {
-      this.angularAcceleration += 0.01 * multiplier;
+      this.angularAcceleration += (0.000303 * MS_PER_FRAME) * multiplier;
     } else {
-      this.angularAcceleration -= 0.01 * multiplier;
+      this.angularAcceleration -= (0.000303 * MS_PER_FRAME) * multiplier;
     }
   }
   applyThrusters() {
