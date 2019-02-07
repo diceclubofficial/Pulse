@@ -5,9 +5,11 @@ class Lander {
   constructor(x, y) {
     // image data
     this.landerThrusterSheet = new Image();
-    this.landerThrusterSheet.src = "images/landerThrusterSheet.png";
+    this.landerThrusterSheet.src = "images/landerThrusterSheetRed.png";
     this.landerStaticImage = new Image();
     this.landerStaticImage.src = "images/landerStaticImage.png";
+    this.landerDashForwardSheet = new Image();
+    this.landerDashForwardSheet.src = "images/landerDashForwardSheetRed.png";
     this.spriteWidth = 42, this.spriteHeight = 50;
 
     // vector quantities
@@ -34,10 +36,10 @@ class Lander {
     this.groundedVertexPositions = [];
 
     // sprite animation
-    this.numImages = 3, this.currImage = 0;
-    this.animationDirection = 1;
+    this.numImages = 4;
+    this.currImage = 0;
     this.thrustersOn = false;
-    this.framesPerAnimation = 3; // change this to change the animation speed
+    this.framesPerAnimation = 5; // animation speed
     this.animationTimer = 0;
     this.fuel = 3000;
 
@@ -49,8 +51,10 @@ class Lander {
     this.ammo = 1000;
 
     // dashing
+    this.inDashingAnimation = false;
+    this.dashingNumImages = 3;
     this.dashTimer = 0;
-    this.dashCooldown = 10;
+    this.dashCooldown = 20;
   }
 
   update() {
@@ -129,7 +133,10 @@ class Lander {
     // draw lander image
     context.translate(this.x + this.width / 2, this.y + this.height / 2);
     context.rotate(this.angle);
-    if (this.thrustersOn) {
+    if(this.inDashingAnimation) {
+      context.drawImage(this.landerDashForwardSheet, this.currImage * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
+    }
+    else if (this.thrustersOn) {
       context.drawImage(this.landerThrusterSheet, this.currImage * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
     } else {
       context.drawImage(this.landerStaticImage, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
@@ -148,17 +155,16 @@ class Lander {
 
     // Change sprite:
     // if thrusters are on, cycle through the images
-    if (this.thrustersOn) {
-      this.currImage += this.animationDirection;
-
-      // switch animation direction back and forth
-      if (this.currImage >= this.numImages - 1) {
+    if(this.inDashingAnimation) {
+      this.currImage++;
+      if(this.currImage >= this.dashingNumImages) {
+        this.inDashingAnimation = false;
         this.currImage = 2;
-        this.animationDirection = -1;
-      } else if (this.currImage <= 0) {
-        this.currImage = 0;
-        this.animationDirection = 1;
       }
+    }
+    else if (this.thrustersOn) {
+      this.currImage++;
+      this.currImage %= this.numImages;
     } else {
       this.currImage = 2; // when the thrusters first come on, the flame starts small
     }
@@ -240,8 +246,7 @@ class Lander {
     appliedForce.div(this.mass);
     this.acceleration.add(appliedForce);
   }
-  applyTorque(clockwise, multiplier) {
-    if (multiplier == undefined) multiplier = 1;
+  applyTorque(clockwise, multiplier = 1) {
     if (clockwise) {
       this.angularAcceleration += 0.01 * multiplier;
     } else {
@@ -295,13 +300,15 @@ class Lander {
     // Reset timer
     this.dashTimer = this.dashCooldown;
 
+    let dashMagnitude = 50;
+
     // Check fuel
-    if(this.fuel <= 0) {
+    if(this.fuel <= dashMagnitude) {
       return;
     }
 
     // Dash forward
-    let dashMagnitude = 50;
+
     if(direction == "forward") {
       let thrustForce = new Vector(Math.cos(this.angle - (Math.PI / 2)), Math.sin(this.angle - (Math.PI / 2)));
       thrustForce.mult(dashMagnitude * this.thrusterPower);
@@ -317,6 +324,9 @@ class Lander {
     }
 
     this.fuel -= dashMagnitude;
+
+    this.inDashingAnimation = true;
+    this.currImage = 0;
   }
 
   translate(translationVector) {

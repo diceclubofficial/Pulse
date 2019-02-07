@@ -1,9 +1,8 @@
 
 todo current commit:
--make lander touching ground booleans into a state machine
+-add animations for dashes (huge flames)
 
 todo later:
--add animations for dashes (huge flames)
 -add air resistance
 -make camera position itself based on where the lander is facing
 -make asteroid sprites generate with the shape (Jason)

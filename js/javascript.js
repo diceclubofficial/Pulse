@@ -395,7 +395,7 @@ function spawnBulletParticles(x, y, angle) {
     numSprites: 2,
   }
 
-  let framesPerSprite = 1;
+  let framesPerSprite = 3;
   let scale = 0.75;
   let rotationAngle = angle;
   let repeat = false;
