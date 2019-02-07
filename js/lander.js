@@ -114,7 +114,7 @@ class Lander {
     }
 
     //if the lander is not off the ground, show success screen
-    if (this.inGround) {
+    if (this.groundState != this.OFF_GROUND) {
       changeScene("scene-successScreen");
     }
   }
@@ -138,10 +138,9 @@ class Lander {
     // draw lander image
     context.translate(this.x + this.width / 2, this.y + this.height / 2);
     context.rotate(this.angle);
-    if(this.inDashingAnimation) {
+    if (this.inDashingAnimation) {
       context.drawImage(this.landerDashForwardSheet, this.currImage * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
-    }
-    else if (this.thrustersOn) {
+    } else if (this.thrustersOn) {
       context.drawImage(this.landerThrusterSheet, this.currImage * this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
     } else {
       context.drawImage(this.landerStaticImage, -this.imageWidth / 2, -this.imageHeight / 2, this.imageWidth, this.imageHeight);
@@ -160,14 +159,13 @@ class Lander {
 
     // Change sprite:
     // if thrusters are on, cycle through the images
-    if(this.inDashingAnimation) {
+    if (this.inDashingAnimation) {
       this.currImage++;
-      if(this.currImage >= this.dashingNumImages) {
+      if (this.currImage >= this.dashingNumImages) {
         this.inDashingAnimation = false;
         this.currImage = 2;
       }
-    }
-    else if (this.thrustersOn) {
+    } else if (this.thrustersOn) {
       this.currImage++;
       this.currImage %= this.numImages;
     } else {
@@ -308,22 +306,22 @@ class Lander {
     let dashMagnitude = 50;
 
     // Check fuel
-    if(this.fuel <= dashMagnitude) {
+    if (this.fuel <= dashMagnitude) {
       return;
     }
 
     // Dash forward
 
-    if(direction == "forward") {
+    if (direction == "forward") {
       let thrustForce = new Vector(Math.cos(this.angle - (Math.PI / 2)), Math.sin(this.angle - (Math.PI / 2)));
       thrustForce.mult(dashMagnitude * this.thrusterPower);
       this.applyForce(thrustForce);
-    } else if(direction == "right") {
-      let thrustForce = new Vector( Math.cos(this.angle), Math.sin(this.angle) );
+    } else if (direction == "right") {
+      let thrustForce = new Vector(Math.cos(this.angle), Math.sin(this.angle));
       thrustForce.mult(dashMagnitude * this.thrusterPower);
       this.applyForce(thrustForce);
-    } else if(direction == "left") {
-      let thrustForce = new Vector( Math.cos(this.angle - Math.PI), Math.sin(this.angle - Math.PI) );
+    } else if (direction == "left") {
+      let thrustForce = new Vector(Math.cos(this.angle - Math.PI), Math.sin(this.angle - Math.PI));
       thrustForce.mult(dashMagnitude * this.thrusterPower);
       this.applyForce(thrustForce);
     }
