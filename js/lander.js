@@ -43,7 +43,7 @@ class Lander {
     this.framesPerBullet = 5;
     this.bulletTimer = 0;
     this.bulletSpread = 18; // total range of bullet directions in degrees
-    this.recoilForce = 0; //1.5
+    this.recoilForce = 1.5; //1.5
     this.ammo = 1000;
   }
 
@@ -100,6 +100,11 @@ class Lander {
     // If offscreen, print coordinates
     if (this.x < -this.width || this.x > OFFSCREEN_WIDTH || this.y < -this.height || this.y > OFFSCREEN_HEIGHT) {
       console.log("Lander is offscreen at (" + Math.floor(this.x) + ", " + Math.floor(this.y) + ") with velocity x:" + Math.floor(this.velocity.x) + " y:" + Math.floor(this.velocity.y));
+    }
+
+    //if the lander is not off the ground, show success screen
+    if (this.inGround) {
+      changeScene("scene-successScreen");
     }
   }
 

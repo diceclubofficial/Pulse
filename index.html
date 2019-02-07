@@ -6,18 +6,19 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 <body>
 
-	<img id="titleScreen" src="images/titlePage1Large.png" alt="Title Page 1" width="600" height="600">
+	<img class="scene-titleScreen" id="titleScreen" src="images/titleScreen.gif" alt="Title Page 1" width="600" height="600">
 
-	<div id="startButton">START GAME</div>
+	<img class="hidden scene-successScreen" id="successScreen" src="images/successScreen.png" alt="Success Screen" width="600" height="600">
+
+	<div class="scene-titleScreen" id="startButton">START GAME</div>
 
 	<audio id="mizar" src="music/billvortexMizar.mp3" type="audio/mpeg"></audio>
 	<audio id="truffes" src="music/billvortexTruffes.mp3" type="audio/mpeg"></audio>
 	<audio id="incendie" src="music/billvortexIncendie.mp3" type="audio/mpeg"></audio>
 
-	<canvas class="hidden" id="game-area" width="750" height="750"></canvas>
+	<canvas class="hidden scene-gameMain" id="game-area" width="750" height="750"></canvas>
 
-	<button id="muteButton" class="hidden" type="button" name="button"> Stop Music</button>
-
+	<button class="hidden scene-gameMain" id="muteButton" type="button" name="button">Stop Music</button>
 
 	<script type="text/javascript" src="js/vector.js"></script>
 	<script type="text/javascript" src="js/animation.js"></script>

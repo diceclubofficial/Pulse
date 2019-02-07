@@ -78,13 +78,36 @@ window.onload = function() {
 
 const DEV_MODE = false; // change this to toggle showing developer stats
 
+function changeScene(newScene) {
+  for (let scene of sceneNames) {
+
+    //set all elements with class id of the scene in argument to remove "hidden" class
+    if (scene == newScene) {
+      let classList = document.getElementsByClassName(scene);
+      for (let tempElement of classList) {
+        tempElement.classList.remove("hidden");
+      }
+
+      //get all elements withOUT class id of the scene in argument to add "hidden" class
+    } else {
+      let classList = document.getElementsByClassName(scene);
+      for (let tempElement of classList) {
+        tempElement.classList.add("hidden");
+      }
+    }
+  }
+}
+
 function startGame() {
-  // remove start button and title screen
-  startButton.classList.add('hidden');
-  document.getElementById('titleScreen').classList.add('hidden');
-  // show canvas and mute button
-  canvasGA.classList.remove('hidden');
-  muteButton.classList.remove('hidden');
+  // // remove start button and title screen
+  // startButton.classList.add('hidden');
+  // document.getElementById('titleScreen').classList.add('hidden');
+  // // show canvas and mute button
+  // canvasGA.classList.remove('hidden');
+  // muteButton.classList.remove('hidden');
+
+  //change scene to game screen
+  changeScene("scene-gameMain");
 
   // initialize audioContext and start playing audio
   audioContext.resume();
@@ -157,6 +180,7 @@ function drawEverything() {
 
   drawForeground(contextOffscreen);
 }
+
 function showDeveloperStats() {
   // coordinate markers
   let context = contextOffscreen;
@@ -229,6 +253,7 @@ function spawnAsteroidOffscreen() {
   let newAsteroid = new Asteroid(spawnPoint.x, spawnPoint.y, asteroidScreenCoordinates, asteroidScreenDimensions);
   asteroids.push(newAsteroid);
 }
+
 function updateAsteroids() {
   // Spawn asteroids
   if (asteroids.length < maxAsteroids) {
@@ -249,6 +274,7 @@ function updateAsteroids() {
     asteroid.update();
   }
 }
+
 function updateWaves() {
   // spawn waves
   if (trebleWaves.length < maxTrebleWaves) {
@@ -288,9 +314,11 @@ function updateWaves() {
     bassWave.update();
   }
 }
+
 function updateAudio() {
   // do audio stuff here
 }
+
 function updateBullets() {
   // Update bullets
   for (let bullet of bullets) {
@@ -306,6 +334,7 @@ function updateBullets() {
   }
   bullets = aliveBullets;
 }
+
 function updateAnimations() {
 
   let aliveAnimations = [];
@@ -363,6 +392,7 @@ function drawBackground(context) {
 
   context.restore();
 }
+
 function drawForeground(context) {
   context.save();
 
@@ -399,6 +429,7 @@ function spawnBulletParticles(x, y, angle) {
 
   animations.push(animation);
 }
+
 function spawnExplosion(x, y) {
   let position = new Vector(x, y);
 
@@ -420,6 +451,7 @@ function spawnExplosion(x, y) {
 
   animations.push(animation);
 }
+
 function spawnAsteroidCollisionDust(x, y, scale = 1) {
   let position = new Vector(x, y);
 
