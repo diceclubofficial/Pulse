@@ -58,6 +58,7 @@ class Lander {
   }
 
   update() {
+    // Cancel all motion if in ground
     if (this.groundState == this.IN_GROUND) {
       this.velocity.mult(0);
       this.acceleration.mult(0);
@@ -79,11 +80,20 @@ class Lander {
     this.shape.rotate(this.angularVelocity);
     this.angularAcceleration *= 0;
 
+    // Animation
     this.animate();
 
+    // Timers
     this.bulletTimer--;
     this.dashTimer--;
 
+    // Apply drag force
+    let drag = new Vector(Math.cos(this.velocity.angle + (Math.PI / 2)), Math.sin(this.velocity.angle + (Math.PI / 2)));
+    drag.magnitude = DRAG_CONSTANT * this.velocity.magnitude;
+    this.applyForce(drag);
+    console.log(this.velocity.magnitude);
+
+    // Ground collision detection
     if (this.groundState == this.TOUCHING_GROUND) {
       this.collideWithGround();
     } else {
@@ -305,7 +315,7 @@ class Lander {
     // Reset timer
     this.dashTimer = this.dashCooldown;
 
-    let dashMagnitude = 50;
+    let dashMagnitude = 75;
 
     // Check fuel
     if (this.fuel <= dashMagnitude) {
