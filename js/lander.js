@@ -9,7 +9,7 @@ class Lander {
     this.landerStaticImage = new Image();
     this.landerStaticImage.src = "images/landerStaticImage.png";
     this.landerDashForwardSheet = new Image();
-    this.landerDashForwardSheet.src = "images/landerDashForwardSheetRed.png";
+    this.landerDashForwardSheet.src = "images/landerDashForwardSheetRedExtended.png";
     this.spriteWidth = 42, this.spriteHeight = 50;
 
     // vector quantities
@@ -113,9 +113,11 @@ class Lander {
       console.log("Lander is offscreen at (" + Math.floor(this.x) + ", " + Math.floor(this.y) + ") with velocity x:" + Math.floor(this.velocity.x) + " y:" + Math.floor(this.velocity.y));
     }
 
-    //if the lander is not off the ground, show success screen
-    if (this.groundState != this.OFF_GROUND) {
-      changeScene("scene-successScreen");
+    // success and failure states
+    if(this.groundedVertexPositions[0] == 0 && !safeLanding) {
+      badLanding = true;
+    } else if(this.groundState == this.IN_GROUND && !badLanding) {
+      safeLanding = true;
     }
   }
 

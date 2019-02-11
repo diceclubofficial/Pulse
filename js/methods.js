@@ -1,4 +1,15 @@
 
+function changeOffscreenDimensions(horizontalScreens, verticalScreens) {
+  OFFSCREEN_WIDTH = horizontalScreens * WIDTH;
+  OFFSCREEN_HEIGHT = verticalScreens * HEIGHT;
+  canvasOffscreen.width = OFFSCREEN_WIDTH;
+  canvasOffscreen.height = OFFSCREEN_HEIGHT;
+
+  bottomScreenY = OFFSCREEN_HEIGHT - HEIGHT;
+
+  totalScreens = (OFFSCREEN_WIDTH / WIDTH) * (OFFSCREEN_HEIGHT / HEIGHT);
+}
+
 function rectanglesCollide(rect1, rect2) {
   return (rect1.x + rect1.width > rect2.x
     && rect1.x < rect2.x + rect2.width
