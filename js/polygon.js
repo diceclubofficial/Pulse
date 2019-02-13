@@ -5,7 +5,7 @@ class Polygon {
   constructor(points) {
     // list of vertices (as Vectors)
     this.vertices = [];
-    for(let i = 0; i < points.length; i++) {
+    for (let i = 0; i < points.length; i++) {
       this.vertices[i] = points[i];
     }
 
@@ -15,10 +15,10 @@ class Polygon {
   }
 
   updateEdges() {
-    for(let i = 0; i < this.vertices.length; i++) {
+    for (let i = 0; i < this.vertices.length; i++) {
       let point1 = this.vertices[i];
       let point2;
-      if(i == this.vertices.length - 1) point2 = this.vertices[0];
+      if (i == this.vertices.length - 1) point2 = this.vertices[0];
       else point2 = this.vertices[i + 1];
 
       let edge = new Vector(point2.x - point1.x, point2.y - point1.y);
@@ -30,19 +30,19 @@ class Polygon {
     context.save();
     context.strokeStyle = color;
     // draw vertices and edges
-    for(let i = 0; i < this.vertices.length; i++) {
+    for (let i = 0; i < this.vertices.length; i++) {
       let currPoint = this.vertices[i];
       let nextPoint;
-      if(i == this.vertices.length - 1) nextPoint = this.vertices[0];
+      if (i == this.vertices.length - 1) nextPoint = this.vertices[0];
       else nextPoint = this.vertices[i + 1];
       // vertex
-      if(drawPoints) {
+      if (drawPoints) {
         context.beginPath();
-        context.arc(currPoint.x, currPoint.y, 2, 0, 2*Math.PI);
+        context.arc(currPoint.x, currPoint.y, 2, 0, 2 * Math.PI);
         context.stroke();
       }
       // edges
-      context.lineWidth = drawPoints ? 1 : 2;
+      context.lineWidth = drawPoints ? 1 : 3;
       context.beginPath();
       context.moveTo(currPoint.x, currPoint.y);
       context.lineTo(nextPoint.x, nextPoint.y);
@@ -50,9 +50,9 @@ class Polygon {
     }
 
     // centroid
-    if(drawPoints) {
+    if (drawPoints) {
       context.beginPath();
-      context.arc(this.centroid.x, this.centroid.y, 2, 0, 2*Math.PI);
+      context.arc(this.centroid.x, this.centroid.y, 2, 0, 2 * Math.PI);
       context.stroke();
     }
     context.restore();
@@ -67,10 +67,10 @@ class Polygon {
     let max = min;
 
     // iterate through all points and project them to find the longest section
-    for(let vertex of this.vertices) {
+    for (let vertex of this.vertices) {
       let p = axis.dot(vertex);
-      if(p < min) min = p;
-      else if(p > max) max = p;
+      if (p < min) min = p;
+      else if (p > max) max = p;
     }
     let projection = new Projection(min, max);
     return projection;
@@ -79,34 +79,34 @@ class Polygon {
   rotate(theta) {
     // theta in radians
     let fixedCentroid = this.centroid;
-    for(let i = 0; i < this.vertices.length; i++) {
+    for (let i = 0; i < this.vertices.length; i++) {
       this.vertices[i] = rotatePoint(this.vertices[i], theta, fixedCentroid);
     }
     this.updateEdges();
   }
 
   translate(vector) {
-    for(let i = 0; i < this.vertices.length; i++) {
+    for (let i = 0; i < this.vertices.length; i++) {
       this.vertices[i].add(vector);
     }
   }
 
   overlapsPolygon(polygon2, returnMTV) {
     let polygon1 = this;
-    if(returnMTV == undefined) returnMTV = false;
+    if (returnMTV == undefined) returnMTV = false;
     // Add normals to axes and remove parallel axes
     let minOverlap;
     let smallestAxis;
-    if(returnMTV) {
+    if (returnMTV) {
       minOverlap = Number.MAX_SAFE_INTEGER;
     }
     let normals1 = polygon1.normals;
     let normals2 = polygon2.normals;
     let normals = normals1.concat(normals2);
     let axes = [];
-    outer: for(let normal of normals) {
-      for(let axis of axes) {
-        if(axis.isParallelTo(normal)) {
+    outer: for (let normal of normals) {
+      for (let axis of axes) {
+        if (axis.isParallelTo(normal)) {
           continue outer;
         }
       }
@@ -114,21 +114,21 @@ class Polygon {
     }
 
     // cycle through axes and evaluate if the polygons' projections overlap
-    for(let axis of axes) {
+    for (let axis of axes) {
       let projection1 = polygon1.project(axis);
       let projection2 = polygon2.project(axis);
 
-      if(!projection1.overlaps(projection2)) {
+      if (!projection1.overlaps(projection2)) {
         return false;
-      } else if(returnMTV) {
+      } else if (returnMTV) {
         let overlap = projection1.getOverlap(projection2);
-        if(overlap < minOverlap) {
+        if (overlap < minOverlap) {
           minOverlap = overlap;
           smallestAxis = axis;
         }
       }
     }
-    if(returnMTV) {
+    if (returnMTV) {
       let mtv = new Vector(smallestAxis.x, smallestAxis.y);
       mtv.magnitude = minOverlap;
       return mtv;
@@ -144,9 +144,9 @@ class Polygon {
     circleAxis.sub(closestVertex);
     normals.push(circleAxis);
     let axes = [];
-    outer: for(let normal of normals) {
-      for(let axis of axes) {
-        if(axis.isParallelTo(normal)) {
+    outer: for (let normal of normals) {
+      for (let axis of axes) {
+        if (axis.isParallelTo(normal)) {
           continue outer;
         }
       }
@@ -154,11 +154,11 @@ class Polygon {
     }
 
     // cycle through axes and evaluate if the polygons' projections overlap
-    for(let axis of axes) {
+    for (let axis of axes) {
       let polygonProj = polygon.project(axis);
       let circleProj = circle.project(axis);
 
-      if(!polygonProj.overlaps(circleProj)) {
+      if (!polygonProj.overlaps(circleProj)) {
         return false;
       }
     }
@@ -174,9 +174,9 @@ class Polygon {
     circleAxis.sub(closestVertex);
     normals.push(circleAxis);
     let axes = [];
-    outer: for(let normal of normals) {
-      for(let axis of axes) {
-        if(axis.isParallelTo(normal)) {
+    outer: for (let normal of normals) {
+      for (let axis of axes) {
+        if (axis.isParallelTo(normal)) {
           continue outer;
         }
       }
@@ -184,11 +184,11 @@ class Polygon {
     }
 
     // cycle through axes and evaluate if the polygons' projections overlap
-    for(let axis of axes) {
+    for (let axis of axes) {
       let polygonProj = polygon.project(axis);
       let circleProj = circle.project(axis);
 
-      if(!polygonProj.overlaps(circleProj)) {
+      if (!polygonProj.overlaps(circleProj)) {
         return false;
       }
     }
@@ -196,15 +196,15 @@ class Polygon {
     // Check if polygon is inside the angle range of the sector of the circle
     let towardsPolygon = new Vector(this.x, this.y);
     towardsPolygon.sub(new Vector(circle.x, circle.y));
-    let middleAngle = -1*(Math.PI/2 - towardsPolygon.angle);
+    let middleAngle = -1 * (Math.PI / 2 - towardsPolygon.angle);
 
-    if(middleAngle < circle.startAngle || middleAngle > circle.endAngle) {
+    if (middleAngle < circle.startAngle || middleAngle > circle.endAngle) {
       return false;
     }
 
     // Check if polygon is close to the actual sector rather than just inside but close to the center
     let polygonDistance = towardsPolygon.magnitude;
-    if(polygonDistance > circle.radius + arcMargin/2 || polygonDistance < circle.radius - arcMargin/2) {
+    if (polygonDistance > circle.radius + arcMargin / 2 || polygonDistance < circle.radius - arcMargin / 2) {
       return false;
     }
 
@@ -220,8 +220,9 @@ class Polygon {
   get centroid() {
     // very similar to center of mass calculation
     // just treat each vertex as a point mass worth equal weight
-    let sumX = 0, sumY = 0;
-    for(let vertex of this.vertices) {
+    let sumX = 0,
+      sumY = 0;
+    for (let vertex of this.vertices) {
       sumX += vertex.x;
       sumY += vertex.y;
     }
@@ -233,18 +234,18 @@ class Polygon {
   // get all the vectors perpendicular to the polygon's edges
   get normals() {
     let normals = [];
-    for(let i = 0; i < this.edges.length; i++) {
+    for (let i = 0; i < this.edges.length; i++) {
       normals[i] = this.edges[i].perp();
     }
     return normals;
   }
   get area() {
     let area = 0;
-    let j = this.vertices.length - 1;  // The last vertex is the 'previous' one to the first
+    let j = this.vertices.length - 1; // The last vertex is the 'previous' one to the first
 
-    for(let i = 0; i < this.vertices.length; i++) {
+    for (let i = 0; i < this.vertices.length; i++) {
       area += (this.vertices[j].x + this.vertices[i].x) * (this.vertices[j].y - this.vertices[i].y);
-      j = i;  //j is previous vertex to i
+      j = i; //j is previous vertex to i
     }
     area /= 2;
     area = Math.abs(area);
@@ -253,7 +254,7 @@ class Polygon {
 
   toString() {
     let returned = "Polygon with points: "
-    for(let point of this.vertices) {
+    for (let point of this.vertices) {
       returned += "(" + point.x + ", " + point.y + ") ";
     }
     return returned;
