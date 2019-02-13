@@ -4,19 +4,18 @@ function startWaveGame() {
   // change scene to game screen
   changeScene("gameArea");
 
-  // initialize audioContext and start playing audio
+  // Start playing audio
   audioContext.resume();
-  source.connect(audioContext.destination);
-  // audioElement.play();
+  audioElement.play();
 
   // initialize variables
   changeOffscreenDimensions(1, 2);
   gameAreaOrigin = new Vector(0, 0);
   probe = new Lander(gameAreaOrigin.x + WIDTH / 2, gameAreaOrigin.y + 0.03 * HEIGHT);
   trebleWaves = [];
-  maxTrebleWaves = 3;
+  maxTrebleWaves = 0;
   bassWaves = [];
-  maxBassWaves = 2;
+  maxBassWaves = 20;
   asteroids = [];
   maxAsteroids = 0;
   bullets = [];
@@ -28,6 +27,7 @@ function startWaveGame() {
     let r = randomValue(0.1, 5);
     stars[i] = new Star(x, y, r);
   }
+  frameCounter = 0;
 
   // loop play
   loop = setInterval(playWaveGame, MS_PER_FRAME);
@@ -38,12 +38,15 @@ function playWaveGame() {
   applyKeyboardInput();
 
   // Update everything
+  frameCounter++;
   updateWaves();
   updateAsteroids();
   updateAnimations();
   updateBullets();
   if (probe.groundState != probe.IN_GROUND) probe.applyForce(GRAVITY);
   probe.update();
+
+  audioAnalysis();
 
   collisionDetectionWaves();
 

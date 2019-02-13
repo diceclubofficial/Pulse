@@ -15,13 +15,6 @@ const I = 73,
       L = 76;
 let keys = [];
 
-// audio stuff
-let audioContext = new AudioContext();
-audioContext.suspend();
-let trackID = 'incendie';
-let audioElement = document.getElementById(trackID);
-let source = audioContext.createMediaElementSource(audioElement);
-
 // start at title screen
 changeScene("titleScreen");
 
@@ -39,13 +32,13 @@ window.onload = function() {
   });
   playButtonAsteroids.addEventListener('click', function() {
     startAsteroidGame();
-  })
+  });
   playButtonWaves.addEventListener('click', function() {
     startWaveGame();
-  })
+  });
   titleScreenButton.addEventListener('click', function() {
     changeScene("titleScreen");
-  })
+  });
   muteButton.addEventListener('click', function() {
     audioElement.pause();
   });

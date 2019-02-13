@@ -91,7 +91,6 @@ class Lander {
     let drag = new Vector(Math.cos(this.velocity.angle + (Math.PI / 2)), Math.sin(this.velocity.angle + (Math.PI / 2)));
     drag.magnitude = DRAG_CONSTANT * this.velocity.magnitude;
     this.applyForce(drag);
-    console.log(this.velocity.magnitude);
 
     // Ground collision detection
     if (this.groundState == this.TOUCHING_GROUND) {

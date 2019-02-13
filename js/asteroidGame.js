@@ -4,11 +4,6 @@ function startAsteroidGame() {
   // change scene to game screen
   changeScene("gameArea");
 
-  // initialize audioContext and start playing audio
-  audioContext.resume();
-  source.connect(audioContext.destination);
-  // audioElement.play();
-
   // initialize variables
   changeOffscreenDimensions(5, 1);
   gameAreaOrigin = new Vector(2*WIDTH, 0);
@@ -32,6 +27,7 @@ function startAsteroidGame() {
     let r = randomValue(0.1, 5);
     stars[i] = new Star(x, y, r);
   }
+  frameCounter = 0;
 
   // loop play
   loop = setInterval(playAsteroidGame, MS_PER_FRAME);
@@ -42,6 +38,7 @@ function playAsteroidGame() {
   applyKeyboardInput();
 
   // Update everything
+  frameCounter++;
   updateAsteroids();
   updateAnimations();
   updateBullets();

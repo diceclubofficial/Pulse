@@ -11,16 +11,19 @@ class TrebleWave {
     else if(color == "red") this.type = 3;
 
     // type-specific data
+    let minSpeed = 0.2; //0.65
+    let maxSpeed = 0.5; //0.90
+    let change = (maxSpeed - minSpeed)/2;
     let speed;
     if(this.type == 1) {
-      speed = MS_PER_FRAME * randomValue(0.09, 0.15);
+      speed = MS_PER_FRAME * randomValue(minSpeed, minSpeed + change);
     }
     else if(this.type == 2) {
-      speed = MS_PER_FRAME * randomValue(0.15, 0.21);
+      speed = MS_PER_FRAME * randomValue(minSpeed + change, minSpeed + 2*change);
     }
     else if(this.type == 3) {
       this.clockwise = randomInt(0, 2);
-      speed = MS_PER_FRAME * randomValue(0.21, 0.27);
+      speed = MS_PER_FRAME * randomValue(minSpeed + 2*change, maxSpeed);
     }
 
     // image data
@@ -91,9 +94,10 @@ class TrebleWave {
       }
     }
 
-    // If off-screen and distanceFromCenter is increasing, alive is false
+    // If off-screen,
     if(this.x < this.screenCoordinates.x - this.width || this.x > this.screenCoordinates.x + this.screenDimensions.x || this.y < this.screenCoordinates.y - this.height || this.y > this.screenCoordinates.y + this.screenDimensions.y) {
-      let newDistanceFromCenter = distance(this.x, this.y, canvasGA.width/2, canvasGA.height/2);
+      // Calculate distance from center
+      let newDistanceFromCenter = distance(this.x, this.y, this.screenCoordinates.x + this.screenDimensions.x/2, this.screenCoordinates.y + this.screenDimensions.y/2);
       if(newDistanceFromCenter > this.distanceFromCenter) {
         this.alive = false;
         return;
@@ -121,12 +125,10 @@ class TrebleWave {
 
   draw(context) {
     context.save();
-
     context.translate(this.coordinates.x + this.width/2, this.coordinates.y + this.height/2);
     context.rotate(this.angle);
     context.globalAlpha = (this.dyingTimer/this.dyingTimerMax); //to have the image fade out as it's dying
     context.drawImage(this.waveSheet, this.currImage*this.spriteWidth, 0, this.spriteWidth, this.spriteHeight, -this.width/2, -this.height/2, this.width, this.height);
-
     context.restore();
   }
 

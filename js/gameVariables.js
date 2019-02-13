@@ -51,7 +51,8 @@ let safeLanding = false;
 let safeLandingTimerMax = 1000 / MS_PER_FRAME
 let safeLandingTimer = safeLandingTimerMax;
 let badLanding = false;
-let badLandingTimerMax = 500 / MS_PER_FRAME
+let badLandingTimerMax = 100 / MS_PER_FRAME
 let badLandingTimer = badLandingTimerMax;
 
+let frameCounter = 0;
 let loop;

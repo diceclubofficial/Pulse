@@ -151,7 +151,7 @@ function drawForeground(context) {
   context.restore();
 }
 
-// updating things
+// asteroids
 function spawnAsteroidOffscreen() {
   let offsetX = 0.3125 * WIDTH;
   let offsetY = 0.3125 * HEIGHT;
@@ -195,19 +195,27 @@ function updateAsteroids() {
     asteroid.update();
   }
 }
-function updateWaves() {
-  // spawn waves
-  if (trebleWaves.length < maxTrebleWaves) {
+// waves
+function spawnTrebleWave() {
+  if(trebleWaves.length < maxTrebleWaves) {
     let randomIndex = randomInt(0, waveSpawnPoints.length);
     let spawnPoint = waveSpawnPoints[randomIndex];
     let color = randomInt(1, 4);
     trebleWaves.push(new TrebleWave(spawnPoint.x, spawnPoint.y, color, waveScreenCoordinates, waveScreenDimensions));
   }
-  if (bassWaves.length < maxBassWaves) {
+}
+function spawnBassWave() {
+  if(bassWaves.length < maxBassWaves) {
     let spawnPoint = waveSpawnPoints[bassWaveSpawnPoint];
     bassWaveSpawnPoint++;
     bassWaveSpawnPoint %= waveSpawnPoints.length;
     bassWaves.push(new BassWave(spawnPoint.x, spawnPoint.y, waveScreenCoordinates, waveScreenDimensions));
+  }
+}
+function updateWaves() {
+  // spawn waves
+  if(trebleWaves.length < maxTrebleWaves) {
+    spawnTrebleWave();
   }
 
   // despawn waves
@@ -234,6 +242,7 @@ function updateWaves() {
     bassWave.update();
   }
 }
+// other stuff
 function updateBullets() {
   // Update bullets
   for (let bullet of bullets) {

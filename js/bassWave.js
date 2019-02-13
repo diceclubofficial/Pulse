@@ -5,7 +5,7 @@ class BassWave {
   constructor(x, y, screenCoordinates, screenDimensions) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = 0.096 * MS_PER_FRAME;
+    this.speed = 0.5 * MS_PER_FRAME; // 0.096
     this.radius = 1;
     this.fillStyle = 'white';
 

@@ -1,8 +1,9 @@
 
 todo current commit:
--air resistance and terminal velocity
+-basic rhythm capabilities
 
 todo later:
+-make animations able to loop a certain number of times
 -make camera position itself based on where the lander is facing
 -make asteroid sprites generate with the shape (Jason)
 -fix collision detection
@@ -16,11 +17,13 @@ todo later:
 -make the display for fuel, ammo, and speed nice-looking
 
 issues:
+-need to separate lowpass filter source and actual audio to play
 -gun too strong? stronger than thruster? needs playtesting
 -asteroid generation based on Perlin sometimes has jagged cuts because of Perlin resetting
 -bass waves go way too fast and are too large to avoid - need to playtest
 
 ideas:
+-make parallax scrolling with stars (smallest stars have low z-indexes)
 -something cool happens when you use fire from the thrusters on something else (like R.O.B.'s aerials in smash)
 -have music from planet fade in as lander descends (start with lonely machinery beeping and fade in music as the planet and waves are visible)
 -asteroids collide on the beat in the middle of the screen and explode?

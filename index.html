@@ -7,33 +7,34 @@
 <body>
 
 	<!-- Scenes -->
-	<img class="scene-titleScreen" id="titleScreenImage" src="images/titleScreen.gif" alt="Title Page 1" width="768" height="600">
-	<div class="scene-titleScreen menuButton">Start</div>
+	<img class="hidden scene-titleScreen" id="titleScreenImage" src="images/titleScreen.gif" alt="Title Page 1" width="768" height="600">
+	<div class="hidden scene-titleScreen menuButton">Start</div>
 
-	<div class="scene-menuScreen">Menu</div>
+	<div class="hidden scene-menuScreen">Menu</div>
 	<br class="scene-menuScreen">
 	<br class="scene-menuScreen">
 	<br class="scene-menuScreen">
-	<div class="scene-menuScreen" id="playButtonAsteroids">Play Asteroids</div>
+	<div class="hidden scene-menuScreen" id="playButtonAsteroids">Play Asteroids</div>
 	<br class="scene-menuScreen">
-	<div class="scene-menuScreen" id="playButtonWaves">Play Waves</div>
+	<div class="hidden scene-menuScreen" id="playButtonWaves">Play Waves</div>
 	<br class="scene-menuScreen">
-	<div class="scene-menuScreen" id="titleScreenButton">Exit to Title Screen</div>
+	<div class="hidden scene-menuScreen" id="titleScreenButton">Exit to Title Screen</div>
 
-	<canvas class="scene-gameArea" id="game-area" width="750" height="750"></canvas>
-	<button class="scene-gameArea" id="muteButton" type="button" name="button">Stop Music</button>
+	<canvas class="hidden scene-gameArea" id="game-area" width="750" height="750"></canvas>
+	<button class="hidden scene-gameArea" id="muteButton" type="button" name="button">Stop Music</button>
 
-	<img class="scene-successScreen" id="successScreen" src="images/successScreen.png" alt="Success Screen" width="600" height="600">
-	<div class="scene-successScreen menuButton">To Menu</div>
+	<img class="hidden scene-successScreen" id="successScreen" src="images/successScreen.png" alt="Success Screen" width="600" height="600">
+	<div class="hidden scene-successScreen menuButton">To Menu</div>
 
-	<img class="scene-gameOverScreen" id="gameOverScreen" src="images/gameOverScreen.png" alt="Game Over Screen" width="600" height="600">
-	<div class="scene-gameOverScreen menuButton">To Menu</div>
+	<img class="hidden scene-gameOverScreen" id="gameOverScreen" src="images/gameOverScreen.png" alt="Game Over Screen" width="600" height="600">
+	<div class="hidden scene-gameOverScreen menuButton">To Menu</div>
 
 
 	<!-- Audio Elements -->
 	<audio id="mizar" src="music/billvortexMizar.mp3" type="audio/mpeg"></audio>
 	<audio id="truffes" src="music/billvortexTruffes.mp3" type="audio/mpeg"></audio>
 	<audio id="incendie" src="music/billvortexIncendie.mp3" type="audio/mpeg"></audio>
+	<audio id="drums" src="music/simpledrums.mp3" type="audio/mpeg"></audio>
 
 
 	<!-- JavaScript Code -->
@@ -61,6 +62,7 @@
 	<script type="text/javascript" src="js/asteroidGame.js"></script>
 	<script type="text/javascript" src="js/waveGame.js"></script>
 
+	<script type="text/javascript" src="js/audioAnalysis.js"></script>
 	<script type="text/javascript" src="js/javascript.js"></script>
 
 </body>
