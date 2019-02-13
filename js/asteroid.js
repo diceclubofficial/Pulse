@@ -5,7 +5,7 @@ class Asteroid {
   constructor(x, y, screenCoordinates, screenDimensions) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = MS_PER_FRAME*randomValue(0.09, 0.24);
+    this.speed = MS_PER_FRAME * randomValue(0.09, 0.24);
     //random velocity
     this.velocity = new Vector(randomValue(-1, 1), randomValue(-1, 1));
     this.velocity.magnitude = this.speed;
@@ -22,7 +22,7 @@ class Asteroid {
     this.angularAcceleration = 0;
     this.momentOfInertia = (.5 * this.mass * Math.pow(this.width / 2, 2));
 
-    this.fillStyle = 'rgb(255, 255, 255)';
+    this.fillStyle = 'rgb(110, 110, 110)';
 
     this.onScreen = false;
     this.screenCoordinates = new Vector(screenCoordinates.x, screenCoordinates.y);
@@ -121,9 +121,58 @@ class Asteroid {
     context.restore();
   }
 
+  //taken from: https://stackoverflow.com/questions/25701798/a-reusable-function-to-clip-images-into-polygons-using-html5-canvas
+  clippingPath(ctx, pathPoints, img, x, y) {
+
+    // save the unclipped context
+    ctx.save();
+
+    // define the path that will be clipped to
+    ctx.beginPath();
+    //where it starts drawing the image ON THE CANVAS
+    ctx.moveTo(pathPoints[0], pathPoints[1]);
+    // this demo has a known number of polygon points
+    // but include a loop of "lineTo's" if you have a variable number of points
+    //ctx.lineTo(pathPoints[2],pathPoints[3]);
+    //ctx.lineTo(pathPoints[4],pathPoints[5]);
+    for (let i = 2; i < pathPoints.length; i += 2) {
+      ctx.lineTo(pathPoints[i], pathPoints[i + 1]);
+    }
+    ctx.closePath();
+
+    // stroke the path
+    // half of the stroke is outside the path
+    // the outside part of the stroke will survive the clipping that follows
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // make the current path a clipping path
+    ctx.clip();
+
+    // draw the image which will be clipped except in the clipping path
+    // and rotate
+    ctx.translate(x, y);
+    ctx.rotate(this.angle);
+    ctx.drawImage(img, -img.width / 2, -img.height / 2);
+
+    // restore the unclipped context (==undo the clipping path)
+    ctx.restore();
+  }
+
   draw(context) {
     // draw shape without points
     this.shape.draw(context, this.fillStyle, false);
+
+    //draw the image
+    let pathPoints = [];
+    for (let vertex of this.shape.vertices) {
+      pathPoints.push(vertex.x);
+      pathPoints.push(vertex.y);
+    }
+
+    let asteroidImage = new Image();
+    asteroidImage.src = "images/asteroidSurface.png";
+    this.clippingPath(context, pathPoints, asteroidImage, this.shape.x, this.shape.y);
   }
 
   collisionDetection() {
@@ -133,6 +182,7 @@ class Asteroid {
       this.collisionDetectionWithTerrain();
     }
   }
+
   collisionDetectionWithAsteroid() {
     let thisAsteroidColliding = 0;
     asteroidLoop: for (let other of asteroids) {
@@ -280,7 +330,7 @@ class Asteroid {
     //spawn animation asteroid dust
     let animationPosition = new Vector(this.shape.centroid.x, this.shape.centroid.y);
     animationPosition.sub(newVelocity);
-    spawnAsteroidCollisionDust(animationPosition.x, animationPosition.y, 0.05*this.radius);
+    spawnAsteroidCollisionDust(animationPosition.x, animationPosition.y, 0.05 * this.radius);
 
     // break into pieces
     if (shatter || (this.dwarf <= 0 && newEnergy > 30)) {
