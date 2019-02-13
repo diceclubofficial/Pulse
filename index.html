@@ -6,27 +6,42 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 <body>
 
-	<img class="scene-titleScreen" id="titleScreen" src="images/titleScreen.gif" alt="Title Page 1" width="800" height="600">
+	<!-- Scenes -->
+	<img class="scene-titleScreen" id="titleScreenImage" src="images/titleScreen.gif" alt="Title Page 1" width="768" height="600">
+	<div class="scene-titleScreen menuButton">Start</div>
 
-	<img class="hidden scene-successScreen" id="successScreen" src="images/successScreen.png" alt="Success Screen" width="600" height="600">
+	<div class="scene-menuScreen">Menu</div>
+	<br class="scene-menuScreen">
+	<br class="scene-menuScreen">
+	<br class="scene-menuScreen">
+	<div class="scene-menuScreen" id="playButtonAsteroids">Play Asteroids</div>
+	<br class="scene-menuScreen">
+	<div class="scene-menuScreen" id="playButtonWaves">Play Waves</div>
+	<br class="scene-menuScreen">
+	<div class="scene-menuScreen" id="titleScreenButton">Exit to Title Screen</div>
 
-	<div class="scene-titleScreen" id="startButton">START GAME</div>
+	<canvas class="scene-gameArea" id="game-area" width="750" height="750"></canvas>
+	<button class="scene-gameArea" id="muteButton" type="button" name="button">Stop Music</button>
 
+	<img class="scene-successScreen" id="successScreen" src="images/successScreen.png" alt="Success Screen" width="600" height="600">
+	<div class="scene-successScreen menuButton">To Menu</div>
+
+	<img class="scene-gameOverScreen" id="gameOverScreen" src="images/gameOverScreen.png" alt="Game Over Screen" width="600" height="600">
+	<div class="scene-gameOverScreen menuButton">To Menu</div>
+
+
+	<!-- Audio Elements -->
 	<audio id="mizar" src="music/billvortexMizar.mp3" type="audio/mpeg"></audio>
 	<audio id="truffes" src="music/billvortexTruffes.mp3" type="audio/mpeg"></audio>
 	<audio id="incendie" src="music/billvortexIncendie.mp3" type="audio/mpeg"></audio>
 
-	<canvas class="hidden scene-gameMain" id="game-area" width="750" height="750"></canvas>
 
-	<button class="hidden scene-gameMain" id="muteButton" type="button" name="button">Stop Music</button>
-
-
-
+	<!-- JavaScript Code -->
+	<script type="text/javascript" src="js/methods.js"></script>
 	<script type="text/javascript" src="js/vector.js"></script>
 	<script type="text/javascript" src="js/animation.js"></script>
 	<script type="text/javascript" src="js/initializer.js"></script>
 
-	<script type="text/javascript" src="js/methods.js"></script>
 	<script type="text/javascript" src="js/projection.js"></script>
 	<script type="text/javascript" src="js/circle.js"></script>
 	<script type="text/javascript" src="js/polygon.js"></script>
@@ -40,6 +55,11 @@
 	<script type="text/javascript" src="js/bassWave.js"></script>
 	<script type="text/javascript" src="js/trebleWave.js"></script>
 	<script type="text/javascript" src="js/asteroid.js"></script>
+
+	<script type="text/javascript" src="js/gameVariables.js"></script>
+	<script type="text/javascript" src="js/gameFunctions.js"></script>
+	<script type="text/javascript" src="js/asteroidGame.js"></script>
+	<script type="text/javascript" src="js/waveGame.js"></script>
 
 	<script type="text/javascript" src="js/javascript.js"></script>
 

@@ -4,13 +4,12 @@
 body {
   background-color: #000;
 }
-#startButton {
-  font-family: sans-serif;
+div {
+  font-family: monospace;
+  color: white;
   font-size: 40px;
   text-align: center;
   background-color: #000;
-  color: rgb(171, 0, 186);
-  border: 10px solid rgb(171, 0, 186);
 }
 #muteButton {
   font-size: 30px;
@@ -19,5 +18,5 @@ body {
   display: none;
 }
 canvas {
-  border: 1px solid rgb(171, 0, 186);
+  border: 1px solid rgba(171,0,186,1);
 }

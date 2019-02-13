@@ -9,18 +9,23 @@ canvasGA.height = HEIGHT;
 
 let canvasOffscreen = document.createElement("canvas");
 let contextOffscreen = canvasOffscreen.getContext("2d");
-const OFFSCREEN_WIDTH = WIDTH;
-const OFFSCREEN_HEIGHT = 2 * HEIGHT;
-canvasOffscreen.width = OFFSCREEN_WIDTH;
-canvasOffscreen.height = OFFSCREEN_HEIGHT;
-
+let OFFSCREEN_WIDTH;
+let OFFSCREEN_HEIGHT;
+let bottomScreenY;
+let totalScreens;
+changeOffscreenDimensions(1, 2);
 let gameAreaOrigin = new Vector(0, 0);
-let bottomScreenY = OFFSCREEN_HEIGHT - HEIGHT;
-
-let totalScreens = (OFFSCREEN_WIDTH / WIDTH) * (OFFSCREEN_HEIGHT / HEIGHT);
 
 let sceneNames = [
-  "scene-titleScreen",
-  "scene-gameMain",
-  "scene-successScreen",
+  "titleScreen",
+  "menuScreen",
+  "gameArea",
+  "successScreen",
+  "gameOverScreen",
 ];
+
+const DEV_MODE = false; // change this to toggle showing developer stats
+
+const FPS = 100;
+const MS_PER_FRAME = 1000 / FPS;
+console.log("Running at " + Math.round(FPS) + " frames/second and " + Math.round(MS_PER_FRAME) + " ms/frame.");

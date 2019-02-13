@@ -39,8 +39,8 @@ class TrebleWave {
 		direction.sub(this.coordinates);
 		this.velocity = new Vector(direction.x, direction.y);
 		this.velocity.magnitude = speed;
-    console.log("coordinates and dimensions", screenCoordinates.toString(), screenDimensions.toString());
-    console.log("center of screen", this.centerOfScreen.toString());
+    // console.log("coordinates and dimensions", screenCoordinates.toString(), screenDimensions.toString());
+    // console.log("center of screen", this.centerOfScreen.toString());
 
     // dimensions
     this.width = 120;

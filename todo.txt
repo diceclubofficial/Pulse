@@ -1,21 +1,15 @@
 
 todo current commit:
--change fps to make it easily changeable
-
-todo Colin:
--game states (waiting for Jason)
--air resistance
+-air resistance and terminal velocity
 
 todo later:
--add air resistance
 -make camera position itself based on where the lander is facing
 -make asteroid sprites generate with the shape (Jason)
 -fix collision detection
   -make rotational collisions and rotational energy with asteroids
   -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
   -do concave polygon collision detection (in progress but postponed)
--add game states (success/gameOver screen and 8 levels)
--increase fps to 60 or 120 and change numbers accurately
+-add different levels that get harder (make level select screen)
 -telegraph if the lander is going to hit the ground at too high speed with speed lines like from anime and mariokart
 -add sprites to bassWaves (need more art)
 -make bullet firing charge up when you're not firing (nerf machine-gun firing and incentivize intentional aiming and firing at asteroids)
@@ -30,11 +24,8 @@ ideas:
 -something cool happens when you use fire from the thrusters on something else (like R.O.B.'s aerials in smash)
 -have music from planet fade in as lander descends (start with lonely machinery beeping and fade in music as the planet and waves are visible)
 -asteroids collide on the beat in the middle of the screen and explode?
--make terminal velocity for lander?
 -make terrain red like mars (like Game Over drawing)
--make lander smaller (and change fire sprite to red)
 -pick out a color scheme to design by
--make gravity increase as you approach the surface
 
 wave naming convention:
 -treble - small fast waves (blue, green, and red rectangular waves)
