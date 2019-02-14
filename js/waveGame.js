@@ -20,13 +20,6 @@ function startWaveGame() {
   maxAsteroids = 0;
   bullets = [];
   animations = [];
-  stars = [];
-  for (let i = 0; i < starsPerScreen * totalScreens; i++) {
-    let x = randomValue(0, OFFSCREEN_WIDTH);
-    let y = randomValue(0, terrain.highestGround);
-    let r = randomValue(0.1, 5);
-    stars[i] = new Star(x, y, r);
-  }
   frameCounter = 0;
 
   // loop play

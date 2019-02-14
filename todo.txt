@@ -1,6 +1,6 @@
 
 todo current commit:
--basic rhythm capabilities
+-do parallax scrolling with background images
 
 todo later:
 -make animations able to loop a certain number of times

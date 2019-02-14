@@ -39,7 +39,7 @@ class Terrain {
   }
 
   draw(context) {
-    let previousStrokeStyle = context.strokeStyle;
+    context.save();
     context.strokeStyle = 'rgb(255, 255, 255)';
 
     context.moveTo(this.startPoint, this.elevationMap[0]);
@@ -48,7 +48,7 @@ class Terrain {
     }
     context.stroke();
 
-    context.strokeStyle = previousStrokeStyle;
+    context.restore();
   }
 
   collisionDetection() {

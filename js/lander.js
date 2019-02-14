@@ -105,16 +105,16 @@ class Lander {
     let xDiff = 0.333 * WIDTH;
     let yDiff = 0.4 * HEIGHT;
     if (this.x < gameAreaOrigin.x + xDiff && this.velocity.x < 0 && gameAreaOrigin.x + this.velocity.x > 0) {
-      gameAreaOrigin.add(new Vector(this.velocity.x, 0));
+      moveCamera(this.velocity.x, 0);
     }
     if (this.x > gameAreaOrigin.x + WIDTH - xDiff && this.velocity.x > 0 && gameAreaOrigin.x + WIDTH + this.velocity.x < OFFSCREEN_WIDTH) {
-      gameAreaOrigin.add(new Vector(this.velocity.x, 0));
+      moveCamera(this.velocity.x, 0);
     }
     if (this.y < gameAreaOrigin.y + yDiff && this.velocity.y < 0 && gameAreaOrigin.y + this.velocity.y > 0) {
-      gameAreaOrigin.add(new Vector(0, this.velocity.y));
+      moveCamera(0, this.velocity.y);
     }
     if (this.y > gameAreaOrigin.y + HEIGHT - yDiff && this.velocity.y > 0 && gameAreaOrigin.y + HEIGHT + this.velocity.y < OFFSCREEN_HEIGHT) {
-      gameAreaOrigin.add(new Vector(0, this.velocity.y));
+      moveCamera(0, this.velocity.y);
     }
 
     // If offscreen, print coordinates

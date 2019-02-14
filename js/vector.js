@@ -3,7 +3,13 @@
 class Vector {
 
   constructor(x, y) {
-    this.components = [x, y];
+    // x and y are vectors --> x is start pos and y is end pos
+    if(typeof x == "object" && typeof y == "object") {
+      let temp = new Vector(y.x, y.y);
+      temp.sub(x);
+      this.components = [temp.x, temp.y];
+    }
+    else this.components = [x, y];
   }
 
   add(value) {

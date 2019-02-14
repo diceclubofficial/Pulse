@@ -5,13 +5,12 @@ function startAsteroidGame() {
   changeScene("gameArea");
 
   // initialize variables
-  changeOffscreenDimensions(5, 1);
-  gameAreaOrigin = new Vector(2*WIDTH, 0);
+  changeOffscreenDimensions(2, 2);
+  gameAreaOrigin = new Vector(0, 0);
   asteroidScreenCoordinates = new Vector(0, 0);
   asteroidScreenDimensions = new Vector(OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
   terrain = new Terrain();
   probe = new Lander(gameAreaOrigin.x + WIDTH / 2, gameAreaOrigin.y + 0.03 * HEIGHT);
-  console.log(probe.toString());
   trebleWaves = [];
   maxTrebleWaves = 0;
   bassWaves = [];
@@ -20,13 +19,6 @@ function startAsteroidGame() {
   maxAsteroids = 45;
   bullets = [];
   animations = [];
-  stars = [];
-  for (let i = 0; i < starsPerScreen * totalScreens; i++) {
-    let x = randomValue(0, OFFSCREEN_WIDTH);
-    let y = randomValue(0, OFFSCREEN_HEIGHT);
-    let r = randomValue(0.1, 5);
-    stars[i] = new Star(x, y, r);
-  }
   frameCounter = 0;
 
   // loop play

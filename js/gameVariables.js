@@ -10,15 +10,14 @@ console.log("Gravity is " + GRAVITY.y/MS_PER_FRAME + " N/ms and "+ GRAVITY.y + "
 
 // background
 let terrain = new Terrain();
-let stars = [];
-// Randomly generate stars
-const starsPerScreen = 20;
-for (let i = 0; i < starsPerScreen * totalScreens; i++) {
-  let x = randomValue(0, OFFSCREEN_WIDTH);
-  let y = randomValue(0, terrain.highestGround);
-  let r = randomValue(0.1, 5);
-  stars[i] = new Star(x, y, r);
-}
+const starBackgroundImage0 = new Image();
+starBackgroundImage0.src = "images/starBackground3.png";
+const starBackgroundImage1 = new Image();
+starBackgroundImage1.src = "images/starBackground1.png";
+const starBackgroundImage2 = new Image();
+starBackgroundImage2.src = "images/starBackground2.png";
+let backgroundPos1 = new Vector(0, 0);
+let backgroundPos2 = new Vector(0, 0);
 
 // waves
 let trebleWaves = [];

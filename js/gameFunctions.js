@@ -1,6 +1,6 @@
 // drawing things
 function drawEverythingAsteroids() {
-  drawBackgroundAsteroids(contextOffscreen);
+  drawBackground(contextOffscreen, false);
 
   // asteroids
   for (let asteroid of asteroids) {
@@ -23,7 +23,7 @@ function drawEverythingAsteroids() {
   drawForeground(contextOffscreen);
 }
 function drawEverythingWaves() {
-  drawBackgroundWaves(contextOffscreen);
+  drawBackground(contextOffscreen, true);
 
   // waves
   for (let trebleWave of trebleWaves) {
@@ -99,40 +99,33 @@ function showDeveloperStats() {
   terrain.showDeveloperStats(contextOffscreen);
   probe.showDeveloperStats(contextOffscreen);
 }
-function drawBackgroundAsteroids(context) {
+function drawBackground(context, drawGradient = false) {
   context.save();
 
   // black background most everywhere
   context.fillStyle = "#000";
-  context.fillRect(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
-
-  // stars
-  for (let star of stars) {
-    star.draw(context);
-  }
-
-  context.restore();
-}
-function drawBackgroundWaves(context) {
-  context.save();
-
-  // black background most everywhere
-  context.fillStyle = "#000";
-  context.fillRect(0, 0, OFFSCREEN_WIDTH, bottomScreenY);
+  if(drawGradient) context.fillRect(0, 0, OFFSCREEN_WIDTH, bottomScreenY);
+  else context.fillRect(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
 
   // atmosphere background near terrain
-  const backgroundGradient = context.createLinearGradient(0, bottomScreenY, 0, OFFSCREEN_HEIGHT);
-  backgroundGradient.addColorStop(0, "#000");
-  backgroundGradient.addColorStop(0.7, "#171e26");
-  // backgroundGradient.addColorStop(0.7, "#3f586b");
-  backgroundGradient.addColorStop(1, "#000");
-  context.fillStyle = backgroundGradient;
-  context.fillRect(0, bottomScreenY, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
-
-  // stars
-  for (let star of stars) {
-    star.draw(context);
+  if(drawGradient) {
+    const backgroundGradient = context.createLinearGradient(0, bottomScreenY, 0, OFFSCREEN_HEIGHT);
+    backgroundGradient.addColorStop(0, "#000");
+    backgroundGradient.addColorStop(0.7, "#171e26");
+    // backgroundGradient.addColorStop(0.7, "#3f586b");
+    backgroundGradient.addColorStop(1, "#000");
+    context.fillStyle = backgroundGradient;
+    context.fillRect(0, bottomScreenY, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
   }
+
+  // draw background images
+  context.globalAlpha = 0.4;
+  context.drawImage(starBackgroundImage0, 0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
+  context.globalAlpha = 0.2;
+  context.drawImage(starBackgroundImage1, backgroundPos1.x, backgroundPos1.y, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
+  context.globalAlpha = 0.1;
+  context.drawImage(starBackgroundImage2, backgroundPos2.x, backgroundPos2.y, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
+  context.globalAlpha = 1;
 
   context.restore();
 }
@@ -360,4 +353,14 @@ function spawnAsteroidCollisionDust(x, y, scale = 1) {
   let animation = new Animation("dust", position, information, framesPerSprite, scale, rotationAngle, repeat);
 
   animations.push(animation);
+}
+
+// move camera
+function moveCamera(x, y) {
+  gameAreaOrigin.add(new Vector(x, y));
+
+  let parallaxScalar1 = 0.5;
+  let parallaxScalar2 = 0.3;
+  backgroundPos1.add(new Vector(parallaxScalar1*x, parallaxScalar1*y));
+  backgroundPos2.add(new Vector(parallaxScalar2*x, parallaxScalar2*y));
 }
