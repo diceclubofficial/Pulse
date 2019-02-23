@@ -6,7 +6,7 @@ const MASS_CONSTANT = probe.shape.area; // 1 mass unit = the mass of the lander
 const GRAVITY = new Vector(0, 0.0015 * MS_PER_FRAME);
 const TERMINAL_VELOCITY = 5;
 const DRAG_CONSTANT = GRAVITY.y / TERMINAL_VELOCITY;
-console.log("Gravity is " + GRAVITY.y/MS_PER_FRAME + " N/ms and "+ GRAVITY.y + " N/frame");
+console.log("Gravity is " + GRAVITY.y / MS_PER_FRAME + " N/ms and " + GRAVITY.y + " N/frame");
 
 // background
 let terrain = new Terrain();
@@ -19,13 +19,17 @@ starBackgroundImage2.src = "images/starBackground2.png";
 let backgroundPos1 = new Vector(0, 0);
 let backgroundPos2 = new Vector(0, 0);
 
+//Lore
+let currentScene = "titleScreen";
+
+
 // waves
 let trebleWaves = [];
 let maxTrebleWaves;
 let bassWaves = [];
 let maxBassWaves;
 let waveScreenCoordinates = new Vector(0, 0);
-let waveScreenDimensions = new Vector(WIDTH, 2*HEIGHT);
+let waveScreenDimensions = new Vector(WIDTH, 2 * HEIGHT);
 let waveSpawnPoints = [
   new Vector(waveScreenCoordinates.x - 10, waveScreenCoordinates.y + waveScreenDimensions.y - 50),
   new Vector(waveScreenCoordinates.x, waveScreenCoordinates.y + waveScreenDimensions.y + 20),

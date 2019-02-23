@@ -9,6 +9,15 @@ canvasGA.height = HEIGHT;
 
 let canvasOffscreen = document.createElement("canvas");
 let contextOffscreen = canvasOffscreen.getContext("2d");
+
+let lore1Canvas = document.getElementById("lore1");
+let lore1Context = lore1Canvas.getContext("2d");
+let lore2Canvas = document.getElementById("lore2");
+let lore2Context = lore2Canvas.getContext("2d");
+let lore3Canvas = document.getElementById("lore3");
+let lore3Context = lore3Canvas.getContext("2d");
+
+
 let OFFSCREEN_WIDTH;
 let OFFSCREEN_HEIGHT;
 let bottomScreenY;
@@ -19,6 +28,9 @@ let gameAreaOrigin = new Vector(0, 0);
 let sceneNames = [
   "titleScreen",
   "menuScreen",
+  "lore1",
+  "lore2",
+  "lore3",
   "gameArea",
   "successScreen",
   "gameOverScreen",

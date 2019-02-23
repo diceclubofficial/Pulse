@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
 </head>
 <link rel="stylesheet" type="text/css" href="style.css">
+
 <body>
 
 	<!-- Scenes -->
-	<img class="hidden scene-titleScreen" id="titleScreenImage" src="images/titleScreen.gif" alt="Title Page 1" width="768" height="600">
+	<div>
+		<img class="hidden scene-titleScreen center" id="titleScreenImage" src="images/titleScreen.gif" alt="Title Page 1" width="768" height="600">
+	</div>
 	<div class="hidden scene-titleScreen menuButton buttonStyle">Start</div>
+
+	<!-- Lore button -->
+	<div class="hidden scene-titleScreen buttonStyle" id="lore1Button">Lore</div>
 
 	<div class="hidden scene-menuScreen">Menu</div>
 	<br class="scene-menuScreen">
@@ -20,14 +27,28 @@
 	<br class="scene-menuScreen">
 	<div class="hidden scene-menuScreen buttonStyle" id="titleScreenButton">Exit to Title Screen</div>
 
+	<!-- Lore elements -->
+	<div class="greyBackground">
+		<canvas class="hidden scene-lore1 lore" id="lore1" width="1024" height="800"></canvas>
+		<p class="hidden scene-lore1 loreText">Earth is dying. In the planet's final days, the world's leading scientific body, Dice Club, launches a terraforming probe towards the source of the strange radio waves from interstelllar space.</p>
+		<canvas class="hidden scene-lore2 lore" id="lore2" width="1024" height="800"></canvas>
+		<p class="hidden scene-lore2 loreText">Many years pass... The source of the radio waves seems to be getting closer, but whether or not there is inteligent life beyond Earth remains a mystery.</p>
+		<canvas class="hidden scene-lore3 lore" id="lore3" width="1024" height="800"></canvas>
+		<p class="hidden scene-lore3 loreText">Finally, the probe arrives at an exo-planet that appears to be radiating music...</p>
+	</div>
+
+
 	<canvas class="hidden scene-gameArea" id="game-area" width="750" height="750"></canvas>
 	<button class="hidden scene-gameArea" id="muteButton" type="button" name="button">Stop Music</button>
+	<div>
+		<img class="hidden scene-successScreen" id="successScreen" src="images/successScreen.png" alt="Success Screen" width="600" height="600">
+	</div>
+	<div class="hidden scene-successScreen menuButton buttonStyle">To Menu</div>
 
-	<img class="hidden scene-successScreen" id="successScreen" src="images/successScreen.png" alt="Success Screen" width="600" height="600">
-	<div class="hidden scene-successScreen menuButton">To Menu</div>
-
-	<img class="hidden scene-gameOverScreen" id="gameOverScreen" src="images/gameOverScreen.png" alt="Game Over Screen" width="600" height="600">
-	<div class="hidden scene-gameOverScreen menuButton">To Menu</div>
+	<div>
+		<img class="hidden scene-gameOverScreen" id="gameOverScreen" src="images/gameOverScreen.png" alt="Game Over Screen" width="600" height="600">
+	</div>
+	<div class="hidden scene-gameOverScreen menuButton buttonStyle">To Menu</div>
 
 
 	<!-- Audio Elements -->
@@ -42,6 +63,8 @@
 	<script type="text/javascript" src="js/vector.js"></script>
 	<script type="text/javascript" src="js/animation.js"></script>
 	<script type="text/javascript" src="js/initializer.js"></script>
+
+	<script type="text/javascript" src="js/lore.js"></script>
 
 	<script type="text/javascript" src="js/projection.js"></script>
 	<script type="text/javascript" src="js/circle.js"></script>
@@ -65,4 +88,5 @@
 	<script type="text/javascript" src="js/javascript.js"></script>
 
 </body>
+
 </html>

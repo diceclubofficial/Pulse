@@ -4,6 +4,7 @@
 body {
   background-color: #000;
 }
+
 div {
   font-family: monospace;
   color: white;
@@ -55,4 +56,24 @@ canvas {
 
 .buttonStyle:active{
   background: rgba(193, 54, 235, 0.66);
+}
+
+.lore3img{
+  position: absolute;
+}
+
+.lore{
+  margin: auto;
+  width: 50%;
+}
+
+.loreText{
+  font-size: 25px;
+  margin: auto;
+  width: 75%;
+}
+
+.greyBackground{
+  background-color: #222;
+  height: 60%;
 }

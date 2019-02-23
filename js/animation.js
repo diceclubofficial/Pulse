@@ -86,30 +86,42 @@ class Animation {
   }
 
   draw(context) {
-    context.save();
 
-    //dont draw if animation is only supposed to play once and it has finished one cycle
-    if (this.oneCycleCompleted == true && this.repeat == false) {
-      return;
+    if (this.type == "origin") {
+      context.drawImage(this.spriteSheet, //Sprite sheet source
+        this.currentImagePosX * this.spriteWidth, //X Pos on sheet
+        this.currentImagePosY * this.spriteHeight, //Y Pos on sheet
+        this.spriteWidth, //Sprite width
+        this.spriteHeight, //Sprite Height
+        0, //X Pos on canvas (origin)
+        0, //Y Pos on canvas (origin)
+        this.spriteWidth * this.scale, //Width on screen
+        this.spriteHeight * this.scale); //Height on screen
+    } else {
+
+      context.save();
+
+      //dont draw if animation is only supposed to play once and it has finished one cycle
+      if (this.oneCycleCompleted == true && this.repeat == false) {
+        return;
+      }
+
+      // rotate animation
+      context.translate(this.coordinates.x, this.coordinates.y);
+      context.rotate(this.rotationAngle);
+
+      //display sprite
+      context.drawImage(this.spriteSheet, //Sprite sheet source
+        this.currentImagePosX * this.spriteWidth, //X Pos on sheet
+        this.currentImagePosY * this.spriteHeight, //Y Pos on sheet
+        this.spriteWidth, //Sprite width
+        this.spriteHeight, //Sprite Height
+        0 - this.spriteWidth * this.scale / 2, //X Pos on canvas (center)
+        0 - this.spriteHeight * this.scale / 2, //Y Pos on canvas (center)
+        this.spriteWidth * this.scale, //Width on screen
+        this.spriteHeight * this.scale); //Height on screen
+
+      context.restore();
     }
-
-    // rotate animation
-    context.translate(this.coordinates.x, this.coordinates.y);
-    context.rotate(this.rotationAngle);
-
-    //display sprite
-    context.drawImage(this.spriteSheet, //Sprite sheet source
-      this.currentImagePosX * this.spriteWidth, //X Pos on sheet
-      this.currentImagePosY * this.spriteHeight, //Y Pos on sheet
-      this.spriteWidth, //Sprite width
-      this.spriteHeight, //Sprite Height
-      0 - this.spriteWidth * this.scale / 2, //X Pos on canvas (center)
-      0 - this.spriteHeight * this.scale / 2, //Y Pos on canvas (center)
-      this.spriteWidth * this.scale, //Width on screen
-      this.spriteHeight * this.scale); //Height on screen
-
-    //console.log("Sprite coords from class:", this.coordinates.x - this.spriteWidth * this.scale / 2 + " ", this.coordinates.y - this.spriteHeight * this.scale / 2);
-
-    context.restore();
   }
 }

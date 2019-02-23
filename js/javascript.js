@@ -1,19 +1,21 @@
 "use strict"
 
 const UP = 38,
-      RIGHT = 39,
-      DOWN = 40,
-      LEFT = 37;
+RIGHT = 39,
+DOWN = 40,
+LEFT = 37;
 const SPACEBAR = 32;
 const W = 87,
-      A = 65,
-      S = 83,
-      D = 68;
+A = 65,
+S = 83,
+D = 68;
 const I = 73,
-      J = 74,
-      K = 75,
-      L = 76;
+J = 74,
+K = 75,
+L = 76;
 let keys = [];
+
+
 
 // start at title screen
 changeScene("titleScreen");
@@ -42,6 +44,9 @@ window.onload = function() {
   muteButton.addEventListener('click', function() {
     audioElement.pause();
   });
+  lore1Button.addEventListener('click', function() {
+    startLore1();
+  });
 }
 
 function changeScene(newScene) {
@@ -61,11 +66,45 @@ function changeScene(newScene) {
       }
     }
   }
-  console.log("Changed scene to " + newScene);
+  currentScene = newScene;
 }
+
+
 
 // keyboard input
 function applyKeyboardInput() {
+
+  //lore
+  if(currentScene.includes("lore") && keys[SPACEBAR] && !loreKeyPressed){
+    //make sure this code only runs once
+    loreKeyPressed = true;
+    let currentLoreNum = parseInt(currentScene.substring(4, 5));
+    let newScene = 0;
+
+    //if you are on the last lore page, redirect to menuScreen
+    if(currentLoreNum == 3){
+      newScene = "menuScreen";
+    } else {
+      newScene = currentLoreNum + 1;
+    }
+
+    if(newScene == 2){
+      clearInterval(loop);
+      startLore2();
+    } else if(newScene == 3){
+      clearInterval(loop);
+      startLore3();
+    } else {
+      clearInterval(loop);
+      changeScene(newScene);
+    }
+
+
+  } else if(currentScene.includes("lore") && keys[SPACEBAR] == false){
+    loreKeyPressed = false;
+  }
+
+
   // control probe
   if (keys[W] && probe.groundState == probe.OFF_GROUND) {
     probe.applyThrusters();
@@ -84,7 +123,7 @@ function applyKeyboardInput() {
   }
 
   // fire gun
-  if (keys[SPACEBAR] && probe.bulletTimer <= 0) {
+  if (currentScene == "gameArea" && keys[SPACEBAR] && probe.bulletTimer <= 0) {
     probe.fireBullet();
   }
 
