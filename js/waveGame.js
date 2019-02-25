@@ -9,13 +9,14 @@ function startWaveGame() {
   audioElement.play();
 
   // initialize variables
-  changeOffscreenDimensions(1, 2);
+  changeOffscreenDimensions(1, 1);
+  terrain = new Terrain();
   gameAreaOrigin = new Vector(0, 0);
   probe = new Lander(gameAreaOrigin.x + WIDTH / 2, gameAreaOrigin.y + 0.03 * HEIGHT);
   trebleWaves = [];
-  maxTrebleWaves = 0;
+  maxTrebleWaves = 0; // 3
   bassWaves = [];
-  maxBassWaves = 20;
+  maxBassWaves = 0; //1
   asteroids = [];
   maxAsteroids = 0;
   bullets = [];
@@ -60,7 +61,7 @@ function playWaveGame() {
   }
   if(badLanding) {
     if(badLandingTimer == badLandingTimerMax) {
-      spawnExplosion(probe.shape.vertices[0].x, probe.shape.vertices[0].y);
+      spawnExplosion(probe.shape.centroid.x, probe.shape.centroid.y, 0.45);
       probe.groundState = probe.IN_GROUND;
     }
     badLandingTimer--;

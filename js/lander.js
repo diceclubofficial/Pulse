@@ -100,6 +100,10 @@ class Lander {
       this.impactGround = true;
       this.groundedVertexPositions = [];
     }
+    // if(this.groundState == this.IN_GROUND && !badLanding) {
+    //   console.log("Grounded and safe");
+    //   safeLanding = true;
+    // }
 
     // if approaching the edge of the screen, move the screen
     let xDiff = 0.333 * WIDTH;
@@ -194,7 +198,16 @@ class Lander {
     }
     this.impactGround = false;
     // If two or more vertices are touching the ground, the lander is static
-    if (this.groundedVertexPositions.length >= 2 || this.groundedVertexPositions[0] == 0) {
+    console.log(this.groundedVertexPositions);
+
+    if(this.groundedVertexPositions.includes(0) || this.groundedVertexPositions.includes(1) || this.groundedVertexPositions.includes(4)) {
+      console.log("badLanding on vertices");
+      badLanding = true;
+    }
+    if(this.groundedVertexPositions.includes(2) && this.groundedVertexPositions.includes(3)) {
+      safeLanding = true;
+    }
+    if(this.groundedVertexPositions.length >= 2 || this.groundedVertexPositions.includes(0)) {
       this.groundState = this.IN_GROUND;
       return;
     }
@@ -219,7 +232,7 @@ class Lander {
   }
 
   generateDimensions() {
-    this.imageWidth = 50;
+    this.imageWidth = 40;
     this.imageHeight = this.imageWidth * (this.spriteHeight / this.spriteWidth); // calculate height based on width and sprite size to not distort the image
     let xs = this.imageWidth * (3 / 42),
       xl = this.imageWidth * (11 / 42); //x-small and x-large

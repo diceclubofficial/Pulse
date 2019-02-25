@@ -142,7 +142,7 @@ function drawForeground(context) {
   context.fillText("Ammo: " + probe.ammo, gameAreaOrigin.x + 30, gameAreaOrigin.y + 30 + padding);
   if(probe.velocity.magnitude >= DANGEROUS_SPEED) context.fillStyle = "red";
   else context.fillStyle = "white";
-  context.fillText("Speed: " + Math.round(probe.velocity.magnitude*10)/10, gameAreaOrigin.x + WIDTH - 200, gameAreaOrigin.y + 30);
+  context.fillText("Speed: " + probe.velocity.magnitude.toFixed(2), gameAreaOrigin.x + WIDTH - 200, gameAreaOrigin.y + 30);
 
   context.restore();
 }
@@ -212,6 +212,9 @@ function updateWaves() {
   // spawn waves
   if(trebleWaves.length < maxTrebleWaves) {
     spawnTrebleWave();
+  }
+  if(bassWaves.length < maxBassWaves) {
+    spawnBassWave();
   }
 
   // despawn waves
@@ -316,20 +319,19 @@ function spawnBulletParticles(x, y, angle) {
 
   animations.push(animation);
 }
-function spawnExplosion(x, y) {
+function spawnExplosion(x, y, scale = 0.2) {
   let position = new Vector(x, y);
 
   let information = {
     src: "images/explosions.png",
-    sheetWidth: 200,
-    sheetHeight: 300,
-    spriteWidth: 100,
-    spriteHeight: 100,
+    sheetWidth: 1600,
+    sheetHeight: 2400,
+    spriteWidth: 800,
+    spriteHeight: 800,
     numSprites: 5
   }
 
   let framesPerSprite = 66 / MS_PER_FRAME;
-  let scale = 1.5;
   let rotationAngle = randomValue(0, 2 * Math.PI);
   let repeat = false;
 

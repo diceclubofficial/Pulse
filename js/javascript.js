@@ -16,7 +16,6 @@ L = 76;
 let keys = [];
 
 
-
 // start at title screen
 changeScene("titleScreen");
 

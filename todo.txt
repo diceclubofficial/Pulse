@@ -1,7 +1,6 @@
 
 todo current commit:
--add dangerous speed and rotation around vertices
-  -un-rotate image and find translation difference between start and end
+-add more badLanding states
 
 todo later:
 -make animations able to loop a certain number of times
