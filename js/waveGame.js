@@ -59,6 +59,10 @@ function playWaveGame() {
     }
   }
   if(badLanding) {
+    if(badLandingTimer == badLandingTimerMax) {
+      spawnExplosion(probe.shape.vertices[0].x, probe.shape.vertices[0].y);
+      probe.groundState = probe.IN_GROUND;
+    }
     badLandingTimer--;
     console.log("badLanding", badLandingTimer);
     if(badLandingTimer <= 0) {

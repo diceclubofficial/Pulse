@@ -1,11 +1,11 @@
 
 todo current commit:
--do parallax scrolling with background images
+-add dangerous speed and rotation around vertices
+  -un-rotate image and find translation difference between start and end
 
 todo later:
 -make animations able to loop a certain number of times
 -make camera position itself based on where the lander is facing
--make asteroid sprites generate with the shape (Jason)
 -fix collision detection
   -make rotational collisions and rotational energy with asteroids
   -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)

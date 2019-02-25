@@ -121,13 +121,6 @@ class Lander {
     if (this.x < -this.width || this.x > OFFSCREEN_WIDTH || this.y < -this.height || this.y > OFFSCREEN_HEIGHT) {
       console.log("Lander is offscreen at (" + Math.floor(this.x) + ", " + Math.floor(this.y) + ") with velocity x:" + Math.floor(this.velocity.x) + " y:" + Math.floor(this.velocity.y));
     }
-
-    // success and failure states
-    if(this.groundedVertexPositions[0] == 0 && !safeLanding) {
-      badLanding = true;
-    } else if(this.groundState == this.IN_GROUND && !badLanding) {
-      safeLanding = true;
-    }
   }
 
   showDeveloperStats(context) {
@@ -187,7 +180,10 @@ class Lander {
   collideWithGround() {
     this.fillStyle = "rgb(255, 0, 0)";
     // On first impact, bounce velocity
-    if (this.impactGround) {
+    if(this.impactGround) {
+      if(this.velocity.magnitude >= DANGEROUS_SPEED && !safeLanding) {
+        badLanding = true;
+      }
       let velMult = -0.2;
       this.velocity = new Vector(this.velocity.x * velMult, this.velocity.y * velMult);
       if (Math.abs(this.velocity.y) < 1) {

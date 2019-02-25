@@ -140,6 +140,9 @@ function drawForeground(context) {
   context.fillStyle = "white";
   context.fillText("Fuel: " + probe.fuel, gameAreaOrigin.x + 30, gameAreaOrigin.y + 30);
   context.fillText("Ammo: " + probe.ammo, gameAreaOrigin.x + 30, gameAreaOrigin.y + 30 + padding);
+  if(probe.velocity.magnitude >= DANGEROUS_SPEED) context.fillStyle = "red";
+  else context.fillStyle = "white";
+  context.fillText("Speed: " + Math.round(probe.velocity.magnitude*10)/10, gameAreaOrigin.x + WIDTH - 200, gameAreaOrigin.y + 30);
 
   context.restore();
 }
