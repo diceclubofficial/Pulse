@@ -1,6 +1,10 @@
 
 todo current commit:
--add more badLanding states
+-add more game states (level progression harder and harder, maybe upgrades?)
+
+art and design:
+-asteroid pixel art
+-planet pixel art
 
 todo later:
 -make animations able to loop a certain number of times
@@ -9,7 +13,6 @@ todo later:
   -make rotational collisions and rotational energy with asteroids
   -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
   -do concave polygon collision detection (in progress but postponed)
--add different levels that get harder (make level select screen)
 -telegraph if the lander is going to hit the ground at too high speed with speed lines like from anime and mariokart
 -add sprites to bassWaves (need more art)
 -make bullet firing charge up when you're not firing (nerf machine-gun firing and incentivize intentional aiming and firing at asteroids)

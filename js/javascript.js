@@ -21,9 +21,9 @@ changeScene("titleScreen");
 
 // buttons
 let menuButtons = document.getElementsByClassName('menuButton');
+let titleScreenButtons = document.getElementsByClassName('titleScreenButton');
 let playButtonAsteroids = document.getElementById('playButtonAsteroids');
 let playButtonWaves = document.getElementById('playButtonWaves');
-let titleScreenButton = document.getElementById('titleScreenButton');
 let muteButton = document.getElementById('muteButton');
 window.onload = function() {
   Object.entries(menuButtons).map((button) => {
@@ -31,14 +31,16 @@ window.onload = function() {
       changeScene("menuScreen");
     });
   });
+  Object.entries(titleScreenButtons).map((button) => {
+    button[1].addEventListener("click", function() {
+      changeScene("titleScreen");
+    });
+  });
   playButtonAsteroids.addEventListener('click', function() {
     startAsteroidGame();
   });
   playButtonWaves.addEventListener('click', function() {
     startWaveGame();
-  });
-  titleScreenButton.addEventListener('click', function() {
-    changeScene("titleScreen");
   });
   muteButton.addEventListener('click', function() {
     audioElement.pause();
