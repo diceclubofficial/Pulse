@@ -1,22 +1,27 @@
 
 todo current commit:
--add more game states (level progression harder and harder, maybe upgrades?)
+-add probe health bar that decreases when probe hits asteroids
 
 art and design:
 -asteroid pixel art
 -planet pixel art
+-new parallax star background art
+-add sprites to bassWaves
+-broken lander when health == 0
 
 todo later:
--make animations able to loop a certain number of times
+-fix asteroid-lander collision detection (maybe adding random torque makes asteroid clip inside lander?)
+-add more game states (level progression harder and harder, maybe upgrades?)
 -make camera position itself based on where the lander is facing
 -fix collision detection
   -make rotational collisions and rotational energy with asteroids
   -fix lander-terrain collision detection (keep calculating torque and applying so it doesn't stick immediately; make lander rotate around vertex rather than around center; lander loses controls when it touches the ground)
   -do concave polygon collision detection (in progress but postponed)
 -telegraph if the lander is going to hit the ground at too high speed with speed lines like from anime and mariokart
--add sprites to bassWaves (need more art)
 -make bullet firing charge up when you're not firing (nerf machine-gun firing and incentivize intentional aiming and firing at asteroids)
 -make the display for fuel, ammo, and speed nice-looking
+-make animations able to loop a certain number of times
+
 
 issues:
 -need to separate lowpass filter source and actual audio to play
