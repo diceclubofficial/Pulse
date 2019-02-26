@@ -14,9 +14,9 @@ function startWaveGame() {
   gameAreaOrigin = new Vector(0, 0);
   probe = new Lander(gameAreaOrigin.x + WIDTH / 2, gameAreaOrigin.y + 0.03 * HEIGHT);
   trebleWaves = [];
-  maxTrebleWaves = 0; // 3
+  maxTrebleWaves = 3; // 3
   bassWaves = [];
-  maxBassWaves = 0; //1
+  maxBassWaves = 1; //1
   asteroids = [];
   maxAsteroids = 0;
   bullets = [];

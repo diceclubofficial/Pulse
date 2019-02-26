@@ -41,7 +41,7 @@ class Terrain {
   draw(context) {
     context.save();
     context.strokeStyle = 'rgb(255, 255, 255)';
-
+    context.beginPath();
     context.moveTo(this.startPoint, this.elevationMap[0]);
     for (let i = 0; i < this.elevationMap.length; i++) {
       context.lineTo(this.startPoint + i * this.segmentLength, this.elevationMap[i]);

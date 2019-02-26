@@ -134,6 +134,56 @@ function showDeveloperStats() {
   terrain.showDeveloperStats(contextOffscreen);
   probe.showDeveloperStats(contextOffscreen);
 }
+function drawSpeedometer(context){
+
+  let barWidth = 25;
+  let barHeight = 200;
+  //get correct dimensions to clip image
+  let speedWidth = 25;
+  let speedHeight = 200;
+
+  //simplifying code
+  let downsizeRatio = speedHeight/speedBarHeight;
+  let maxSpeed = DANGEROUS_SPEED/0.75;// = 1.87
+  //0.75 is the % of the bar under the line for dangerous speed
+
+  let speedBarClipX = 0;
+  //clip the image at y coordinate here. Scale it to current speed over the value needed for the 70% marker to be the dangerous speed.
+  let speedBarClipY = speedBarHeight - speedBarHeight * probe.velocity.magnitude/maxSpeed;
+  let speedBarClipWidth = (barWidth/barHeight)*speedBarHeight;
+  let speedBarClipHeight = speedBarHeight;
+  let speedX = gameAreaOrigin.x + WIDTH - 60;
+  let speedY = gameAreaOrigin.y + 230 - (speedBarHeight - speedBarClipY)*downsizeRatio;
+
+  //make sure the bar doesnt go above or below the boundaries
+  if(speedBarClipY >= speedBarHeight){
+    speedBarClipY = speedBarHeight;
+  } else if(speedBarClipY <= 0){
+    speedBarClipY = 0;
+  }
+
+  if(speedY <= gameAreaOrigin.y + 30){
+    speedY = gameAreaOrigin.y + 30;
+  } else if(speedY >= gameAreaOrigin.y + 230){
+    speedY = gameAreaOrigin.y + 230;
+  }
+
+  //draw health bar
+  context.drawImage(speedBar, speedBarClipX, speedBarClipY, speedBarClipWidth, speedBarClipHeight, speedX, speedY, speedWidth, speedHeight);
+
+  //draw critical line on health bar
+  context.strokeStyle = "rgb(255, 0, 0)";
+  context.lineWidth = 5;
+  context.beginPath();
+  context.moveTo(gameAreaOrigin.x + WIDTH - 60, gameAreaOrigin.y + 80);
+  context.lineTo(gameAreaOrigin.x + WIDTH - 35, gameAreaOrigin.y + 80);
+  context.stroke();
+
+  //draw border around health bar
+  context.lineWidth = 2;
+  context.strokeStyle = "rgb(255, 255, 255)";
+  context.strokeRect(gameAreaOrigin.x + WIDTH - 60, gameAreaOrigin.y + 30, barWidth, barHeight);
+}
 function drawBackground(context, drawGradient = false) {
   context.save();
 
@@ -186,8 +236,10 @@ function drawForeground(context) {
   if(probe.velocity.magnitude >= DANGEROUS_SPEED) context.fillStyle = "red";
   else context.fillStyle = "white";
   context.fillText("Speed: " + probe.velocity.magnitude.toFixed(2), gameAreaOrigin.x + xDiff, gameAreaOrigin.y + yDiff + 3*padding);
+  drawSpeedometer(context);
 
   context.restore();
+
 }
 
 // asteroids

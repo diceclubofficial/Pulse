@@ -23,6 +23,13 @@ let backgroundPos2 = new Vector(0, 0);
 //Lore
 let currentScene = "titleScreen";
 
+//Speedometer
+let speedBar = new Image();
+speedBar.src = "images/healthBarGradient.png";
+//1080 x 1920
+let speedBarWidth = 1080;
+let speedBarHeight = 1920;
+
 // waves
 let trebleWaves = [];
 let maxTrebleWaves;
