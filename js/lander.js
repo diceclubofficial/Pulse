@@ -3,6 +3,9 @@
 class Lander {
 
   constructor(x, y) {
+    this.maxHealth = 100;
+    this.health = this.maxHealth;
+
     // image data
     this.landerThrusterSheet = new Image();
     this.landerThrusterSheet.src = "images/landerThrusterSheetRed.png";
@@ -58,6 +61,8 @@ class Lander {
   }
 
   update() {
+    if(this.health < 0) this.health = 0;
+
     // Cancel all motion if in ground
     if (this.groundState == this.IN_GROUND) {
       this.velocity.mult(0);

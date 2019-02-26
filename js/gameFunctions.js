@@ -132,17 +132,25 @@ function drawBackground(context, drawGradient = false) {
 function drawForeground(context) {
   context.save();
 
-  let padding = 20;
+  let padding = 30;
   let fontSize = 20;
   context.font = fontSize + "px Courier New";
   context.textAlign = "left";
   context.textBaseline = "top";
   context.fillStyle = "white";
-  context.fillText("Fuel: " + probe.fuel, gameAreaOrigin.x + 30, gameAreaOrigin.y + 30);
-  context.fillText("Ammo: " + probe.ammo, gameAreaOrigin.x + 30, gameAreaOrigin.y + 30 + padding);
+  let xDiff = 30;
+  let yDiff = 30;
+  context.fillText("Fuel: " + probe.fuel, gameAreaOrigin.x + xDiff, gameAreaOrigin.y + yDiff);
+  context.fillText("Ammo: " + probe.ammo, gameAreaOrigin.x + xDiff, gameAreaOrigin.y + yDiff + padding);
+  // health
+  context.fillStyle = "lightgreen";
+  if(probe.health <= 0.5*probe.maxHealth) context.fillStyle = "orange";
+  if(probe.health <= 0.25*probe.maxHealth) context.fillStyle = "red";
+  context.fillText("Health: " + Math.round(probe.health), gameAreaOrigin.x + xDiff, gameAreaOrigin.y + yDiff + 2*padding);
+  // speed
   if(probe.velocity.magnitude >= DANGEROUS_SPEED) context.fillStyle = "red";
   else context.fillStyle = "white";
-  context.fillText("Speed: " + probe.velocity.magnitude.toFixed(2), gameAreaOrigin.x + WIDTH - 200, gameAreaOrigin.y + 30);
+  context.fillText("Speed: " + probe.velocity.magnitude.toFixed(2), gameAreaOrigin.x + xDiff, gameAreaOrigin.y + yDiff + 3*padding);
 
   context.restore();
 }

@@ -70,8 +70,6 @@ function changeScene(newScene) {
   currentScene = newScene;
 }
 
-
-
 // keyboard input
 function applyKeyboardInput() {
 
@@ -124,19 +122,13 @@ function applyKeyboardInput() {
   }
 
   // fire gun
-  if (currentScene == "gameArea" && keys[SPACEBAR] && probe.bulletTimer <= 0) {
+  if (currentScene == "gameArea" && keys[UP] && probe.bulletTimer <= 0) {
     probe.fireBullet();
   }
 
   // dash
-  if (keys[UP] && probe.dashTimer <= 0) {
+  if (keys[SPACEBAR] && probe.dashTimer <= 0) {
     probe.dash("forward");
-  }
-  if (keys[RIGHT] && probe.dashTimer <= 0) {
-    probe.dash("right");
-  }
-  if (keys[LEFT] && probe.dashTimer <= 0) {
-    probe.dash("left");
   }
 
   // control camera
