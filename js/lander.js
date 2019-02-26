@@ -3,7 +3,7 @@
 class Lander {
 
   constructor(x, y) {
-    this.maxHealth = 100;
+    this.maxHealth = 20;
     this.health = this.maxHealth;
 
     // image data
@@ -61,7 +61,9 @@ class Lander {
   }
 
   update() {
-    if(this.health < 0) this.health = 0;
+    if(this.health < 0) {
+      badLanding = true;
+    }
 
     // Cancel all motion if in ground
     if (this.groundState == this.IN_GROUND) {

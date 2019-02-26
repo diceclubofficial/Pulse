@@ -22,6 +22,7 @@ changeScene("titleScreen");
 // buttons
 let menuButtons = document.getElementsByClassName('menuButton');
 let titleScreenButtons = document.getElementsByClassName('titleScreenButton');
+let playButtonFull = document.getElementById('playButtonFull');
 let playButtonAsteroids = document.getElementById('playButtonAsteroids');
 let playButtonWaves = document.getElementById('playButtonWaves');
 let muteButton = document.getElementById('muteButton');
@@ -36,6 +37,9 @@ window.onload = function() {
       changeScene("titleScreen");
     });
   });
+  playButtonFull.addEventListener('click', function() {
+    startFullGame();
+  })
   playButtonAsteroids.addEventListener('click', function() {
     startAsteroidGame();
   });
@@ -105,15 +109,15 @@ function applyKeyboardInput() {
 
 
   // control probe
-  if (keys[W] && probe.groundState == probe.OFF_GROUND) {
+  if (keys[W] && probe.groundState == probe.OFF_GROUND && probe.health > 0) {
     probe.applyThrusters();
   } else {
     probe.thrustersOn = false;
   }
-  if (keys[D] && probe.groundState == probe.OFF_GROUND) {
+  if (keys[D] && probe.groundState == probe.OFF_GROUND && probe.health > 0) {
     probe.applyTorque(true);
   }
-  if (keys[A] && probe.groundState == probe.OFF_GROUND) {
+  if (keys[A] && probe.groundState == probe.OFF_GROUND && probe.health > 0) {
     probe.applyTorque(false);
   }
   // regenerate terrain
@@ -122,12 +126,12 @@ function applyKeyboardInput() {
   }
 
   // fire gun
-  if (currentScene == "gameArea" && keys[UP] && probe.bulletTimer <= 0) {
+  if (currentScene == "gameArea" && keys[UP] && probe.bulletTimer <= 0 && probe.health > 0) {
     probe.fireBullet();
   }
 
   // dash
-  if (keys[SPACEBAR] && probe.dashTimer <= 0) {
+  if (keys[SPACEBAR] && probe.dashTimer <= 0 && probe.health > 0) {
     probe.dash("forward");
   }
 

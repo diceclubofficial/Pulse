@@ -43,28 +43,6 @@ function playAsteroidGame() {
   // show developer-intended hitboxes and additional stuff
   if (DEV_MODE) showDeveloperStats();
 
-  // check end states
-  if(safeLanding) {
-    safeLandingTimer--;
-    console.log("safeLanding", safeLandingTimer);
-    if(safeLandingTimer <= 0) {
-      safeLanding = false;
-      safeLandingTimer = safeLandingTimerMax;
-      clearInterval(loop);
-      changeScene("successScreen");
-    }
-  }
-  if(badLanding) {
-    badLandingTimer--;
-    console.log("badLanding", badLandingTimer);
-    if(badLandingTimer <= 0) {
-      badLanding = false;
-      badLandingTimer = badLandingTimerMax;
-      clearInterval(loop);
-      changeScene("gameOverScreen");
-    }
-  }
-
   // draw onto game area
   contextGA.fillStyle = "#555";
   contextGA.fillRect(0, 0, WIDTH, HEIGHT);

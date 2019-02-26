@@ -1,6 +1,7 @@
 
 todo current commit:
--add probe health bar that decreases when probe hits asteroids
+-integrate asteroid game and wave game into one
+  -when lander health == 0, lander stops working and explodes (gameOver)
 
 art and design:
 -asteroid pixel art

@@ -1,4 +1,39 @@
 // drawing things
+function drawEverything() {
+  drawBackground(contextOffscreen, false);
+
+  // asteroids
+  for (let asteroid of asteroids) {
+    asteroid.draw(contextOffscreen);
+  }
+
+  // waves
+  for (let trebleWave of trebleWaves) {
+    trebleWave.draw(contextOffscreen);
+  }
+  for (let bassWave of bassWaves) {
+    bassWave.draw(contextOffscreen);
+  }
+
+  // bullets
+  for (let bullet of bullets) {
+    bullet.draw(contextOffscreen);
+  }
+
+  // terrain
+  terrain.draw(contextOffscreen);
+
+  // lander
+  probe.draw(contextOffscreen);
+
+  // animations
+  for (let animation of animations) {
+    animation.draw(contextOffscreen);
+  }
+
+
+  drawForeground(contextOffscreen);
+}
 function drawEverythingAsteroids() {
   drawBackground(contextOffscreen, false);
 
@@ -280,6 +315,25 @@ function updateAnimations() {
 }
 
 // collision detection
+function collisionDetection() {
+  terrain.collisionDetection();
+
+  for (let asteroid of asteroids) {
+    asteroid.collisionDetection();
+  }
+
+  for (let bassWave of bassWaves) {
+    bassWave.collisionDetection();
+  }
+
+  for (let trebleWave of trebleWaves) {
+    trebleWave.collisionDetection();
+  }
+
+  for (let bullet of bullets) {
+    bullet.collisionDetection();
+  }
+}
 function collisionDetectionAsteroids() {
   for (let asteroid of asteroids) {
     asteroid.collisionDetection();

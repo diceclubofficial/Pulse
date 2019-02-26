@@ -23,7 +23,6 @@ let backgroundPos2 = new Vector(0, 0);
 //Lore
 let currentScene = "titleScreen";
 
-
 // waves
 let trebleWaves = [];
 let maxTrebleWaves;
@@ -57,6 +56,9 @@ let safeLandingTimer = safeLandingTimerMax;
 let badLanding = false;
 let badLandingTimerMax = 300 / MS_PER_FRAME
 let badLandingTimer = badLandingTimerMax;
+let probeDestroyed = false;
+let probeDestroyedTimerMax = 300 / MS_PER_FRAME;
+let probeDestroyedTimer = probeDestroyedTimerMax;
 
 let frameCounter = 0;
 let loop;
