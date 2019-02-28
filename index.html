@@ -9,11 +9,15 @@
 <body>
 
 	<!-- Scenes -->
+	<!-- Title Screen -->
 	<div>
 		<img class="hidden scene-titleScreen center" id="titleScreenImage" src="images/titleScreen.gif" alt="Title Page 1" width="768" height="600">
 	</div>
 	<div class="hidden scene-titleScreen buttonStyle" id="lore1Button">Start</div>
+	<br class="hidden scene-titleScreen">
+	<div class="hidden scene-titleScreen buttonStyle levelSelectButton">Level Select</div>
 
+	<!-- Menu Screen -->
 	<div class="hidden scene-menuScreen">Menu</div>
 	<br class="scene-menuScreen">
 	<br class="scene-menuScreen">
@@ -25,34 +29,44 @@
 	<div class="hidden scene-menuScreen buttonStyle" id="playButtonWaves">Play Waves</div>
 	<br class="scene-menuScreen">
 	<div class="hidden scene-menuScreen buttonStyle titleScreenButton">Exit to Title Screen</div>
+	<br class="scene-menuScreen">
+	<div class="hidden scene-menuScreen buttonStyle levelSelectButton">Level Select</div>
 
-	<!-- Lore elements -->
+	<!-- Lore Elements -->
 	<div class="scene-lore1 greyBackground">
-		<canvas class="hidden scene-lore1 lore" id="lore1" width="1024" height="800"></canvas>
+		<canvas class="hidden scene-lore1 smaller" id="lore1" width="1024" height="800"></canvas>
 		<p class="hidden scene-lore1 loreText"> Earth is dying. In the planet's final days, the world's leading scientists launched a   probe containing all the necessary equipment to rebuild human society elsewhere. The probe's destination: anywhere else.</p>
 	</div>
 	<div class="scene-lore2 greyBackground">
-		<canvas class="hidden scene-lore2 lore" id="lore2" width="1024" height="800"></canvas>
+		<canvas class="hidden scene-lore2 smaller" id="lore2" width="1024" height="800"></canvas>
 		<p class="hidden scene-lore2 loreText"> Many years passed uneventfully... The vast emptiness of space seemed hopeless. After 120 years of scouting, the probe sensed strange signals - radio waves that peaked at regular intervals. Hope seemed near.</p>
 	</div>
 	<div class="scene-lore3 greyBackground">
-		<canvas class="hidden scene-lore3 lore" id="lore3" width="1024" height="800"></canvas>
+		<canvas class="hidden scene-lore3 smaller" id="lore3" width="1024" height="800"></canvas>
 		<p class="hidden scene-lore3 loreText"> As the probe approached, the strange signals seemed to be coming from an exoplanet, previously unknown to humanity. The probe descended to enter into orbit, and was almost knocked off-course by the planet's chaotic atmosphere. In an effort to terraform the planet into something more habitable, the probe descended on several sites.</p>
 	</div>
 
-
+	<!-- Game Area -->
 	<canvas class="hidden scene-gameArea" id="game-area" width="750" height="750"></canvas>
 	<button class="hidden scene-gameArea" id="muteButton" type="button" name="button">Stop Music</button>
+
+	<!-- Success Screen -->
 	<div>
 		<img class="hidden scene-successScreen" id="successScreen" src="images/successScreen.png" alt="Success Screen" width="600" height="600">
 	</div>
-	<div class="hidden scene-successScreen titleScreenButton buttonStyle">Back To Title Screen</div>
+	<div class="hidden scene-successScreen levelSelectButton buttonStyle">Continue</div>
 
+	<!-- Game Over Screen -->
 	<div>
 		<img class="hidden scene-gameOverScreen" id="gameOverScreen" src="images/gameOverScreen.png" alt="Game Over Screen" width="600" height="600">
 	</div>
-	<div class="hidden scene-gameOverScreen titleScreenButton buttonStyle">Back To Title Screen</div>
+	<div class="hidden scene-gameOverScreen menuButton buttonStyle">Back To Menu</div>
 
+	<!-- Level Select -->
+	<div class="hidden scene-levelSelect">
+		<canvas class="hidden scene-levelSelect" id="level-select-area" width="512" height="400"></canvas>
+		<div class="hidden scene-levelSelect buttonStyle" id="nextLevelButton">Next Level</div>
+	</div>
 
 	<!-- Audio Elements -->
 	<audio id="mizar" src="music/billvortexMizar.mp3" type="audio/mpeg"></audio>
@@ -87,10 +101,10 @@
 	<script type="text/javascript" src="js/fullGame.js"></script>
 	<script type="text/javascript" src="js/asteroidGame.js"></script>
 	<script type="text/javascript" src="js/waveGame.js"></script>
+	<script type="text/javascript" src="js/levelSelect.js"></script>
 
 	<script type="text/javascript" src="js/audioAnalysis.js"></script>
 	<script type="text/javascript" src="js/javascript.js"></script>
 
 </body>
-
 </html>

@@ -3,7 +3,7 @@
 //boolean to tell if the spacebar has been pressed, so it only fires once per press
 let loreKeyPressed = false;
 
-//generic lander animation information wich I use in all lore scenes
+//generic lander animation information which I use in all lore scenes
 let landerAnimationInformation = {
   src: "images/landerThrusterSheetRedLarge.png",
   sheetWidth: 672,
@@ -43,7 +43,7 @@ function startLore1() {
   loop = setInterval(playLore1, MS_PER_FRAME);
 }
 
-function playLore1(){
+function playLore1() {
   applyKeyboardInput();
   lore1Animation.update();
   lore1Animation.draw(lore1Context);

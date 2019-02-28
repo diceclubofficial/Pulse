@@ -22,10 +22,12 @@ changeScene("titleScreen");
 // buttons
 let menuButtons = document.getElementsByClassName('menuButton');
 let titleScreenButtons = document.getElementsByClassName('titleScreenButton');
+let levelSelectButtons = document.getElementsByClassName('levelSelectButton');
 let playButtonFull = document.getElementById('playButtonFull');
 let playButtonAsteroids = document.getElementById('playButtonAsteroids');
 let playButtonWaves = document.getElementById('playButtonWaves');
 let muteButton = document.getElementById('muteButton');
+let nextLevelButton = document.getElementById('nextLevelButton');
 window.onload = function() {
   Object.entries(menuButtons).map((button) => {
     button[1].addEventListener("click", function() {
@@ -35,6 +37,11 @@ window.onload = function() {
   Object.entries(titleScreenButtons).map((button) => {
     button[1].addEventListener("click", function() {
       changeScene("titleScreen");
+    });
+  });
+  Object.entries(levelSelectButtons).map((button) => {
+    button[1].addEventListener("click", function() {
+      startLevelSelect();
     });
   });
   playButtonFull.addEventListener('click', function() {
@@ -52,6 +59,9 @@ window.onload = function() {
   lore1Button.addEventListener('click', function() {
     startLore1();
   });
+  nextLevelButton.addEventListener('click', function() {
+    startFullGame();
+  })
 }
 
 function changeScene(newScene) {
@@ -77,7 +87,7 @@ function changeScene(newScene) {
 // keyboard input
 function applyKeyboardInput() {
 
-  //lore
+  // lore
   if(currentScene.includes("lore") && keys[SPACEBAR] && !loreKeyPressed){
     //make sure this code only runs once
     loreKeyPressed = true;
@@ -106,6 +116,11 @@ function applyKeyboardInput() {
   } else if(currentScene.includes("lore") && keys[SPACEBAR] == false){
     loreKeyPressed = false;
   }
+
+  // // level select screen
+  // if(currentScene.equals("levelSelect") && keys[SPACEBAR]) {
+  //
+  // }
 
 
   // control probe
@@ -169,7 +184,7 @@ document.addEventListener('keyup', processKeyUpInput);
 function processKeyUpInput(event) {
   keys[event.keyCode] = false;
 }
-canvasGA.addEventListener('click', processMouseInput);
+document.addEventListener('click', processMouseInput);
 function processMouseInput(event) {
   var relX = (event.clientX - canvasGA.offsetLeft);
   var relY = (event.clientY - canvasGA.offsetTop);

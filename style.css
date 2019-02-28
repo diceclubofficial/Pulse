@@ -22,27 +22,27 @@ canvas {
   border: 1px solid rgba(171,0,186,1);
 }
 
-.buttonStyle{
+.buttonStyle {
   /* display:inline-block; */
   margin: 0 auto;
-  position:relative;
-  padding:0.5em;
-  cursor:pointer;
-  background:#000;  color:white;
-  z-index:0;
+  position: relative;
+  padding: 0.5em;
+  cursor: pointer;
+  background: #000;
+  color: white;
+  z-index: 0;
 
   border-color: rgba(171,0,186,1);
   border-left-style: solid;
   border-width: 10px;
 
-  width: 50%;
-
+  width: 40%;
 }
 
 .buttonStyle:before {
   content: "";
   position: absolute;
-  z-index:-1;
+  z-index: -1;
   top: 0;  left: 0;  right: 0;  bottom: 0;
   background: rgba(224, 147, 231, 0.46);
   transform: scaleX(0);
@@ -50,24 +50,28 @@ canvas {
   transition: transform 0.5s ease-out;
 }
 
-.buttonStyle:hover:before{
+.buttonStyle:hover:before {
   transform: scaleX(1);
 }
 
-.buttonStyle:active{
+.buttonStyle:active {
   background: rgba(193, 54, 235, 0.66);
 }
 
-.lore3img{
-  position: absolute;
-}
-
-.lore{
+.smaller {
   margin: auto;
   width: 50%;
 }
 
-.loreText{
+#level-select-area {
+  width: 60%;
+}
+
+.scene-levelSelect.buttonStyle {
+  float: right;
+}
+
+.loreText {
   font-size: 25px;
   margin: auto;
   width: 75%;

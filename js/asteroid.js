@@ -305,8 +305,7 @@ class Asteroid {
     probe.health -= 2 * force.magnitude;
     let randomVertexPos = randomInt(0, probe.shape.vertices.length);
     let randomVertex = probe.shape.vertices[randomVertexPos];
-    spawnExplosion(randomVertex.x, randomVertex.y, 0.2);
-    // spawnExplosion(this.shape.centroid.x + mtv.x, this.shape.centroid.y + mtv.y, 0.2);
+    spawnExplosion(randomVertex.x, randomVertex.y, 0.13);
 
     // run velocity calculations and shattering on asteroid
     this.collideAgainst(probe);

@@ -26,7 +26,7 @@ class Lander {
     this.angularVelocity = 0;
     this.angularAcceleration = 0;
 
-    this.thrusterPower = 0.0045 * MS_PER_FRAME;
+    this.thrusterPower = 0.0025 * MS_PER_FRAME;
     this.momentOfInertia = (.5 * this.mass * Math.pow(this.width / 2, 2));
     this.fillStyle = 'rgb(255, 255, 255)';
 
@@ -207,11 +207,11 @@ class Lander {
     // If two or more vertices are touching the ground, the lander is static
     console.log(this.groundedVertexPositions);
 
-    if(this.groundedVertexPositions.includes(0) || this.groundedVertexPositions.includes(1) || this.groundedVertexPositions.includes(4)) {
+    if((this.groundedVertexPositions.includes(0) || this.groundedVertexPositions.includes(1) || this.groundedVertexPositions.includes(4)) && !safeLanding) {
       console.log("badLanding on vertices");
       badLanding = true;
     }
-    if(this.groundedVertexPositions.includes(2) && this.groundedVertexPositions.includes(3)) {
+    if(this.groundedVertexPositions.includes(2) && this.groundedVertexPositions.includes(3) && !badLanding) {
       safeLanding = true;
     }
     if(this.groundedVertexPositions.length >= 2 || this.groundedVertexPositions.includes(0)) {

@@ -17,6 +17,8 @@ let lore2Context = lore2Canvas.getContext("2d");
 let lore3Canvas = document.getElementById("lore3");
 let lore3Context = lore3Canvas.getContext("2d");
 
+let levelSelectCanvas = document.getElementById('level-select-area');
+let levelSelectContext = levelSelectCanvas.getContext('2d');
 
 let OFFSCREEN_WIDTH;
 let OFFSCREEN_HEIGHT;
@@ -34,6 +36,7 @@ let sceneNames = [
   "gameArea",
   "successScreen",
   "gameOverScreen",
+  "levelSelect",
 ];
 
 const DEV_MODE = false; // change this to toggle showing developer stats

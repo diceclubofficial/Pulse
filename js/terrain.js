@@ -2,14 +2,14 @@
 
 class Terrain {
 
-  constructor() {
+  constructor(rockiness = 100) {
     // Fill a raw elevation map with noise for each pixel in width
     // Sample the height every x pixels to form a new Array
     this.noise = new Perlin();
     this.startPoint = 0;
     this.endPoint = OFFSCREEN_WIDTH;
     this.seaLevel = bottomScreenY + 0.85 * HEIGHT; // 85% down on the last screen height
-    this.maxElevationDiff = 100;
+    this.maxElevationDiff = rockiness;
     this.highestGround = this.seaLevel - this.maxElevationDiff;
 
     this.segmentLength = 20;

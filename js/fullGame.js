@@ -10,22 +10,27 @@ function startFullGame() {
 
   // initialize variables
   changeOffscreenDimensions(2, 2);
-  terrain = new Terrain();
+  let rockiness = 30 + 10*(currentLevel);
+  terrain = new Terrain(rockiness);
   gameAreaOrigin = new Vector(0, 0);
   asteroidScreenCoordinates = new Vector(0, 0);
   asteroidScreenDimensions = new Vector(OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
   probe = new Lander(gameAreaOrigin.x + WIDTH / 2, gameAreaOrigin.y + 0.03 * HEIGHT);
   trebleWaves = [];
-  maxTrebleWaves = 3;
   bassWaves = [];
-  maxBassWaves = 1;
   asteroids = [];
-  maxAsteroids = 45;
   bullets = [];
   animations = [];
+
+  maxAsteroids = Math.round(map(currentLevel, 1, 8, 10, 50));
+  maxTrebleWaves = Math.round(map(currentLevel, 1, 8, 0, 6));
+  maxBassWaves = Math.round(map(currentLevel, 1, 8, 0, 3));
+  console.log("Level " + currentLevel + " starting with maxAsteroids:", maxAsteroids, " maxTrebleWaves:", maxTrebleWaves, " maxBassWaves:", maxBassWaves);
+
   frameCounter = 0;
 
   // loop play
+  clearInterval(loop);
   loop = setInterval(playFullGame, MS_PER_FRAME);
 }
 
@@ -57,6 +62,7 @@ function playFullGame() {
     if(safeLandingTimer <= 0) {
       safeLanding = false;
       safeLandingTimer = safeLandingTimerMax;
+      currentLevel++;
       clearInterval(loop);
       changeScene("successScreen");
     }
@@ -71,6 +77,7 @@ function playFullGame() {
     if(badLandingTimer <= 0) {
       badLanding = false;
       badLandingTimer = badLandingTimerMax;
+      currentLevel = 1;
       clearInterval(loop);
       changeScene("gameOverScreen");
     }

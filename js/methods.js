@@ -34,8 +34,8 @@ function rotatePoint(vector, theta, origin) {
   return new Vector(x1, y1);
 }
 
-function map(value, li, hi, lt, ht) {
-	return (value/(hi-li))*(ht-lt)+lt;
+function map(value, low1, high1, low2, high2) {
+    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
 function randomValue(min, max) {

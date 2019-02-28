@@ -1,6 +1,6 @@
 // drawing things
 function drawEverything() {
-  drawBackground(contextOffscreen, false);
+  drawBackground(contextOffscreen, true);
 
   // asteroids
   for (let asteroid of asteroids) {
@@ -134,7 +134,7 @@ function showDeveloperStats() {
   terrain.showDeveloperStats(contextOffscreen);
   probe.showDeveloperStats(contextOffscreen);
 }
-function drawSpeedometer(context){
+function drawSpeedometer(context) {
 
   let barWidth = 25;
   let barHeight = 200;
