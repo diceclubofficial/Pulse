@@ -262,7 +262,6 @@ function spawnAsteroidOffscreen() {
       spawnPoint = new Vector(asteroidScreenCoordinates.x + randomValue(0, asteroidScreenDimensions.x), asteroidScreenCoordinates.y + asteroidScreenDimensions.y + offsetY);
       break;
   }
-  // console.log("asteroid spawn point", spawnPoint.toString(), randomSpawnPoint);
   let newAsteroid = new Asteroid(spawnPoint.x, spawnPoint.y, asteroidScreenCoordinates, asteroidScreenDimensions);
   asteroids.push(newAsteroid);
 }

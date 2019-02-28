@@ -58,7 +58,6 @@ function playFullGame() {
   // check end states
   if(safeLanding) {
     safeLandingTimer--;
-    console.log("safeLanding", safeLandingTimer);
     if(safeLandingTimer <= 0) {
       safeLanding = false;
       safeLandingTimer = safeLandingTimerMax;
@@ -73,7 +72,6 @@ function playFullGame() {
       probe.groundState = probe.IN_GROUND;
     }
     badLandingTimer--;
-    console.log("badLanding", badLandingTimer);
     if(badLandingTimer <= 0) {
       badLanding = false;
       badLandingTimer = badLandingTimerMax;
@@ -87,7 +85,6 @@ function playFullGame() {
       spawnExplosion(probe.shape.centroid.x, probe.shape.centroid.y, 0.45);
     }
     probeDestroyedTimer--;
-    console.log("probeDestroyed", probeDestroyedTimer);
     if(probeDestroyedTimer <= 0) {
       probeDestroyed = false;
       probeDestroyedTimer = probeDestroyedTimerMax;

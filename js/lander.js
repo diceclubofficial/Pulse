@@ -107,10 +107,6 @@ class Lander {
       this.impactGround = true;
       this.groundedVertexPositions = [];
     }
-    // if(this.groundState == this.IN_GROUND && !badLanding) {
-    //   console.log("Grounded and safe");
-    //   safeLanding = true;
-    // }
 
     // if approaching the edge of the screen, move the screen
     let xDiff = 0.333 * WIDTH;
@@ -205,7 +201,6 @@ class Lander {
     }
     this.impactGround = false;
     // If two or more vertices are touching the ground, the lander is static
-    console.log(this.groundedVertexPositions);
 
     if((this.groundedVertexPositions.includes(0) || this.groundedVertexPositions.includes(1) || this.groundedVertexPositions.includes(4)) && !safeLanding) {
       console.log("badLanding on vertices");
