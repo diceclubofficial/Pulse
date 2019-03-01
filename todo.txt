@@ -1,8 +1,5 @@
 
 todo current commit:
--add more game states (level progression getting harder and harder, )
-  -level progression - things get harder (terrain rockier, more asteroids and waves) (level 1 has no waves)
-  -level select screen (add upgrades to this screen later)
 
 art and design:
 -asteroid pixel art
@@ -11,6 +8,12 @@ art and design:
 -broken lander game over image when health == 0
 -new title screen with pulse logo
 -add sprites to bassWaves
+
+todo upcoming:
+-level select gif
+-art (above)
+-writing for lore screens
+-music interpretation
 
 todo later:
 -fix asteroid-lander collision detection (maybe adding random torque makes asteroid clip inside lander?)
@@ -29,13 +32,13 @@ issues:
 -bass waves go way too fast and are too large to avoid - need to playtest
 
 ideas:
--maybe add "tutorial" or level 0 landing on some moon of the planet to touch down and learn the mechanics of maneuvering the probe and landing on terrain without disrupted by asteroids and waves
 -make bullet firing charge up when you're not firing (nerf machine-gun firing and incentivize intentional aiming and firing at asteroids)
 -something cool happens when you use fire from the thrusters on something else (like R.O.B.'s aerials in smash)
 -have music from planet fade in as lander descends (start with lonely machinery beeping and fade in music as the planet and waves are visible)
 -asteroids collide on the beat in the middle of the screen and explode?
 -make terrain red like mars (like Game Over drawing)
 -pick out a color scheme to design by
+-maybe add "tutorial" or level 0 landing on some moon of the planet to touch down and learn the mechanics of maneuvering the probe and landing on terrain without disrupted by asteroids and waves
 
 wave naming convention:
 -treble - small fast waves (blue, green, and red rectangular waves)

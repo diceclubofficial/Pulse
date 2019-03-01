@@ -9,7 +9,7 @@ function startFullGame() {
   audioElement.play();
 
   // initialize variables
-  changeOffscreenDimensions(2, 2);
+  changeOffscreenDimensions(1, 2);
   let rockiness = 30 + 10*(currentLevel);
   terrain = new Terrain(rockiness);
   gameAreaOrigin = new Vector(0, 0);

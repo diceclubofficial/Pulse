@@ -41,6 +41,6 @@ let sceneNames = [
 
 const DEV_MODE = false; // change this to toggle showing developer stats
 
-const FPS = 100;
+const FPS = 60;
 const MS_PER_FRAME = 1000 / FPS;
 console.log("Running at " + Math.round(FPS) + " frames/second and " + Math.round(MS_PER_FRAME) + " ms/frame.");

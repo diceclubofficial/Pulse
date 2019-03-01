@@ -61,7 +61,8 @@ class Lander {
   }
 
   update() {
-    if(this.health < 0) {
+    if(this.health < 1) {
+      this.health = 0;
       badLanding = true;
     }
 

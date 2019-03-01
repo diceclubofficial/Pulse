@@ -5,7 +5,7 @@ class Asteroid {
   constructor(x, y, screenCoordinates, screenDimensions) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = MS_PER_FRAME * randomValue(0.09, 0.24);
+    this.speed = MS_PER_FRAME * randomValue(0.12, 0.30);
     //random velocity
     this.velocity = new Vector(randomValue(-1, 1), randomValue(-1, 1));
     this.velocity.magnitude = this.speed;
@@ -239,7 +239,6 @@ class Asteroid {
       this.coordinates.add(mtv);
       this.shape.translate(mtv);
 
-
       // run velocity calculations and shattering
       let otherCopy = {
         mass: other.mass,
@@ -339,7 +338,7 @@ class Asteroid {
     spawnAsteroidCollisionDust(animationPosition.x, animationPosition.y, 0.05 * this.radius);
 
     // break into pieces
-    if (shatter || (this.dwarf <= 0 && newEnergy > 30)) {
+    if (shatter || (this.dwarf <= 0 && newEnergy > 20)) {
       this.shatter(newVelocity);
     } else { // or bounce elastically
       this.velocity = newVelocity;
