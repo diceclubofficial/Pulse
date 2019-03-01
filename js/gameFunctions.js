@@ -305,7 +305,12 @@ function spawnBassWave() {
 function updateWaves() {
   // spawn waves
   if(trebleWaves.length < maxTrebleWaves) {
-    spawnTrebleWave();
+    if(waveTimer >= waveInterval*FPS/1000){
+      console.log("yay");
+      spawnTrebleWave();
+      waveTimer = 0;
+    }
+    waveTimer++;
   }
   if(bassWaves.length < maxBassWaves) {
     spawnBassWave();

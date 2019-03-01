@@ -46,6 +46,8 @@ let waveSpawnPoints = [
   new Vector(waveScreenCoordinates.x + waveScreenDimensions.x + 10, waveScreenCoordinates.y + waveScreenDimensions.y - 50),
 ];
 let bassWaveSpawnPoint = 0;
+let waveTimer = 0;
+let waveInterval = 1000; //ms
 
 // asteroids
 let asteroids = [];
