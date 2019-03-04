@@ -204,7 +204,6 @@ class Lander {
     // If two or more vertices are touching the ground, the lander is static
 
     if((this.groundedVertexPositions.includes(0) || this.groundedVertexPositions.includes(1) || this.groundedVertexPositions.includes(4)) && !safeLanding) {
-      console.log("badLanding on vertices");
       badLanding = true;
     }
     if(this.groundedVertexPositions.includes(2) && this.groundedVertexPositions.includes(3) && !badLanding) {

@@ -302,8 +302,7 @@ function spawnBassWave() {
     bassWaves.push(new BassWave(spawnPoint.x, spawnPoint.y, waveScreenCoordinates, waveScreenDimensions));
   }
 }
-function updateWaves() {
-  // spawn waves
+function spawnWavesAutomatically() {
   if(trebleWaves.length < maxTrebleWaves) {
     if(waveTimer >= waveInterval*FPS/1000){
       console.log("yay");
@@ -315,6 +314,10 @@ function updateWaves() {
   if(bassWaves.length < maxBassWaves) {
     spawnBassWave();
   }
+}
+function updateWaves() {
+  // spawn waves automatically without music
+  // spawnWavesAutomatically();
 
   // despawn waves
   let aliveTrebleWaves = [];

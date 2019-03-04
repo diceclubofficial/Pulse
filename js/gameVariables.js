@@ -6,11 +6,11 @@ const MASS_CONSTANT = probe.shape.area; // 1 mass unit = the mass of the lander
 const GRAVITY = new Vector(0, 0.0015 * MS_PER_FRAME);
 const TERMINAL_VELOCITY = 5;
 const DRAG_CONSTANT = GRAVITY.y / TERMINAL_VELOCITY;
-console.log("Gravity is " + GRAVITY.y/MS_PER_FRAME + " N/ms and "+ GRAVITY.y + " N/frame");
-const DANGEROUS_SPEED = 1.0; // 1.4
+// console.log("Gravity is " + GRAVITY.y/MS_PER_FRAME + " N/ms and "+ GRAVITY.y + " N/frame");
+const DANGEROUS_SPEED = 1.0;
 
 // background
-let terrain = new Terrain();
+let terrain;
 const starBackgroundImage0 = new Image();
 starBackgroundImage0.src = "images/starBackground3.png";
 const starBackgroundImage1 = new Image();

@@ -1,12 +1,15 @@
 "use strict"
 
 function startFullGame() {
+  if(!finishedLoadingAudio) {
+    alert("Not finished loading audio!");
+    return;
+  }
+
   // change scene to game screen
   changeScene("gameArea");
 
-  // Start playing audio
-  audioContext.resume();
-  audioElement.play();
+  startAudio();
 
   // initialize variables
   changeOffscreenDimensions(1, 2);
@@ -47,7 +50,7 @@ function playFullGame() {
   if (probe.groundState != probe.IN_GROUND) probe.applyForce(GRAVITY);
   probe.update();
 
-  audioAnalysis();
+  analyseAudio();
 
   collisionDetection();
 
@@ -63,6 +66,7 @@ function playFullGame() {
       safeLandingTimer = safeLandingTimerMax;
       currentLevel++;
       clearInterval(loop);
+      bufferSource.stop(0);
       changeScene("successScreen");
     }
   }
@@ -77,6 +81,7 @@ function playFullGame() {
       badLandingTimer = badLandingTimerMax;
       currentLevel = 1;
       clearInterval(loop);
+      bufferSource.stop(0);
       changeScene("gameOverScreen");
     }
   }
@@ -89,6 +94,7 @@ function playFullGame() {
       probeDestroyed = false;
       probeDestroyedTimer = probeDestroyedTimerMax;
       clearInterval(loop);
+      bufferSource.stop(0);
       changeScene("gameOverScreen");
     }
   }

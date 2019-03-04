@@ -5,7 +5,7 @@ class Asteroid {
   constructor(x, y, screenCoordinates, screenDimensions) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = MS_PER_FRAME * randomValue(0.12, 0.30);
+    this.speed = MS_PER_FRAME * randomValue(0.18, 0.34);
     //random velocity
     this.velocity = new Vector(randomValue(-1, 1), randomValue(-1, 1));
     this.velocity.magnitude = this.speed;
@@ -319,6 +319,7 @@ class Asteroid {
     // check if each vertex is below the terrain
     vertexLoop: for (let vertex of this.shape.vertices) {
       if (terrain.isPointBelowSurface(vertex.x + this.velocity.x, vertex.y + this.velocity.y)) {
+        spawnAsteroidCollisionDust(this.shape.x, this.shape.y, this.radius*0.08);
         this.alive = false;
         return;
       }

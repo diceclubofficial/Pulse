@@ -18,7 +18,7 @@ class Terrain {
 
     this.generate();
 
-    console.log("Terrain Elevation Map: ", this.elevationMap);
+    // console.log("Terrain Elevation Map: ", this.elevationMap);
   }
 
   showDeveloperStats(context) {

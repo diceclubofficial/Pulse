@@ -1,5 +1,8 @@
 
 todo current commit:
+-treble waves and bass waves spawn on beat
+  -music starts and stops on level begin and end
+  -clean up code
 
 art and design:
 -asteroid pixel art
@@ -10,6 +13,11 @@ art and design:
 -add sprites to bassWaves
 
 todo upcoming:
+-use AnalysisNode to get FrequencyData and look at which frequencies to cut off at (in offlineContext)
+-read more about bandpass filters and how to use them
+-add sound effects
+  -thruster fwooo
+  -dash phooo
 -level select gif
 -art (above)
 -writing for lore screens
