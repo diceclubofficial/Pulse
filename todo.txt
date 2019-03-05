@@ -1,8 +1,7 @@
 
 todo current commit:
--treble waves and bass waves spawn on beat
-  -music starts and stops on level begin and end
-  -clean up code
+-use AnalysisNode to get FrequencyData and look at which frequencies to cut off at (in offlineContext)
+-push this commit
 
 art and design:
 -asteroid pixel art
@@ -13,8 +12,8 @@ art and design:
 -add sprites to bassWaves
 
 todo upcoming:
--use AnalysisNode to get FrequencyData and look at which frequencies to cut off at (in offlineContext)
--read more about bandpass filters and how to use them
+-make the frequency median instead of average/mean
+-figure out what to do with the frequencies - bandpass filters on bass and treble
 -add sound effects
   -thruster fwooo
   -dash phooo
@@ -34,7 +33,6 @@ todo later:
 -make the display for fuel, ammo, and speed nice-looking
 
 issues:
--need to separate lowpass filter source and actual audio to play
 -gun too strong? stronger than thruster? needs playtesting
 -asteroid generation based on Perlin sometimes has jagged cuts because of Perlin resetting
 -bass waves go way too fast and are too large to avoid - need to playtest
