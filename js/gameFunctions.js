@@ -237,6 +237,10 @@ function drawForeground(context) {
   else context.fillStyle = "white";
   context.fillText("Speed: " + probe.velocity.magnitude.toFixed(2), gameAreaOrigin.x + xDiff, gameAreaOrigin.y + yDiff + 3*padding);
   drawSpeedometer(context);
+  // altitude
+  let altitude = terrain.seaLevel - probe.shape.y;
+  context.fillStyle = "white";
+  context.fillText("Altitude: " + Math.round(altitude), gameAreaOrigin.x + xDiff, gameAreaOrigin.y + yDiff + 4*padding);
 
   context.restore();
 
