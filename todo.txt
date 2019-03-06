@@ -3,7 +3,6 @@ todo current commit:
 -make music at different levels
 
 art and design:
--asteroid pixel art
 -planet pixel art
 -new parallax star background art
 -broken lander game over image when health == 0
@@ -20,8 +19,6 @@ todo upcoming:
   -dash phooo
 -level select gif
 -art (above)
--writing for lore screens
--music interpretation
 
 todo later:
 -fix asteroid-lander collision detection (maybe adding random torque makes asteroid clip inside lander?)

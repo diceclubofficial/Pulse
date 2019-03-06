@@ -40,13 +40,19 @@ class Terrain {
 
   draw(context) {
     context.save();
-    context.strokeStyle = 'rgb(255, 255, 255)';
+    context.strokeStyle = 'rgb(134, 26, 26)';
+    context.lineWidth = 10;
+    context.fillStyle = 'rgb(164, 56, 56)';
     context.beginPath();
-    context.moveTo(this.startPoint, this.elevationMap[0]);
+    context.moveTo(this.startPoint, OFFSCREEN_HEIGHT);
+    context.lineTo(this.startPoint, this.elevationMap[0]);
     for (let i = 0; i < this.elevationMap.length; i++) {
       context.lineTo(this.startPoint + i * this.segmentLength, this.elevationMap[i]);
     }
+    context.lineTo(this.endPoint, OFFSCREEN_HEIGHT);
+    context.closePath();
     context.stroke();
+    context.fill();
 
     context.restore();
   }
