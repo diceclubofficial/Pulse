@@ -1,14 +1,14 @@
 // Pre-generate audio
 let audioContext = new AudioContext();
 let bufferPaths = [
-  // "/music/billvortexmizar.mp3",
+  "/music/billvortexmizar.mp3",
   // "/music/billvortextruffes.mp3", //3
   // "/music/wetandwild.mp3", // great but difficult
   // "/music/spacecop.mp3", // great
   // "/music/spacerhythm1.mp3", //6 // fast
   // "/music/starscreamspace.mp3", // love this song but volume is inconsistent
   // "/music/sultryspaceshowers.mp3", // very difficult
-]
+];
 let bufferLoader = new BufferLoader(audioContext, bufferPaths, loadAudio);
 bufferLoader.load();
 let buffer;

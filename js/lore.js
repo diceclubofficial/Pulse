@@ -127,6 +127,7 @@ function playLore2(){
 let lore3Img = new Image();
 let lore3Asteroids = new Image();
 let asteroidAngle = 0;
+let asteroidAngularVel = toRadians(15) / FPS; // 15 degrees per second
 
 let lore3LanderFramesPerSprite = 15;
 let lore3LanderScale = 0.5;
@@ -155,7 +156,7 @@ function playLore3() {
   lore3Context.scale(2.1, 2.1);
   lore3Context.drawImage(lore3Asteroids, -lore3Asteroids.width/2, -lore3Asteroids.height/2);
   lore3Context.restore();
-  asteroidAngle += 0.0005;
+  asteroidAngle += asteroidAngularVel;
 
   //draw lander
   lore3LanderAnimation.update();

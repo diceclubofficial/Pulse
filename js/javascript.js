@@ -46,12 +46,6 @@ window.onload = function() {
   });
   playButtonFull.addEventListener('click', function() {
     startFullGame();
-  })
-  playButtonAsteroids.addEventListener('click', function() {
-    startAsteroidGame();
-  });
-  playButtonWaves.addEventListener('click', function() {
-    startWaveGame();
   });
   muteButton.addEventListener('click', function() {
     audioElement.pause();
@@ -61,7 +55,7 @@ window.onload = function() {
   });
   nextLevelButton.addEventListener('click', function() {
     startFullGame();
-  })
+  });
 }
 
 function changeScene(newScene) {
