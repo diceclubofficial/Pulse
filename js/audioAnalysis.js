@@ -37,6 +37,8 @@ let treblePeakTimes;
 let treblePeaksElapsed;
 
 function loadAudio(bufferList) {
+  finishedLoadingAudio = false;
+  loadingTasksCompleted = 0;
   if(bufferList != undefined) {
     buffers = bufferList;
     console.log("Finished loading " + buffers.length + " buffers.");
