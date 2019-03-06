@@ -1,6 +1,6 @@
 
 todo current commit:
--figure out what to do with the frequencies - bandpass filters on bass and treble
+-make music at different levels
 
 art and design:
 -asteroid pixel art
@@ -11,8 +11,7 @@ art and design:
 -add sprites to bassWaves
 
 todo upcoming:
--add Davis' lore writing
--make different songs at different levels
+-make music fade in as you approach the wave screen
 -make the frequency diff logarithmic like human hearing
 -peaks are relative to the whole songs' volume
 -make the frequency median instead of average/mean

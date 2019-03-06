@@ -36,7 +36,7 @@ let maxTrebleWaves;
 let bassWaves = [];
 let maxBassWaves;
 let waveScreenCoordinates = new Vector(0, 0);
-let waveScreenDimensions = new Vector(WIDTH, 2 * HEIGHT);
+let waveScreenDimensions = new Vector(WIDTH, 3 * HEIGHT);
 let waveSpawnPoints = [
   new Vector(waveScreenCoordinates.x - 10, waveScreenCoordinates.y + waveScreenDimensions.y - 50),
   new Vector(waveScreenCoordinates.x, waveScreenCoordinates.y + waveScreenDimensions.y + 20),

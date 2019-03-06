@@ -1,16 +1,18 @@
 // Pre-generate audio
 let audioContext = new AudioContext();
 let bufferPaths = [
+  "/music/billvortexincendie.mp3",
   "/music/billvortexmizar.mp3",
-  // "/music/billvortextruffes.mp3", //3
-  // "/music/wetandwild.mp3", // great but difficult
-  // "/music/spacecop.mp3", // great
-  // "/music/spacerhythm1.mp3", //6 // fast
+  // "/music/billvortextruffes.mp3",
+  "/music/spacecop.mp3", // great
+  "/music/wetandwild.mp3", // great but difficult
+  "/music/spacerhythm1.mp3", // fast
   // "/music/starscreamspace.mp3", // love this song but volume is inconsistent
-  // "/music/sultryspaceshowers.mp3", // very difficult
+  "/music/sultryspaceshowers.mp3", // very difficult
 ];
 let bufferLoader = new BufferLoader(audioContext, bufferPaths, loadAudio);
 bufferLoader.load();
+let buffers;
 let buffer;
 let bufferPos = 0;
 let bufferSource;
@@ -35,9 +37,14 @@ let treblePeakTimes;
 let treblePeaksElapsed;
 
 function loadAudio(bufferList) {
-  console.log("Finished loading " + bufferList.length + " buffers.");
-  buffer = bufferList[bufferPos];
-  console.log("Current buffer located at " + bufferPaths[bufferPos]);
+  if(bufferList != undefined) {
+    buffers = bufferList;
+    console.log("Finished loading " + buffers.length + " buffers.");
+  }
+  bufferPos = currentLevel - 1;
+  if(bufferPos > bufferPaths.length - 1) bufferPos = bufferPaths.length - 1;
+  buffer = buffers[bufferPos];
+  console.log("Current buffer is " + bufferPaths[bufferPos]);
 
   // get average frequency data to determine where to put filters
   getAverageFrequencyData(buffer).then(

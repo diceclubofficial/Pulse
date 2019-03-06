@@ -99,7 +99,7 @@ class TrebleWave {
       // Calculate distance from center
       let newDistanceFromCenter = distance(this.x, this.y, this.screenCoordinates.x + this.screenDimensions.x/2, this.screenCoordinates.y + this.screenDimensions.y/2);
       if(newDistanceFromCenter > this.distanceFromCenter) {
-        this.alive = false;
+        this.dying = true;
         return;
       }
       else {

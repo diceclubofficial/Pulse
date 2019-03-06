@@ -2,7 +2,7 @@
 
 function startFullGame() {
   if(!finishedLoadingAudio) {
-    alert("Not finished loading audio!");
+    alert("Hold on just a second...We're not finished loading audio!");
     return;
   }
 
@@ -12,7 +12,7 @@ function startFullGame() {
   startAudio();
 
   // initialize variables
-  changeOffscreenDimensions(1, 2);
+  changeOffscreenDimensions(1, 3);
   let rockiness = 30 + 10*(currentLevel);
   terrain = new Terrain(rockiness);
   gameAreaOrigin = new Vector(0, 0);
@@ -26,8 +26,8 @@ function startFullGame() {
   animations = [];
 
   maxAsteroids = Math.round(map(currentLevel, 1, 8, 10, 50));
-  maxTrebleWaves = Math.round(map(currentLevel, 1, 8, 0, 6));
-  maxBassWaves = Math.round(map(currentLevel, 1, 8, 0, 3));
+  maxTrebleWaves = Math.round(map(currentLevel, 1, 8, 0, 12));
+  maxBassWaves = Math.round(map(currentLevel, 1, 8, 0, 5));
   console.log("Level " + currentLevel + " starting with maxAsteroids:", maxAsteroids, " maxTrebleWaves:", maxTrebleWaves, " maxBassWaves:", maxBassWaves);
 
   frameCounter = 0;
@@ -65,6 +65,7 @@ function playFullGame() {
       safeLanding = false;
       safeLandingTimer = safeLandingTimerMax;
       currentLevel++;
+      loadAudio();
       clearInterval(loop);
       bufferSource.stop(0);
       changeScene("successScreen");
@@ -80,6 +81,7 @@ function playFullGame() {
       badLanding = false;
       badLandingTimer = badLandingTimerMax;
       currentLevel = 1;
+      loadAudio();
       clearInterval(loop);
       bufferSource.stop(0);
       changeScene("gameOverScreen");
@@ -93,6 +95,8 @@ function playFullGame() {
     if(probeDestroyedTimer <= 0) {
       probeDestroyed = false;
       probeDestroyedTimer = probeDestroyedTimerMax;
+      currentLevel = 1;
+      loadAudio();
       clearInterval(loop);
       bufferSource.stop(0);
       changeScene("gameOverScreen");
