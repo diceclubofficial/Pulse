@@ -188,5 +188,5 @@ document.addEventListener('click', processMouseInput);
 function processMouseInput(event) {
   var relX = (event.clientX - canvasGA.offsetLeft);
   var relY = (event.clientY - canvasGA.offsetTop);
-  console.log(relX + ", " + relY);
+  // console.log(relX + ", " + relY);
 }

@@ -1,7 +1,6 @@
 
 todo current commit:
--use AnalysisNode to get FrequencyData and look at which frequencies to cut off at (in offlineContext)
--push this commit
+-figure out what to do with the frequencies - bandpass filters on bass and treble
 
 art and design:
 -asteroid pixel art
@@ -12,8 +11,11 @@ art and design:
 -add sprites to bassWaves
 
 todo upcoming:
+-add Davis' lore writing
+-make different songs at different levels
+-make the frequency diff logarithmic like human hearing
+-peaks are relative to the whole songs' volume
 -make the frequency median instead of average/mean
--figure out what to do with the frequencies - bandpass filters on bass and treble
 -add sound effects
   -thruster fwooo
   -dash phooo

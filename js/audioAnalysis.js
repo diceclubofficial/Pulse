@@ -1,20 +1,18 @@
 // Pre-generate audio
 let audioContext = new AudioContext();
 let bufferPaths = [
-  "/music/simpledrums.mp3", //0
-  "/music/billvortexmizar.mp3",
-  "/music/billvortexincendie.mp3",
-  "/music/billvortextruffes.mp3", //3
-  // "/music/wetandwild.mp3",
-  // "/music/spacecop.mp3",
-  // "/music/spacerhythm1.mp3", //6
-  // "/music/starscreamspace.mp3",
-  // "/music/sultryspaceshowers.mp3",
+  // "/music/billvortexmizar.mp3",
+  // "/music/billvortextruffes.mp3", //3
+  // "/music/wetandwild.mp3", // great but difficult
+  // "/music/spacecop.mp3", // great
+  // "/music/spacerhythm1.mp3", //6 // fast
+  // "/music/starscreamspace.mp3", // love this song but volume is inconsistent
+  // "/music/sultryspaceshowers.mp3", // very difficult
 ]
 let bufferLoader = new BufferLoader(audioContext, bufferPaths, loadAudio);
 bufferLoader.load();
 let buffer;
-let bufferPos = 3;
+let bufferPos = 0;
 let bufferSource;
 let loadingTasksMax = 3;
 let loadingTasksCompleted = 0;
@@ -23,9 +21,17 @@ let finishedLoadingAudio = false;
 let lastTime;
 let secondsElapsed;
 
+let filterQ = 20;
+let filterGain = -100;
+
+let bassFrequency;
+let bassBuffer;
 let bassPeakTimes;
-let treblePeakTimes;
 let bassPeaksElapsed;
+
+let trebleFrequency;
+let trebleBuffer;
+let treblePeakTimes;
 let treblePeaksElapsed;
 
 function loadAudio(bufferList) {
@@ -39,31 +45,54 @@ function loadAudio(bufferList) {
       console.log("Frequency data processing completed.");
 
       impactfulFrequencies = getImpactfulFrequencies(result);
-      console.log("Impactful Frequencies:", impactfulFrequencies);
+      console.log("Impactful Frequencies:", impactfulFrequencies.slice(0, 10));
 
+      // determine which frequencies to use as bass and treble
+      trebleFrequency = impactfulFrequencies[0].frequency;
+      bassFrequency = impactfulFrequencies[0].frequency;
+      let maxFrequencyDiff = 350;
+      for(let f of impactfulFrequencies) {
+        let currFrequency = f.frequency;
+        if(currFrequency > trebleFrequency) trebleFrequency = currFrequency;
+        if(currFrequency < bassFrequency) bassFrequency = currFrequency;
+        let freqDiff = Math.abs(trebleFrequency - bassFrequency);
+        if(freqDiff > maxFrequencyDiff) break;
+      }
+      console.log("Bass:", bassFrequency);
+      console.log("Treble:", trebleFrequency);
       completeLoadingTask();
-    }
-  );
-  // send track through lowpass filter to get bassPeakTimes
-  getFilteredBuffer(buffer, "lowpass", 440).then(
-    function(result) {
-      console.log("Lowpass filter processing completed.");
-      let filteredBuffer = result;
-      // find significant peaks in the track
-      bassPeakTimes = getPeaksAtThreshold(filteredBuffer.getChannelData(0), filteredBuffer.sampleRate, 0.6);
-      console.log("Bass Peaks: ", bassPeakTimes.slice(0, 10));
-      completeLoadingTask();
-    }
-  );
-  // send track through highpass filter to get treblePeakTimes
-  getFilteredBuffer(buffer, "highpass", 440).then(
-    function(result) {
-      console.log("Highpass filter processing completed.");
-      let filteredBuffer = result;
-      // find significant peaks in the track
-      treblePeakTimes = getPeaksAtThreshold(filteredBuffer.getChannelData(0), filteredBuffer.sampleRate, 0.5);
-      console.log("Treble Peaks: ", treblePeakTimes.slice(0, 10));
-      completeLoadingTask();
+
+      // send track through bandpass filter to get bassPeakTimes
+      getFilteredBuffer(buffer, "peaking", trebleFrequency, filterQ, filterGain).then(
+        function(attenuatedBuffer) {
+          getFilteredBuffer(attenuatedBuffer, "bandpass", bassFrequency, filterQ).then(
+            function(filteredBuffer) {
+              console.log("Bass filter processing completed.");
+              bassBuffer = filteredBuffer;
+              // find significant peaks in the track
+              bassPeakTimes = getPeaksAtThreshold(filteredBuffer.getChannelData(0), filteredBuffer.sampleRate, 0.6);
+              console.log("Bass Peaks: ", bassPeakTimes.slice());
+              completeLoadingTask();
+            }
+          );
+        }
+      );
+
+      // send track through bandpass filter to get treblePeakTimes
+      getFilteredBuffer(buffer, "peaking", bassFrequency, filterQ, filterGain).then(
+        function(attenuatedBuffer) {
+          getFilteredBuffer(attenuatedBuffer, "bandpass", trebleFrequency, filterQ).then(
+            function(filteredBuffer) {
+              console.log("Treble filter processing completed.");
+              trebleBuffer = filteredBuffer;
+              // find significant peaks in the track
+              treblePeakTimes = getPeaksAtThreshold(filteredBuffer.getChannelData(0), filteredBuffer.sampleRate, 0.6);
+              console.log("Treble Peaks: ", treblePeakTimes.slice());
+              completeLoadingTask();
+            }
+          );
+        }
+      );
     }
   );
 }
@@ -94,12 +123,12 @@ function analyseAudio() {
   let samplesElapsed = secondsElapsed * buffer.sampleRate;
 
   if(samplesElapsed > bassPeakTimes[bassPeaksElapsed]) {
-    console.log("BASS PEAK", bassPeaksElapsed);
+    console.log("BASS ", bassPeaksElapsed);
     bassPeaksElapsed++;
     spawnBassWave();
   }
   if(samplesElapsed > treblePeakTimes[treblePeaksElapsed]) {
-    console.log("TREBLE PEAK", treblePeaksElapsed);
+    console.log("TREBLE ", treblePeaksElapsed);
     treblePeaksElapsed++;
     spawnTrebleWave();
   }
@@ -109,7 +138,7 @@ function getImpactfulFrequencies(data) {
   let frequencyData = [];
   for(let i in data) {
     frequencyData[i] = {
-      frequency: i,
+      frequency: parseInt(i),
       volume: data[i],
     };
   }
@@ -123,7 +152,7 @@ function getImpactfulFrequencies(data) {
     currEntry.impact = 0;
     innerLoop: for(let otherEntry of impactfulFrequencies) {
       if(otherEntry == currEntry) continue innerLoop;
-      let frequencyDiff = Math.abs(parseInt(otherEntry.frequency) - parseInt(currEntry.frequency));
+      let frequencyDiff = Math.abs(otherEntry.frequency - currEntry.frequency);
       if(frequencyDiff == 0) continue innerLoop;
       currEntry.impact += otherEntry.volume/(frequencyDiff**3);
     }
@@ -131,7 +160,7 @@ function getImpactfulFrequencies(data) {
   impactfulFrequencies.sort(function(a, b) {
     return b.impact - a.impact; // sort frequency data by volume but preserve the frequency
   });
-  return impactfulFrequencies.slice(0, 10);
+  return impactfulFrequencies;
 }
 function getAverageFrequencyData(buffer) {
   return new Promise(function(resolve, reject) {
@@ -142,7 +171,7 @@ function getAverageFrequencyData(buffer) {
     bufferSource.buffer = buffer;
 
     let analyser = offlineContext.createAnalyser();
-    let fftSize = 2048;
+    let fftSize = 16384;
     analyser.fftSize = fftSize;
 
     let processor = offlineContext.createScriptProcessor(fftSize, 1, 1);
@@ -171,7 +200,7 @@ function getAverageFrequencyData(buffer) {
     }
   });
 }
-function getFilteredBuffer(buffer, filterType, frequency) {
+function getFilteredBuffer(buffer, filterType, frequency, q = 1, gain = 0) {
   return new Promise(function(resolve, reject) {
     // create offline context
     let offlineContext = new OfflineAudioContext(1, buffer.length, buffer.sampleRate);
@@ -182,6 +211,8 @@ function getFilteredBuffer(buffer, filterType, frequency) {
     let filter = offlineContext.createBiquadFilter();
     filter.type = filterType;
     filter.frequency.value = frequency;
+    filter.Q.value = q;
+    filter.gain.value = gain;
 
     // connect nodes
     // Pipe the song into the filter, and the filter into the offline context
@@ -202,11 +233,16 @@ function getFilteredBuffer(buffer, filterType, frequency) {
 
 // from http://joesul.li/van/beat-detection-using-web-audio/
 // returns an array of peak timestamps in sample index
-function getPeaksAtThreshold(data, sampleRate, threshold) {
+function getPeaksAtThreshold(data, sampleRate, thresholdRatio) {
+  let maxValue = 0;
+  for(let f of data) {
+    if(f > maxValue) maxValue = f;
+  }
+  let threshold = thresholdRatio*maxValue;
   let peaksArray = [];
   let length = data.length;
   for(let i = 0; i < length;) {
-    if(data[i] > threshold && data[i + 1] < threshold && data[i + 2] < threshold) {
+    if(data[i] > threshold) {
       peaksArray.push(i);
       // Skip forward ~ 1/4s to get past this peak.
       i += 0.25 * sampleRate;
