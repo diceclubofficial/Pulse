@@ -26,8 +26,8 @@ function startFullGame() {
   animations = [];
 
   maxAsteroids = Math.round(map(currentLevel, 1, 8, 10, 50));
-  maxTrebleWaves = Math.round(map(currentLevel, 1, 8, 0, 12));
-  maxBassWaves = Math.round(map(currentLevel, 1, 8, 0, 5));
+  maxTrebleWaves = Math.round(map(currentLevel, 1, 8, 0, 18));
+  maxBassWaves = Math.round(map(currentLevel, 1, 8, 0, 7));
   console.log("Level " + currentLevel + " starting with maxAsteroids:", maxAsteroids, " maxTrebleWaves:", maxTrebleWaves, " maxBassWaves:", maxBassWaves);
 
   frameCounter = 0;

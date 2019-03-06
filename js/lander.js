@@ -44,7 +44,7 @@ class Lander {
     this.thrustersOn = false;
     this.framesPerAnimation = 165 / MS_PER_FRAME; // animation speed
     this.animationTimer = 0;
-    this.fuel = 3000;
+    this.fuel = 500;
 
     // bullet firing
     this.framesPerBullet = 165 / MS_PER_FRAME;

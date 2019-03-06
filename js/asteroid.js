@@ -5,7 +5,7 @@ class Asteroid {
   constructor(x, y, screenCoordinates, screenDimensions) {
     // vector quantities
     this.coordinates = new Vector(x, y);
-    this.speed = MS_PER_FRAME * randomValue(0.18, 0.34);
+    this.speed = MS_PER_FRAME * randomValue(0.18, 0.30);
     //random velocity
     this.velocity = new Vector(randomValue(-1, 1), randomValue(-1, 1));
     this.velocity.magnitude = this.speed;

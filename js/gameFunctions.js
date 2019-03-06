@@ -2,6 +2,9 @@
 function drawEverything() {
   drawBackground(contextOffscreen, true);
 
+  // terrain
+  terrain.draw(contextOffscreen);
+
   // asteroids
   for (let asteroid of asteroids) {
     asteroid.draw(contextOffscreen);
@@ -19,9 +22,6 @@ function drawEverything() {
   for (let bullet of bullets) {
     bullet.draw(contextOffscreen);
   }
-
-  // terrain
-  terrain.draw(contextOffscreen);
 
   // lander
   probe.draw(contextOffscreen);

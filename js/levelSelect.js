@@ -2,7 +2,7 @@
 
 let starBackground = new Image();
 starBackground.src = "images/lore2Close.png";
-let currentLevel = 1;
+let currentLevel = 2;
 
 function startLevelSelect() {
   changeScene("levelSelect");
