@@ -14,6 +14,7 @@ todo upcoming:
 -make the frequency diff logarithmic like human hearing
 -peaks are relative to the whole songs' volume
 -make the frequency median instead of average/mean
+-make waves faster
 -add sound effects
   -thruster fwooo
   -dash phooo

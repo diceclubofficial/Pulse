@@ -36,6 +36,8 @@ let trebleBuffer;
 let treblePeakTimes;
 let treblePeaksElapsed;
 
+let gainNode;
+
 function loadAudio(bufferList) {
   finishedLoadingAudio = false;
   loadingTasksCompleted = 0;
@@ -116,7 +118,10 @@ function completeLoadingTask() {
 function startAudio() {
   bufferSource = audioContext.createBufferSource();
   bufferSource.buffer = buffer;
-  bufferSource.connect(audioContext.destination);
+  gainNode = audioContext.createGain();
+  bufferSource
+  .connect(gainNode)
+  .connect(audioContext.destination);
   bufferSource.start(0);
 
   secondsElapsed = 0;
@@ -127,6 +132,17 @@ function startAudio() {
 }
 
 function analyseAudio() {
+  // change gain based on distance from third screen
+  if(probe.shape.y >= bottomScreenY) {
+    gainNode.gain.setValueAtTime(1, audioContext.currentTime);
+  }
+  else {
+    let newValue = (probe.shape.y / bottomScreenY)**1.5;
+    gainNode.gain.setValueAtTime(newValue, audioContext.currentTime);
+  }
+  console.log("Gain value is " + gainNode.gain.value);
+
+  // check for peaks
   secondsElapsed += (Date.now() - lastTime) / 1000;
   lastTime = Date.now();
   let samplesElapsed = secondsElapsed * buffer.sampleRate;
