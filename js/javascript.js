@@ -51,7 +51,12 @@ window.onload = function() {
     audioElement.pause();
   });
   lore1Button.addEventListener('click', function() {
+    if(!finishedLoadingBuffers) {
+      alert("Just a second...we're not done loading audio files.");
+      return;
+    }
     startLore1();
+    playMenuMusic();
   });
   nextLevelButton.addEventListener('click', function() {
     startFullGame();

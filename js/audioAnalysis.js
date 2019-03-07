@@ -1,13 +1,13 @@
 // Pre-generate audio
 let audioContext = new AudioContext();
 let bufferPaths = [
+  "/music/starscreamspace.mp3", // love this song but volume is inconsistent
   "/music/billvortexincendie.mp3",
   "/music/billvortexmizar.mp3",
   // "/music/billvortextruffes.mp3",
   "/music/spacecop.mp3", // great
   "/music/wetandwild.mp3", // great but difficult
   "/music/spacerhythm1.mp3", // fast
-  // "/music/starscreamspace.mp3", // love this song but volume is inconsistent
   // "/music/sultryspaceshowers.mp3", // very difficult
 ];
 let bufferLoader = new BufferLoader(audioContext, bufferPaths, loadAudio);
@@ -18,6 +18,7 @@ let bufferPos = 0;
 let bufferSource;
 let loadingTasksMax = 3;
 let loadingTasksCompleted = 0;
+let finishedLoadingBuffers = false;
 let finishedLoadingAudio = false;
 
 let lastTime;
@@ -43,9 +44,10 @@ function loadAudio(bufferList) {
   loadingTasksCompleted = 0;
   if(bufferList != undefined) {
     buffers = bufferList;
+    finishedLoadingBuffers = true;
     console.log("Finished loading " + buffers.length + " buffers.");
   }
-  bufferPos = currentLevel - 1;
+  bufferPos = currentLevel;
   if(bufferPos > bufferPaths.length - 1) bufferPos = bufferPaths.length - 1;
   buffer = buffers[bufferPos];
   console.log("Current buffer is " + bufferPaths[bufferPos]);
@@ -115,7 +117,17 @@ function completeLoadingTask() {
   }
 }
 
+function playMenuMusic() {
+  if(bufferSource != undefined) bufferSource.stop(0);
+  bufferSource = audioContext.createBufferSource();
+  bufferSource.buffer = buffers[0];
+  gainNode = audioContext.createGain();
+  gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+  bufferSource.connect(audioContext.destination);
+  bufferSource.start(0);
+}
 function startAudio() {
+  bufferSource.stop(0);
   bufferSource = audioContext.createBufferSource();
   bufferSource.buffer = buffer;
   gainNode = audioContext.createGain();
@@ -140,7 +152,7 @@ function analyseAudio() {
     let newValue = (probe.shape.y / bottomScreenY)**1.5;
     gainNode.gain.setValueAtTime(newValue, audioContext.currentTime);
   }
-  console.log("Gain value is " + gainNode.gain.value);
+  // console.log("Gain value is " + gainNode.gain.value);
 
   // check for peaks
   secondsElapsed += (Date.now() - lastTime) / 1000;
