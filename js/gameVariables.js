@@ -7,7 +7,7 @@ const GRAVITY = new Vector(0, 0.0015 * MS_PER_FRAME);
 const TERMINAL_VELOCITY = 5;
 const DRAG_CONSTANT = GRAVITY.y / TERMINAL_VELOCITY;
 // console.log("Gravity is " + GRAVITY.y/MS_PER_FRAME + " N/ms and "+ GRAVITY.y + " N/frame");
-const DANGEROUS_SPEED = 1.0;
+const DANGEROUS_SPEED = 1.4;
 
 // background
 let terrain;

@@ -8,7 +8,7 @@ let bufferPaths = [
   "/music/wetandwild.mp3", // great but difficult
   "/music/spacerhythm1.mp3", // fast
   // "/music/starscreamspace.mp3", // love this song but volume is inconsistent
-  "/music/sultryspaceshowers.mp3", // very difficult
+  // "/music/sultryspaceshowers.mp3", // very difficult
 ];
 let bufferLoader = new BufferLoader(audioContext, bufferPaths, loadAudio);
 bufferLoader.load();
