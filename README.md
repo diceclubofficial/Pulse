@@ -1,5 +1,5 @@
 # Pulse
-####### A rhythm-game-inspired lunar lander with custom audio analysis and a pixel art aesthetic.
+###### A rhythm-game-inspired lunar lander with custom audio analysis and a pixel art aesthetic.
 Pulse is a game about landing a spaceship on a planet's surface - using the Web Audio API to interpret music into game obstacles. This is our twist to the lunar lander genre; as opposed to the slow, calculated gameplay of traditional lunar landers, Pulse speeds up gameplay with added maneuverability to play like a rhythm game.
 
 ## Executing the Program
