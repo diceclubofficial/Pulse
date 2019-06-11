@@ -10,6 +10,7 @@ art and design:
 -add sprites to bassWaves
 
 todo upcoming:
+-treble waves affect asteroids ?
 -make music fade in as you approach the wave screen
 -make the frequency diff logarithmic like human hearing
 -peaks are relative to the whole songs' volume
