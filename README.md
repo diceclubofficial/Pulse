@@ -5,13 +5,13 @@ Pulse is a game about landing a spaceship on a planet's surface - using the Web 
 ## Executing the Program
 
 1. Clone this repository
-1. Navigate to the Pulse directory on your command line
-1. Run the following on your command line
+2. Navigate to the Pulse directory on your command line
+3. Run the following on your command line
 ```
 node index.js
 ```
-1. Using your web browser, go to localhost:8080
-1. You're all set!
+4. Using your web browser, go to localhost:8080
+5. You're all set!
 
 ## How to Play
 
@@ -34,7 +34,7 @@ Sometimes the music takes a while to load after reaching the title screen. Don't
 ## Contributors
 
 * Colin Spiridonov - design and programming
-* Jason Dykstra - design and programming
+* Jason Dykstra - [art](https://www.piskelapp.com/user/5726259057786880/public), design, and programming
 * Zachary Braner - design and programming
 * Ethan Tift - art
 * Davis Kedrosky - writing
